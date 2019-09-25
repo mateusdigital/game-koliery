@@ -1,3 +1,20 @@
+//----------------------------------------------------------------------------//
+//                       __      __                  __   __                  //
+//               .-----.|  |_.--|  |.--------.---.-.|  |_|  |_                //
+//               |__ --||   _|  _  ||        |  _  ||   _|   _|               //
+//               |_____||____|_____||__|__|__|___._||____|____|               //
+//                                                                            //
+//  File      : Piece.js                                                      //
+//  Project   : columns                                                       //
+//  Date      : Sep 25, 2019                                                  //
+//  License   : GPLv3                                                         //
+//  Author    : stdmatt <stdmatt@pixelwizards.io>                             //
+//  Copyright : stdmatt - 2019                                                //
+//                                                                            //
+//  Description :                                                             //
+//                                                                            //
+//----------------------------------------------------------------------------//
+
 
 /// @XXX(stdmatt): Read the documentation of graphics. that there's some stuff
 //  that we need to do to remove the graphics without a leak...
