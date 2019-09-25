@@ -25,6 +25,9 @@ const BOARD_FIELD_ROWS    = 22;
 const BLOCK_SIZE = 32
 // States : Playing
 const BOARD_STATE_PLAYING = "BOARD_STATE_PLAYING";
+// States : Generating Piece
+const BOARD_STATE_GENERATING_PIECE          = "BOARD_STATE_GENERATING_PIECE";
+const BOARD_STATE_GENERATING_PIECE_FINISHED = "BOARD_STATE_GENERATING_PIECE_FINISHED";
 // States : Destroying Blocks.
 const BOARD_STATE_DESTROYING_PIECES          = "BOARD_STATE_DESTROYING_PIECES";
 const BOARD_STATE_DESTROYING_PIECES_FINISHED = "BOARD_STATE_DESTROYING_PIECES_FINISHED";
@@ -61,24 +64,52 @@ class Board
         this.field     = Array_Create2D(BOARD_FIELD_ROWS, BOARD_FIELD_COLUMNS);
         this.blockSize = Create_Point(BLOCK_SIZE, BLOCK_SIZE);
 
-        // // Piece.
-        this.currPiece = this._GeneratePiece();
-        // this.nextPiece = this._GeneratePiece();
+        // Piece.
+        this.currPiece = null;
+        this.nextPiece = null;
+        this._GeneratePiece();
         this.pieceSpeed = 220;
+
+        // Infos.
+        this.matchInfo = new MatchInfo(this);
+        this.fallInfo  = new FallInfo (this);
+
 
         // Drawing.
         // this.width  = (BOARD_FIELD_COLUMNS * this.blockSize.x);
         // this.height = (BOARD_FIELD_ROWS    * this.blockSize.y)
     } // ctor
 
+
     //--------------------------------------------------------------------------
     Update(dt)
     {
-        if(this.currPiece == null) {
-            return;
+        // State : Playing
+        if(this.currState == BOARD_STATE_PLAYING) {
+            this._UpdateState_Playing(dt);
         }
+        // State : Generating Piece
+        else if(this.currState == BOARD_STATE_GENERATING_PIECE_FINISHED) {
+            this._ChangeState(BOARD_STATE_PLAYING);
+        }
+        // State : Destroying Pieces
+        else if(this.currState == BOARD_STATE_DESTROYING_PIECES_FINISHED) {
+            this.fallInfo.FindPiecesToFall(this.matchInfo.allMatchedBlocks);
+            if(this.fallInfo.hasPiecesToFall) {
+                this._ChangeState(BOARD_STATE_FALLING_PIECES);
+                this.FallPieces();
+            } else {
+                this._ChangeState(BOARD_STATE_GENERATING_PIECE);
+                this._GeneratePiece();
+            }
+        }
+    } // Update
 
+    //--------------------------------------------------------------------------
+    _UpdateState_Playing(dt)
+    {
         this.currPiece.Update(dt);
+
         if(IsKeyPress(KEY_SPACE)) {
             this.currPiece.Rotate();
         }
@@ -111,26 +142,29 @@ class Board
         let new_position_y = this.currPiece.GetBottomPositionY() + (this.pieceSpeed * dt);
         new_coord.y = Math_Int(new_position_y / this.blockSize.y);
 
-        if(new_coord.y >= BOARD_FIELD_ROWS) {
-            this.PlacePiece(this.currPiece, new_coord.x, new_coord.y);
-        } else if(!this.IsBoardEmptyAt(new_coord.x, new_coord.y)) {
-            this.PlacePiece(this.currPiece, new_coord.x, curr_coord.y);
+        if(new_coord.y >= BOARD_FIELD_ROWS ||
+           !this.IsBoardEmptyAt(new_coord.x, new_coord.y) )
+        {
+            this._PlacePiece(this.currPiece, new_coord.x, new_coord.y);
+
+            new_coord.y -= 1;
+            this.matchInfo.FindMatches(new_coord);
+            if(this.matchInfo.hasMatches) {
+                this._ChangeState(BOARD_STATE_DESTROYING_PIECES);
+                this._DestroyBlocks();
+            } else if(this._CheckGameOver()) {
+                this._ChangeState(BOARD_STATE_GAME_OVER);
+                // @todo(stdmatt): ????
+            } else {
+                this._ChangeState(BOARD_STATE_GENERATING_PIECE);
+                this._GeneratePiece();
+            }
         } else {
             this.currPiece.x = (new_coord.x * this.blockSize.x);
             this.currPiece.SetBottomPositionY(new_position_y);
         }
-    } // Update
+    } // _UpdateState_Playing
 
-
-    //--------------------------------------------------------------------------
-    PlacePiece(piece, indexX, indexY)
-    {
-        for(let i = 0; i < PIECE_BLOCKS_COUNT; ++i) {
-            let block = piece.blocks[i];
-            this._SetBlockAt(block, indexX, (indexY - i -1));
-        }
-        this.currPiece = null;
-    } // PlacePiece
 
     //--------------------------------------------------------------------------
     IsBoardEmptyAt(indexX, indexY)
@@ -156,14 +190,66 @@ class Board
         return this.IsCoordXValid(indexX) && this.IsCoordYValid(indexY);
     } // IsValidCoord
 
+
+    //--------------------------------------------------------------------------
+    _GeneratePiece()
+    {
+        let piece = new Piece(this);
+        this.addChild(piece);
+
+        const x = (BOARD_FIELD_COLUMNS / 2) * this.blockSize.x;
+        const y = (3) * this.blockSize.x;
+
+        piece.x = x
+        piece.SetBottomPositionY(y)
+
+        this.currPiece = piece;
+        this._ChangeState(BOARD_STATE_GENERATING_PIECE_FINISHED);
+    } // _GeneratePiece
+
+    //--------------------------------------------------------------------------
+    _PlacePiece(piece, indexX, indexY)
+    {
+        for(let i = 0; i < PIECE_BLOCKS_COUNT; ++i) {
+            let block = piece.blocks[i];
+            this._SetBlockAt(block, indexX, (indexY - i -1));
+        }
+        this.currPiece = null;
+    } // _PlacePiece
+
     //--------------------------------------------------------------------------
     _DestroyBlocks()
     {
+        if(!this.matchInfo.hasMatches) {
+            this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
+            return;
+        }
+
+        for(let i = 0; i < this.matchInfo.allMatchedBlocks.length; ++i) {
+            let block = this.matchInfo.allMatchedBlocks[i];
+            this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
+        }
+
+        this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
     } // _DestroyBlocks
 
     //--------------------------------------------------------------------------
     _FallBlocks()
     {
+        if(!this.fallInfo.hasBlocksToFall) {
+            this._ChangeState(BOARD_STATE_FALLING_PIECES_FINISHED);
+            return;
+        }
+
+        for(let i = 0; i < this.fallInfo.allBlocksToFall.length; ++i) {
+            let block = this.fallInfo.allBlocksToFall[i];
+            let coord = this.fallInfo.allTargetCoords[i];
+
+            this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
+            this._SetBlockAt(block, coord.x, coord.y);
+        }
+
+        this._ChangeState(BOARD_STATE_FALLING_PIECES_FINISHED);
     } // _FallBlocks
 
 
@@ -179,46 +265,39 @@ class Board
     //--------------------------------------------------------------------------
     _RemoveBlockAt(indexX, indexY)
     {
+        let block = this.field[indexY][indexX];
+        if(block != null && block.parent != null) {
+            block.parent.removeChild(block);
+        }
+
         this.field[indexY][indexX] = null;
+
         this.ascii();
     } // _RemoveBlockAt
 
     //--------------------------------------------------------------------------
     _SetBlockAt(block, indexX, indexY)
     {
-        block.parent.removeChild(block);
+        if(block.parent != null) {
+            block.parent.removeChild(block);
+        }
         this.addChild(block);
 
         block.x = (this.blockSize.x * indexX);
         block.y = (this.blockSize.y * indexY);
 
+        block.coordInBoard = Create_Point(indexX, indexY);
         this.field[indexY][indexX] = block;
+
         this.ascii();
     } // _SetBlockAt
 
-    //--------------------------------------------------------------------------
-    _GeneratePiece()
-    {
-        let piece = new Piece(this);
-        this.addChild(piece);
-
-        const x = (BOARD_FIELD_COLUMNS / 2) * this.blockSize.x;
-        const y = (3) * this.blockSize.x;
-
-        piece.x = x
-        piece.SetBottomPositionY(y)
-
-        return piece;
-    } // _GeneratePiece
 
     //--------------------------------------------------------------------------
-    _CalculateCoordPositionInBoard(indexX, indexY)
+    _CheckGameOver()
     {
-        return Create_Point(
-            this.blockSize.x * indexX + this.blockSize.x * 0.5,
-            this.blockSize.y * indexY + this.blockSize.y * 0.5
-        );
-    } // _CalculateCoordPositionInBoard
+        return false;
+    }
 
     //--------------------------------------------------------------------------
     _ChangeState(newState)
@@ -233,6 +312,7 @@ class Board
     {
         let s = "";
         for(let i = 0; i < BOARD_FIELD_ROWS; ++i) {
+            s += String_Cat(" (", i, ")\n");
             for(let j = 0; j < BOARD_FIELD_COLUMNS; ++j) {
                 let p = this.GetBlockAt(j, i);
                 if(p == null) {
@@ -243,7 +323,7 @@ class Board
                 }
                 s += " ";
             }
-            s += "\n";
+            s += String_Cat(" (", i, ")\n")
         }
         console.log(s);
     }
