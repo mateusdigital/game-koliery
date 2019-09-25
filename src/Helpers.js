@@ -45,6 +45,12 @@ function Create_Point(x, y)
 }
 
 //------------------------------------------------------------------------------
+function Copy_Point(p)
+{
+    return new PIXI.Point(p.x, p.y);
+}
+
+//------------------------------------------------------------------------------
 function Points_Are_Orthogonal(p1, p2)
 {
     return p1.x == p2.x || p1.y == p2.y;
