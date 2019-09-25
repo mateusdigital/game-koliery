@@ -64,7 +64,7 @@ class Board
         // // Piece.
         this.currPiece = this._GeneratePiece();
         // this.nextPiece = this._GeneratePiece();
-        this.pieceSpeed = 30;
+        this.pieceSpeed = 220;
 
         // Drawing.
         // this.width  = (BOARD_FIELD_COLUMNS * this.blockSize.x);
@@ -74,8 +74,11 @@ class Board
     //--------------------------------------------------------------------------
     Update(dt)
     {
-        this.currPiece.Update(dt);
+        if(this.currPiece == null) {
+            return;
+        }
 
+        this.currPiece.Update(dt);
         if(IsKeyPress(KEY_SPACE)) {
             this.currPiece.Rotate();
         }
@@ -87,34 +90,70 @@ class Board
             dir_x = +1;
         }
 
-        const coord_x = Math_Int(this.currPiece.x / this.blockSize.x);
-        const coord_y = Math_Int(this.currPiece.y / this.blockSize.y);
+        const curr_coord = this.currPiece.coord;
+        let   new_coord  = Copy_Point(curr_coord);
 
-        console.log(coord_x, coord_y);
-        let new_coord_x = null;
-        if(dir_x != 0 && this.IsCoordValid(coord_x + dir_x, coord_y)) {
-            new_coord_x = coord_x + dir_x;
+        //
+        // Try to move horizontally.
+        //   Horizontal movement is block based - So we just check if there's
+        //   room to move and set the new coord to that position.
+        if(dir_x != 0                                 &&
+           this.IsCoordXValid (curr_coord.x + dir_x)  &&
+           this.IsBoardEmptyAt(curr_coord.x + dir_x, curr_coord.y))
+        {
+            new_coord.x = (curr_coord.x + dir_x)
         }
 
-        if(new_coord_x != null) {
-            this.currPiece.x = (this.blockSize.x * new_coord_x);
-        }
+        //
+        // Try to move vertically.
+        //   Vertical movement is "pixel" based - So we need to move the piece
+        //   by that amount of pixels and check if the resulting coord is valid.
+        let new_position_y = this.currPiece.GetBottomPositionY() + (this.pieceSpeed * dt);
+        new_coord.y = Math_Int(new_position_y / this.blockSize.y);
 
-        // Move
-        let   new_position_y = this.currPiece.y + (this.pieceSpeed * dt);
-        const new_coord_y    = Math_Int(new_position_y / this.blockSize.y);
-        if(new_coord_y >= BOARD_FIELD_ROWS) {
-            new_position_y = (BOARD_FIELD_ROWS * this.blockSize.y);
+        if(new_coord.y >= BOARD_FIELD_ROWS) {
+            this.PlacePiece(this.currPiece, new_coord.x, new_coord.y);
+        } else if(!this.IsBoardEmptyAt(new_coord.x, new_coord.y)) {
+            this.PlacePiece(this.currPiece, new_coord.x, curr_coord.y);
+        } else {
+            this.currPiece.x = (new_coord.x * this.blockSize.x);
+            this.currPiece.SetBottomPositionY(new_position_y);
         }
-        this.currPiece.y = new_position_y;
-
     } // Update
+
+
+    //--------------------------------------------------------------------------
+    PlacePiece(piece, indexX, indexY)
+    {
+        for(let i = 0; i < PIECE_BLOCKS_COUNT; ++i) {
+            let block = piece.blocks[i];
+            this._SetBlockAt(block, indexX, (indexY - i -1));
+        }
+        this.currPiece = null;
+    } // PlacePiece
+
+    //--------------------------------------------------------------------------
+    IsBoardEmptyAt(indexX, indexY)
+    {
+        return this.GetBlockAt(indexX, indexY) == null;
+    } // IsBoardEmptyAt
+
+    //--------------------------------------------------------------------------
+    IsCoordXValid(indexX)
+    {
+        return indexX >= 0 && indexX < BOARD_FIELD_COLUMNS;
+    } // IsCoordXValid
+
+    //--------------------------------------------------------------------------
+    IsCoordYValid(indexY)
+    {
+        return indexY >= 0 && indexY < BOARD_FIELD_ROWS;
+    } // IsCoordYValid
 
     //--------------------------------------------------------------------------
     IsCoordValid(indexX, indexY)
     {
-        return indexX >= 0 && indexX < BOARD_FIELD_COLUMNS
-            && indexY >= 0 && indexY < BOARD_FIELD_ROWS;
+        return this.IsCoordXValid(indexX) && this.IsCoordYValid(indexY);
     } // IsValidCoord
 
     //--------------------------------------------------------------------------
@@ -145,17 +184,15 @@ class Board
     } // _RemoveBlockAt
 
     //--------------------------------------------------------------------------
-    _SetBlockAt(piece, indexX, indexY)
+    _SetBlockAt(block, indexX, indexY)
     {
-        let pos = this._CalculateCoordPositionInBoard(indexX, indexY);
+        block.parent.removeChild(block);
+        this.addChild(block);
 
-        let s = Get_Screen_Size();
-        piece.x = 0; pos.x;
-        piece.y = 0; pos.y;
+        block.x = (this.blockSize.x * indexX);
+        block.y = (this.blockSize.y * indexY);
 
-        piece.SetCoordInBoard(indexX, indexY);
-        this.field[indexY][indexX] = piece;
-
+        this.field[indexY][indexX] = block;
         this.ascii();
     } // _SetBlockAt
 
@@ -164,6 +201,13 @@ class Board
     {
         let piece = new Piece(this);
         this.addChild(piece);
+
+        const x = (BOARD_FIELD_COLUMNS / 2) * this.blockSize.x;
+        const y = (3) * this.blockSize.x;
+
+        piece.x = x
+        piece.SetBottomPositionY(y)
+
         return piece;
     } // _GeneratePiece
 

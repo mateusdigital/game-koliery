@@ -100,6 +100,7 @@ const PIECE_ROTATE_COOLDOWN_DURATION = 0.5;
 class Piece
     extends PIXI.Container
 {
+    //--------------------------------------------------------------------------
     constructor(boardRef)
     {
         super();
@@ -115,12 +116,16 @@ class Piece
         this.rotateTimer = new BaseTimer(PIECE_ROTATE_COOLDOWN_DURATION);
         this.rotateTimer.Start();
 
+        this.coord = Create_Point(0, 0);
     } // ctor
 
     //--------------------------------------------------------------------------
     Update(dt)
     {
         this.rotateTimer.Update(dt);
+
+        this.coord.x = Math_Int(this.x                    / this.boardRef.blockSize.x);
+        this.coord.y = Math_Int(this.GetBottomPositionY() / this.boardRef.blockSize.y);
     }
 
     //--------------------------------------------------------------------------
@@ -143,6 +148,18 @@ class Piece
 
         this.rotateTimer.Start();
     }
+
+    //--------------------------------------------------------------------------
+    SetBottomPositionY(y)
+    {
+        this.y = (y - this.height);
+    } // GetBottomPositionY
+
+    //--------------------------------------------------------------------------
+    GetBottomPositionY()
+    {
+        return this.y + this.height;
+    } // GetBottomPositionY
 
     //--------------------------------------------------------------------------
     _InitializeBlocks()
