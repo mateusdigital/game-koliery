@@ -64,15 +64,34 @@ class Board
         this.field     = Array_Create2D(BOARD_FIELD_ROWS, BOARD_FIELD_COLUMNS);
         this.blockSize = Create_Point(BLOCK_SIZE, BLOCK_SIZE);
 
+        // Infos.
+        this.matchInfo = new MatchInfo(this);
+        this.fallInfo  = new FallInfo (this);
+
         // Piece.
         this.currPiece = null;
         this.nextPiece = null;
         this._GeneratePiece();
+        // this._PlacePiece(this.currPiece, 0, 22);
+
+        // this._GeneratePiece();
+        // this.currPiece.Rotate();
+        // this._PlacePiece(this.currPiece, 1, 22);
+
+        // this._GeneratePiece();
+        // this.currPiece.Rotate();
+        // this._PlacePiece(this.currPiece, 2, 22);
+
+        // let coord = Create_Point(2, 21);
+        // this.matchInfo.FindMatches(coord);
+
+        // if(this.matchInfo.hasMatches) {
+        //     this._ChangeState(BOARD_STATE_DESTROYING_PIECES);
+        //     this._DestroyBlocks();
+        // }
         this.pieceSpeed = 220;
 
-        // Infos.
-        this.matchInfo = new MatchInfo(this);
-        this.fallInfo  = new FallInfo (this);
+
 
 
         // Drawing.
@@ -84,6 +103,10 @@ class Board
     //--------------------------------------------------------------------------
     Update(dt)
     {
+        if(IsKeyDown(KEY_ENTER)) {
+            debugger;
+        }
+
         // State : Playing
         if(this.currState == BOARD_STATE_PLAYING) {
             this._UpdateState_Playing(dt);
@@ -94,14 +117,19 @@ class Board
         }
         // State : Destroying Pieces
         else if(this.currState == BOARD_STATE_DESTROYING_PIECES_FINISHED) {
-            this.fallInfo.FindPiecesToFall(this.matchInfo.allMatchedBlocks);
-            if(this.fallInfo.hasPiecesToFall) {
+            this.fallInfo.FindAllBlocksToFall(this.matchInfo.allMatchedBlocks);
+            if(this.fallInfo.hasBlocksToFall) {
                 this._ChangeState(BOARD_STATE_FALLING_PIECES);
-                this.FallPieces();
+                this._FallBlocks();
             } else {
                 this._ChangeState(BOARD_STATE_GENERATING_PIECE);
                 this._GeneratePiece();
             }
+        }
+        // State : Falling Pieces
+        else if(this.currState == BOARD_STATE_FALLING_PIECES_FINISHED) {
+            this._ChangeState(BOARD_STATE_GENERATING_PIECE);
+            this._GeneratePiece();
         }
     } // Update
 
@@ -109,7 +137,6 @@ class Board
     _UpdateState_Playing(dt)
     {
         this.currPiece.Update(dt);
-
         if(IsKeyPress(KEY_SPACE)) {
             this.currPiece.Rotate();
         }
@@ -149,6 +176,7 @@ class Board
 
             new_coord.y -= 1;
             this.matchInfo.FindMatches(new_coord);
+
             if(this.matchInfo.hasMatches) {
                 this._ChangeState(BOARD_STATE_DESTROYING_PIECES);
                 this._DestroyBlocks();
@@ -236,13 +264,13 @@ class Board
     //--------------------------------------------------------------------------
     _FallBlocks()
     {
-        if(!this.fallInfo.hasBlocksToFall) {
+        if(!this.fallInfo.allFallingBlocks) {
             this._ChangeState(BOARD_STATE_FALLING_PIECES_FINISHED);
             return;
         }
 
-        for(let i = 0; i < this.fallInfo.allBlocksToFall.length; ++i) {
-            let block = this.fallInfo.allBlocksToFall[i];
+        for(let i = 0; i < this.fallInfo.allFallingBlocks.length; ++i) {
+            let block = this.fallInfo.allFallingBlocks[i];
             let coord = this.fallInfo.allTargetCoords[i];
 
             this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
@@ -312,14 +340,20 @@ class Board
     {
         let s = "";
         for(let i = 0; i < BOARD_FIELD_ROWS; ++i) {
-            s += String_Cat(" (", i, ")\n");
+            if(i < 10) {
+                s += " ";
+            }
+
+            s += String_Cat(" (", i, ") ");
             for(let j = 0; j < BOARD_FIELD_COLUMNS; ++j) {
                 let p = this.GetBlockAt(j, i);
                 if(p == null) {
                     s += ". ";
                 } else {
-                    s += p.objectId;
-                    if(p.objectId < 10) s += " ";
+                    // let v = p.objectId;
+                    let v = p.colorIndex;
+                    s += v;
+                    if(v < 10) s += " ";
                 }
                 s += " ";
             }
