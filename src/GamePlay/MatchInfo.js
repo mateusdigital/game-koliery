@@ -13,22 +13,23 @@ class MatchInfo
         this.boardRef = boardRef;
         // Properties.
         this.allMatchedBlocks = [];
-        this.hasMatch         = false;
+        this.hasMatches       = false;
     } // CTOR
 
     //--------------------------------------------------------------------------
     Reset()
     {
         this.allMatchedBlocks = [];
-        this.hasMatch         = false;
+        this.hasMatches         = false;
     } // Reset
 
     //--------------------------------------------------------------------------
     FindMatches(startCoord)
     {
+        this.Reset();
         for(let i = 0; i < PIECE_BLOCKS_COUNT; ++i) {
             let block = this.boardRef.GetBlockAt(startCoord.x, startCoord.y - i);
-            // this._CheckMatches(block);
+            this._CheckMatches(block);
         }
 
     } // FindMatches
@@ -36,59 +37,55 @@ class MatchInfo
     //--------------------------------------------------------------------------
     _CheckMatches(targetBlock)
     {
-        let left_blocks = [];
-        this._GetMatchingBlocks(targetBlock, POINT_LEFT , left_blocks);
+        let horizontal_blocks = [];
+        this._GetMatchingBlocks(targetBlock, POINT_LEFT , horizontal_blocks);
+        this._GetMatchingBlocks(targetBlock, POINT_RIGHT, horizontal_blocks);
 
-        let right_blocks = [];
-        this._GetMatchingBlocks(targetBlock, POINT_RIGHT, right_blocks);
+        let vertical_blocks = [];
+        this._GetMatchingBlocks(targetBlock, POINT_TOP   , vertical_blocks);
+        this._GetMatchingBlocks(targetBlock, POINT_BOTTOM, vertical_blocks);
 
-        let top_blocks = [];
-        this._GetMatchingBlocks(targetBlock, POINT_TOP , top_blocks);
+        let diagonal1_blocks = [];
+        this._GetMatchingBlocks(targetBlock, Create_Point(-1, -1), diagonal1_blocks);
+        this._GetMatchingBlocks(targetBlock, Create_Point(+1, +1), diagonal1_blocks);
 
-        let bottom_blocks = [];
-        this._GetMatchingBlocks(targetBlock, POINT_BOTTOM, bottom_blocks);
+        let diagonal2_blocks = [];
+        this._GetMatchingBlocks(targetBlock, Create_Point(+1, -1), diagonal2_blocks);
+        this._GetMatchingBlocks(targetBlock, Create_Point(-1, +1), diagonal2_blocks);
 
         let has_match = false;
-        if(left_blocks.length + right_blocks.length + 1 >= 3) {
-            for(let i = 0; i < left_blocks.length; ++i) {
-                let cp = left_blocks[i];
-                this._AddUnique(this.allMatchedBlocks, cp, (p)=>{p.objectId == cp.objectId});
-            }
-            for(let i = 0; i < right_blocks.length; ++i) {
-                let cp = right_blocks[i];
-                this._AddUnique(this.allMatchedBlocks, cp, (p)=>{p.objectId == cp.objectId});
-            }
+        if(horizontal_blocks.length + 1 >= 3) {
             has_match = true;
+            this._AddUnique(horizontal_blocks);
         }
-
-        if(top_blocks.length + bottom_blocks.length + 1 >= 3) {
-            for(let i = 0; i < top_blocks.length; ++i) {
-                let cp = top_blocks[i];
-                this._AddUnique(this.allMatchedBlocks, cp, (p)=>{p.objectId == cp.objectId});
-            }
-            for(let i = 0; i < bottom_blocks.length; ++i) {
-                let cp = bottom_blocks[i];
-                this._AddUnique(this.allMatchedBlocks, cp, (p)=>{
-                    p.objectId == cp.objectId
-                });
-            }
-            has_match = true
+        if(vertical_blocks.length + 1 >= 3) {
+            has_match = true;
+            this._AddUnique(vertical_blocks);
+        }
+        if(diagonal1_blocks.length + 1 >= 3) {
+            has_match = true;
+            this._AddUnique(diagonal1_blocks);
+        }
+        if(diagonal2_blocks.length + 1 >= 3) {
+            has_match = true;
+            this._AddUnique(diagonal2_blocks);
         }
 
         if(has_match) {
-            this.hasMatch = true;
+            this.hasMatches = true;
             this.allMatchedBlocks.push(targetBlock);
         }
     } // _CheckMatches
 
     //--------------------------------------------------------------------------
-    _AddUnique(arr, o, f)
+    _AddUnique(arr)
     {
-        if(Array_Contains(arr, f)) {
-            return false;
-        } else {
-            arr.push(o);
-            return true;
+        for(let i = 0; i < arr.length; ++i) {
+            let cp = arr[i];
+            let contains = Array_Contains(this.allMatchedBlocks, (p)=>{p.objectId == cp.objectId});
+            if(!contains) {
+                this.allMatchedBlocks.push(cp);
+            }
         }
     } // _AddUnique
 

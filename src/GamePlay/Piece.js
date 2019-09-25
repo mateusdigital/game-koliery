@@ -57,7 +57,7 @@ class Block
         this.addChild(this.graphics);
 
         // Debug.
-        let text = new PIXI.Text(this.objectId,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'left'});
+        let text = new PIXI.Text(this.colorIndex,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'left'});
         text.x = this.width  / 2 - text.width  / 2;
         text.y = this.height / 2 - text.height / 2;
         this.addChild(text);
