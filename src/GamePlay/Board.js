@@ -142,10 +142,14 @@ class Board
         //
         // State: Finding Matches
         else if(this.currState == BOARD_STATE_FINDING_MATCHES) {
-
+            this._FindMatches();
         }
         else if(this.currState == BOARD_STATE_FINDING_MATCHES_FINISHED) {
-
+            if(this.matchInfo.hasMatches) {
+                this._DestroyBlocks();
+            } else {
+                this._CheckGameOver();
+            }
         }
 
         //
@@ -279,10 +283,17 @@ class Board
 
         // Reset the state vars...
         this.currPiece           = null;
-        this.currPiecePlaceCoord = null
+        this.currPiecePlaceCoord = null;
 
         this._ChangeState(BOARD_STATE_PLACING_PIECE_FINISHED);
     } // _PlacePiece
+
+    //--------------------------------------------------------------------------
+    _FindMatches()
+    {
+        // this.matchInfo.FindMatches(this.blocksToTryFindMatch);
+        this._ChangeState(BOARD_STATE_FINDING_MATCHES_FINISHED);
+    } // _FindMatches
 
     //--------------------------------------------------------------------------
     _DestroyBlocks()
@@ -366,7 +377,14 @@ class Board
     //--------------------------------------------------------------------------
     _CheckGameOver()
     {
-        return false;
+        for(let j = 0; j < BOARD_FIELD_COLUMNS; ++j) {
+            if(this.GetBlockAt(j, 0) != null) {
+               this._ChangeState(BOARD_STATE_GAME_OVER);
+               return;
+            }
+        }
+
+        this._ChangeState(BOARD_STATE_GENERATING_PIECE);
     }
 
     //--------------------------------------------------------------------------
