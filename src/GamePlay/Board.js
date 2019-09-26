@@ -25,6 +25,7 @@ const BOARD_FIELD_ROWS    = 22;
 const BLOCK_SIZE = 32
 // Tweens
 const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 500;
+const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 500;
 // States : Playing
 const BOARD_STATE_PLAYING = "BOARD_STATE_PLAYING";
 // States : Generating Piece
@@ -78,6 +79,7 @@ class Board
 
         // Tweens.
         this.destroyTweenGroup = new TWEEN.Group();
+        this.fallTweenGroup    = new TWEEN.Group();
 
         // this._PlacePiece(this.currPiece, 0, 22);
 
@@ -122,6 +124,7 @@ class Board
         // this.pieceSpeed = 0;
 
         this.destroyTweenGroup.update();
+        this.fallTweenGroup   .update();
 
         // State : Playing
         if(this.currState == BOARD_STATE_PLAYING) {
@@ -289,13 +292,14 @@ class Board
 
         for(let i = 0; i < this.fallInfo.allFallingBlocks.length; ++i) {
             let block = this.fallInfo.allFallingBlocks[i];
-            let coord = this.fallInfo.allTargetCoords[i];
+            let coord = this.fallInfo.allTargetCoords [i];
 
-            this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
-            this._SetBlockAt(block, coord.x, coord.y);
+            this._CreateFallBlockAnimation(block, coord);
         }
 
-        this._ChangeState(BOARD_STATE_FALLING_PIECES_FINISHED);
+        this.fallTweenGroup.onComplete(()=>{
+            this._ChangeState(BOARD_STATE_FALLING_PIECES_FINISHED);
+        });
     } // _FallBlocks
 
 
@@ -372,6 +376,25 @@ class Board
             })
             .start();
     } // _CreateDestroyBlockAnimation
+
+    //--------------------------------------------------------------------------
+    _CreateFallBlockAnimation(block, targetCoord)
+    {
+        let position = Copy_Point(block.position);
+        let target   = Create_Point(position.x, targetCoord.y * this.blockSize.y);
+
+        let tween = new TWEEN.Tween(position, this.fallTweenGroup)
+            .to(target, BOARD_FALL_PIECES_TWEEN_TIME_MS)
+            .onUpdate(()=>{
+                block.x = position.x;
+                block.y = position.y;
+            })
+            .onComplete(()=>{
+               this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
+               this._SetBlockAt(block, targetCoord.x, targetCoord.y);
+            })
+            .start();
+    } // _CreateFallBlockAnimation
 
 
     //--------------------------------------------------------------------------
