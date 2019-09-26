@@ -24,7 +24,7 @@ const BOARD_FIELD_COLUMNS = 8;
 const BOARD_FIELD_ROWS    = 22;
 const BLOCK_SIZE = 32
 // Tweens
-const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 500;
+const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 1500;
 const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 500;
 // State: Playing / Game Over
 BOARD_STATE_PLAYING                    = "BOARD_STATE_PLAYING";
@@ -110,7 +110,7 @@ class Board
         // }
         // this.pieceSpeed = 0;
 
-        this.destroyTweenGroup.update();
+
         this.fallTweenGroup   .update();
 
         // State : Playing / Game Over
@@ -155,18 +155,26 @@ class Board
         //
         // State : Destroying Pieces
         else if(this.currState == BOARD_STATE_DESTROYING_PIECES) {
-
+            const done = (this.destroyTweenGroup.update() == false);
+            if(done) {
+                this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
+            }
         }
         else if(this.currState == BOARD_STATE_DESTROYING_PIECES_FINISHED) {
+            this._ChangeState(BOARD_STATE_FINDING_FALL);
         }
 
         //
         // State : Find Falling Pieces
         else if(this.currState == BOARD_STATE_FINDING_FALL) {
-
+            this._FindBlocksToFall();
         }
         else if(this.currState == BOARD_STATE_FINDING_FALL_FINISHED) {
-
+            if(this.fallInfo.hasBlocksToFall) {
+                // this._FallBlocks();
+            } else {
+                this._ChangeState(BOARD_STATE_GENERATING_PIECE);
+            }
         }
 
         //
@@ -298,20 +306,25 @@ class Board
     //--------------------------------------------------------------------------
     _DestroyBlocks()
     {
-        // if(!this.matchInfo.hasMatches) {
-        //     this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
-        //     return;
-        // }
+        this._ChangeState(BOARD_STATE_DESTROYING_PIECES);
 
-        // for(let i = 0; i < this.matchInfo.allMatchedBlocks.length; ++i) {
-        //     let block = this.matchInfo.allMatchedBlocks[i];
-        //     this._CreateDestroyBlockAnimation(block);
-        // }
+        if(!this.matchInfo.hasMatches) {
+            this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
+            return;
+        }
 
-        // this.destroyTweenGroup.onComplete(()=>{
-        //     this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
-        // });
+        for(let i = 0; i < this.matchInfo.allMatchedBlocks.length; ++i) {
+            let block = this.matchInfo.allMatchedBlocks[i];
+            this._CreateDestroyBlockAnimation(block);
+        }
     } // _DestroyBlocks
+
+    //--------------------------------------------------------------------------
+    _FindBlocksToFall()
+    {
+        this.fallInfo.FindAllBlocksToFall(this.matchInfo.allMatchedBlocks);
+        this._ChangeState(BOARD_STATE_FINDING_FALL_FINISHED);
+    }
 
     //--------------------------------------------------------------------------
     _FallBlocks()
