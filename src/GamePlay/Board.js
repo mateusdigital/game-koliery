@@ -26,17 +26,28 @@ const BLOCK_SIZE = 32
 // Tweens
 const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 500;
 const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 500;
-// States : Playing
-const BOARD_STATE_PLAYING = "BOARD_STATE_PLAYING";
-// States : Generating Piece
-const BOARD_STATE_GENERATING_PIECE          = "BOARD_STATE_GENERATING_PIECE";
-const BOARD_STATE_GENERATING_PIECE_FINISHED = "BOARD_STATE_GENERATING_PIECE_FINISHED";
-// States : Destroying Blocks.
-const BOARD_STATE_DESTROYING_PIECES          = "BOARD_STATE_DESTROYING_PIECES";
-const BOARD_STATE_DESTROYING_PIECES_FINISHED = "BOARD_STATE_DESTROYING_PIECES_FINISHED";
-// States : Falling Blocks.
-const BOARD_STATE_FALLING_PIECES          = "BOARD_STATE_FALLING_PIECES";
-const BOARD_STATE_FALLING_PIECES_FINISHED = "BOARD_STATE_FALLING_PIECES_FINISHED";
+// State: Playing / Game Over
+BOARD_STATE_PLAYING                    = "BOARD_STATE_PLAYING";
+BOARD_STATE_GAME_OVER                  = "BOARD_STATE_GAME_OVER";
+// State: Generating Piece
+BOARD_STATE_GENERATING_PIECE           = "BOARD_STATE_GENERATING_PIECE";
+BOARD_STATE_GENERATING_PIECE_FINISHED  = "BOARD_STATE_GENERATING_PIECE_FINISHED";
+// State: Placing Piece
+BOARD_STATE_PLACING_PIECE              = "BOARD_STATE_PLACING_PIECE";
+BOARD_STATE_PLACING_PIECE_FINISHED     = "BOARD_STATE_PLACING_PIECE_FINISHED";
+// State: Finding Matches
+BOARD_STATE_FINDING_MATCHES            = "BOARD_STATE_FINDING_MATCHES";
+BOARD_STATE_FINDING_MATCHES_FINISHED   = "BOARD_STATE_FINDING_MATCHES_FINISHED";
+// State: Destroying Pieces
+BOARD_STATE_DESTROYING_PIECES          = "BOARD_STATE_DESTROYING_PIECES";
+BOARD_STATE_DESTROYING_PIECES_FINISHED = "BOARD_STATE_DESTROYING_PIECES_FINISHED";
+// State: Finding Fall
+BOARD_STATE_FINDING_FALL               = "BOARD_STATE_FINDING_FALL";
+BOARD_STATE_FINDING_FALL_FINISHED      = "BOARD_STATE_FINDING_FALL_FINISHED";
+// State: Falling Pieces
+BOARD_STATE_FALLING_PIECES             = "BOARD_STATE_FALLING_PIECES";
+BOARD_STATE_FALLING_PIECES_FINISHED    = "BOARD_STATE_FALLING_PIECES_FINISHED";
+
 
 //------------------------------------------------------------------------------
 class Board
@@ -72,40 +83,13 @@ class Board
         this.fallInfo  = new FallInfo (this);
 
         // Piece.
-        this.currPiece = null;
-        this.nextPiece = null;
-        this._GeneratePiece();
+        this.currPiece  = null;
+        this.nextPiece  = null;
         this.pieceSpeed = 100;
 
         // Tweens.
         this.destroyTweenGroup = new TWEEN.Group();
         this.fallTweenGroup    = new TWEEN.Group();
-
-        // this._PlacePiece(this.currPiece, 0, 22);
-
-        // this._GeneratePiece();
-        // this.currPiece.Rotate();
-        // this._PlacePiece(this.currPiece, 1, 22);
-
-        // this._GeneratePiece();
-        // this.currPiece.Rotate();
-        // this._PlacePiece(this.currPiece, 2, 22);
-
-        // let coord = Create_Point(2, 21);
-        // this.matchInfo.FindMatches(coord);
-
-        // if(this.matchInfo.hasMatches) {
-        //     this._ChangeState(BOARD_STATE_DESTROYING_PIECES);
-        //     this._DestroyBlocks();
-        // }
-
-
-
-
-
-        // Drawing.
-        // this.width  = (BOARD_FIELD_COLUMNS * this.blockSize.x);
-        // this.height = (BOARD_FIELD_ROWS    * this.blockSize.y)
     } // ctor
 
 
@@ -126,29 +110,60 @@ class Board
         this.destroyTweenGroup.update();
         this.fallTweenGroup   .update();
 
-        // State : Playing
+        // State : Playing / Game Over
         if(this.currState == BOARD_STATE_PLAYING) {
-            this._UpdateState_Playing(dt);
+
         }
+        else if(this.currState = BOARD_STATE_GAME_OVER) {
+
+        }
+
+        //
         // State : Generating Piece
+        else if(this.currState == BOARD_STATE_GENERATING_PIECE) {
+        }
         else if(this.currState == BOARD_STATE_GENERATING_PIECE_FINISHED) {
-            this._ChangeState(BOARD_STATE_PLAYING);
         }
+
+        //
+        // State: Placing Piece
+        else if(this.currState == BOARD_STATE_PLACING_PIECE) {
+        }
+        else if(this.currState == BOARD_STATE_PLACING_PIECE_FINISHED) {
+        }
+
+        //
+        // State: Finding Matches
+        else if(this.currState == BOARD_STATE_FINDING_MATCHES) {
+
+        }
+        else if(this.currState == BOARD_STATE_FINDING_MATCHES_FINISHED) {
+
+        }
+
+        //
         // State : Destroying Pieces
-        else if(this.currState == BOARD_STATE_DESTROYING_PIECES_FINISHED) {
-            this.fallInfo.FindAllBlocksToFall(this.matchInfo.allMatchedBlocks);
-            if(this.fallInfo.hasBlocksToFall) {
-                this._ChangeState(BOARD_STATE_FALLING_PIECES);
-                this._FallBlocks();
-            } else {
-                this._ChangeState(BOARD_STATE_GENERATING_PIECE);
-                this._GeneratePiece();
-            }
+        else if(this.currState == BOARD_STATE_DESTROYING_PIECES) {
+
         }
+        else if(this.currState == BOARD_STATE_DESTROYING_PIECES_FINISHED) {
+        }
+
+        //
+        // State : Find Falling Pieces
+        else if(this.currState == BOARD_STATE_FINDING_FALL) {
+
+        }
+        else if(this.currState == BOARD_STATE_FINDING_FALL_FINISHED) {
+
+        }
+
+        //
         // State : Falling Pieces
+        else if(this.currState == BOARD_STATE_FALLING_PIECES) {
+
+        }
         else if(this.currState == BOARD_STATE_FALLING_PIECES_FINISHED) {
-            this._ChangeState(BOARD_STATE_GENERATING_PIECE);
-            this._GeneratePiece();
         }
     } // Update
 
@@ -189,7 +204,7 @@ class Board
         new_coord.y = Math_Int(new_position_y / this.blockSize.y);
 
         if(new_coord.y >= BOARD_FIELD_ROWS ||
-           !this.IsBoardEmptyAt(new_coord.x, new_coord.y) )
+           !this.IsBoardEmptyAt(new_coord.x, new_coord.y))
         {
             this._PlacePiece(this.currPiece, new_coord.x, new_coord.y);
 
@@ -322,7 +337,7 @@ class Board
 
         this.field[indexY][indexX] = null;
 
-        this.ascii();
+        // this.ascii();
     } // _RemoveBlockAt
 
     //--------------------------------------------------------------------------
@@ -339,7 +354,7 @@ class Board
         block.coordInBoard = Create_Point(indexX, indexY);
         this.field[indexY][indexX] = block;
 
-        this.ascii();
+        // this.ascii();
     } // _SetBlockAt
 
 
