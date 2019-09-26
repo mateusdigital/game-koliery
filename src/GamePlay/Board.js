@@ -84,9 +84,10 @@ class Board
         this.fallInfo  = new FallInfo (this);
 
         // Piece.
-        this.currPiece  = null;
-        this.nextPiece  = null;
-        this.pieceSpeed = 100;
+        this.currPiece           = null;
+        this.currPiecePlaceCoord = null;
+        this.pieceSpeed          = 100;
+
 
         // Tweens.
         this.destroyTweenGroup = new TWEEN.Group();
@@ -113,7 +114,7 @@ class Board
 
         // State : Playing / Game Over
         if(this.currState == BOARD_STATE_PLAYING) {
-
+            this._UpdateState_Playing(dt);
         }
         else if(this.currState == BOARD_STATE_GAME_OVER) {
 
@@ -209,6 +210,8 @@ class Board
         if(new_coord.y >= BOARD_FIELD_ROWS ||
            !this.IsBoardEmptyAt(new_coord.x, new_coord.y))
         {
+            this.currPiecePlaceCoord = new_coord;
+            this._ChangeState(BOARD_STATE_PLACING_PIECE);
         } else {
             this.currPiece.x = (new_coord.x * this.blockSize.x);
             this.currPiece.SetBottomPositionY(new_position_y);
