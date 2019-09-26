@@ -52,8 +52,12 @@ class Block
         this.objectId     = S_BLOCK_OBJECT_ID++;
         this.coordInBoard = Create_Point(0, 0);
         this.colorIndex   = colorIndex;
+        this.isDestroying = false;
+        this.destroyValue = 0;
+
         // Drawing.
-        this.graphics = this._DrawGraphics();
+        this.graphics = new PIXI.Graphics();
+        this._DrawGraphics();
         this.addChild(this.graphics);
 
         // Debug.
@@ -70,20 +74,35 @@ class Block
     } // SetCoordInBoard
 
     //--------------------------------------------------------------------------
+    StartDestroyAnimation()
+    {
+        this.isDestroying = true;
+        this.destroyValue = 0;
+    } // StartDestroyAnimation
+
+    //--------------------------------------------------------------------------
+    SetDestroyAnimationValue(value)
+    {
+        this.destroyValue = value;
+        this._DrawGraphics();
+    } // SetDestroyAnimationValue
+
+    //--------------------------------------------------------------------------
     _DrawGraphics()
     {
-        const size = this.boardRef.blockSize;
-        let graphics = new PIXI.Graphics();
-
+        const size  = this.boardRef.blockSize;
         const color = gPalette.GetBlockColor(this.colorIndex);
-        graphics.beginFill(color, 1);
-        graphics.drawRoundedRect(0, 0, size.x, size.y, 4);
-        graphics.endFill();
 
-        // this.width  = size.x;
-        // this.height = size.y;
+        this.graphics.clear();
 
-        return graphics;
+        const x = 0;
+        const y = size.y * (this.destroyValue / 2);
+        const w = size.x;
+        const h = size.y - (y * 2);
+
+        this.graphics.beginFill(color, 1);
+            this.graphics.drawRoundedRect(x, y, w, h, 4 * (1 - this.destroyValue));
+        this.graphics.endFill();
     }
 }; // class Block
 
