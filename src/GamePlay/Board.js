@@ -88,6 +88,7 @@ class Board
         this.currPiecePlaceCoord = null;
         this.pieceSpeed          = 100;
 
+        this.blocksToTryFindMatch = null;
 
         // Tweens.
         this.destroyTweenGroup = new TWEEN.Group();
@@ -132,8 +133,10 @@ class Board
         //
         // State: Placing Piece
         else if(this.currState == BOARD_STATE_PLACING_PIECE) {
+            this._PlacePiece();
         }
         else if(this.currState == BOARD_STATE_PLACING_PIECE_FINISHED) {
+            this._ChangeState(BOARD_STATE_FINDING_MATCHES);
         }
 
         //
@@ -261,13 +264,24 @@ class Board
     } // _GeneratePiece
 
     //--------------------------------------------------------------------------
-    _PlacePiece(piece, indexX, indexY)
+    _PlacePiece()
     {
+        const index_x = this.currPiecePlaceCoord.x;
+        const index_y = this.currPiecePlaceCoord.y;
+
+        this.blocksToTryFindMatch = [];
         for(let i = 0; i < PIECE_BLOCKS_COUNT; ++i) {
-            let block = piece.blocks[i];
-            this._SetBlockAt(block, indexX, (indexY - i -1));
+            let block = this.currPiece.blocks[i];
+
+            this.blocksToTryFindMatch.push(block);
+            this._SetBlockAt(block, index_x, (index_y - i -1));
         }
-        this.currPiece = null;
+
+        // Reset the state vars...
+        this.currPiece           = null;
+        this.currPiecePlaceCoord = null
+
+        this._ChangeState(BOARD_STATE_PLACING_PIECE_FINISHED);
     } // _PlacePiece
 
     //--------------------------------------------------------------------------
