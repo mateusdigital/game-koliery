@@ -110,9 +110,6 @@ class Board
         // }
         // this.pieceSpeed = 0;
 
-
-        this.fallTweenGroup   .update();
-
         // State : Playing / Game Over
         if(this.currState == BOARD_STATE_PLAYING) {
             this._UpdateState_Playing(dt);
@@ -171,7 +168,7 @@ class Board
         }
         else if(this.currState == BOARD_STATE_FINDING_FALL_FINISHED) {
             if(this.fallInfo.hasBlocksToFall) {
-                // this._FallBlocks();
+                this._FallBlocks();
             } else {
                 this._ChangeState(BOARD_STATE_GENERATING_PIECE);
             }
@@ -180,9 +177,14 @@ class Board
         //
         // State : Falling Pieces
         else if(this.currState == BOARD_STATE_FALLING_PIECES) {
-
+            const done = (this.fallTweenGroup.update() == false);
+            if(done) {
+                this._ChangeState(BOARD_STATE_FALLING_PIECES_FINISHED);
+            }
         }
         else if(this.currState == BOARD_STATE_FALLING_PIECES_FINISHED) {
+            this.blocksToTryFindMatch = this.fallInfo.allFallingBlocks;
+            this._ChangeState(BOARD_STATE_FINDING_MATCHES);
         }
     } // Update
 
@@ -329,7 +331,9 @@ class Board
     //--------------------------------------------------------------------------
     _FallBlocks()
     {
-        if(!this.fallInfo.allFallingBlocks) {
+        this._ChangeState(BOARD_STATE_FALLING_PIECES);
+
+        if(!this.fallInfo.hasBlocksToFall) {
             this._ChangeState(BOARD_STATE_FALLING_PIECES_FINISHED);
             return;
         }
@@ -340,10 +344,6 @@ class Board
 
             this._CreateFallBlockAnimation(block, coord);
         }
-
-        this.fallTweenGroup.onComplete(()=>{
-            this._ChangeState(BOARD_STATE_FALLING_PIECES_FINISHED);
-        });
     } // _FallBlocks
 
 
