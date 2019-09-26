@@ -72,7 +72,8 @@ class Board
         // iVars
         // State
         this.prevState = null;
-        this.currState = BOARD_STATE_PLAYING;
+        this.currState = null;
+        this._ChangeState(BOARD_STATE_GENERATING_PIECE);
 
         // Field.
         this.field     = Array_Create2D(BOARD_FIELD_ROWS, BOARD_FIELD_COLUMNS);
@@ -114,15 +115,17 @@ class Board
         if(this.currState == BOARD_STATE_PLAYING) {
 
         }
-        else if(this.currState = BOARD_STATE_GAME_OVER) {
+        else if(this.currState == BOARD_STATE_GAME_OVER) {
 
         }
 
         //
         // State : Generating Piece
         else if(this.currState == BOARD_STATE_GENERATING_PIECE) {
+            this._GeneratePiece();
         }
         else if(this.currState == BOARD_STATE_GENERATING_PIECE_FINISHED) {
+            this._ChangeState(BOARD_STATE_PLAYING);
         }
 
         //
@@ -206,21 +209,6 @@ class Board
         if(new_coord.y >= BOARD_FIELD_ROWS ||
            !this.IsBoardEmptyAt(new_coord.x, new_coord.y))
         {
-            this._PlacePiece(this.currPiece, new_coord.x, new_coord.y);
-
-            new_coord.y -= 1;
-            this.matchInfo.FindMatches(new_coord);
-
-            if(this.matchInfo.hasMatches) {
-                this._ChangeState(BOARD_STATE_DESTROYING_PIECES);
-                this._DestroyBlocks();
-            } else if(this._CheckGameOver()) {
-                this._ChangeState(BOARD_STATE_GAME_OVER);
-                // @todo(stdmatt): ????
-            } else {
-                this._ChangeState(BOARD_STATE_GENERATING_PIECE);
-                this._GeneratePiece();
-            }
         } else {
             this.currPiece.x = (new_coord.x * this.blockSize.x);
             this.currPiece.SetBottomPositionY(new_position_y);
@@ -370,6 +358,8 @@ class Board
         // debugger;
         this.prevState = this.currState;
         this.currState = newState;
+
+        console.log("[STATE] ", this.prevState, " -> ", this.currState);
     } // _ChangeState
 
 
