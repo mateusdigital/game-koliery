@@ -23,6 +23,8 @@
 const BOARD_FIELD_COLUMNS = 8;
 const BOARD_FIELD_ROWS    = 22;
 const BLOCK_SIZE = 32
+// Tweens
+const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 500;
 // States : Playing
 const BOARD_STATE_PLAYING = "BOARD_STATE_PLAYING";
 // States : Generating Piece
@@ -72,6 +74,11 @@ class Board
         this.currPiece = null;
         this.nextPiece = null;
         this._GeneratePiece();
+        this.pieceSpeed = 100;
+
+        // Tweens.
+        this.destroyTweenGroup = new TWEEN.Group();
+
         // this._PlacePiece(this.currPiece, 0, 22);
 
         // this._GeneratePiece();
@@ -89,7 +96,7 @@ class Board
         //     this._ChangeState(BOARD_STATE_DESTROYING_PIECES);
         //     this._DestroyBlocks();
         // }
-        this.pieceSpeed = 220;
+
 
 
 
@@ -104,8 +111,17 @@ class Board
     Update(dt)
     {
         if(IsKeyDown(KEY_ENTER)) {
-            debugger;
+            this.pieceSpeed = 900;
+        } else {
+            this.pieceSpeed = 100;
         }
+
+        // if(IsKeyPress(KEY_SPACE)) {
+        //     this._CreateDestroyBlockAnimation(this.currPiece.blocks[0]);
+        // }
+        // this.pieceSpeed = 0;
+
+        this.destroyTweenGroup.update();
 
         // State : Playing
         if(this.currState == BOARD_STATE_PLAYING) {
@@ -255,10 +271,12 @@ class Board
 
         for(let i = 0; i < this.matchInfo.allMatchedBlocks.length; ++i) {
             let block = this.matchInfo.allMatchedBlocks[i];
-            this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
+            this._CreateDestroyBlockAnimation(block);
         }
 
-        this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
+        this.destroyTweenGroup.onComplete(()=>{
+            this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
+        });
     } // _DestroyBlocks
 
     //--------------------------------------------------------------------------
@@ -334,6 +352,27 @@ class Board
         this.prevState = this.currState;
         this.currState = newState;
     } // _ChangeState
+
+
+    //--------------------------------------------------------------------------
+    _CreateDestroyBlockAnimation(block)
+    {
+        let curr = {value: 0};
+        let end  = {value: 1};
+
+        block.StartDestroyAnimation();
+        let tween = new TWEEN.Tween(curr, this.destroyTweenGroup)
+            .to(end, BOARD_DESTROY_PIECES_TWEEN_TIME_MS)
+            .onUpdate(()=>{
+                block.SetDestroyAnimationValue(curr.value);
+            })
+            .onComplete(()=>{
+                // @XXX(stdmatt): Destroy piece....
+                this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
+            })
+            .start();
+    } // _CreateDestroyBlockAnimation
+
 
     //--------------------------------------------------------------------------
     ascii()
