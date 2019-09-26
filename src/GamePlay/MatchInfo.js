@@ -24,14 +24,13 @@ class MatchInfo
     } // Reset
 
     //--------------------------------------------------------------------------
-    FindMatches(startCoord)
+    FindMatches(blocksToCheck)
     {
         this.Reset();
-        for(let i = 0; i < PIECE_BLOCKS_COUNT; ++i) {
-            let block = this.boardRef.GetBlockAt(startCoord.x, startCoord.y - i);
+        for(let i = 0; i < blocksToCheck.length; ++i) {
+            let block = blocksToCheck[i];
             this._CheckMatches(block);
         }
-
     } // FindMatches
 
     //--------------------------------------------------------------------------

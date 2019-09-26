@@ -291,26 +291,26 @@ class Board
     //--------------------------------------------------------------------------
     _FindMatches()
     {
-        // this.matchInfo.FindMatches(this.blocksToTryFindMatch);
+        this.matchInfo.FindMatches(this.blocksToTryFindMatch);
         this._ChangeState(BOARD_STATE_FINDING_MATCHES_FINISHED);
     } // _FindMatches
 
     //--------------------------------------------------------------------------
     _DestroyBlocks()
     {
-        if(!this.matchInfo.hasMatches) {
-            this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
-            return;
-        }
+        // if(!this.matchInfo.hasMatches) {
+        //     this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
+        //     return;
+        // }
 
-        for(let i = 0; i < this.matchInfo.allMatchedBlocks.length; ++i) {
-            let block = this.matchInfo.allMatchedBlocks[i];
-            this._CreateDestroyBlockAnimation(block);
-        }
+        // for(let i = 0; i < this.matchInfo.allMatchedBlocks.length; ++i) {
+        //     let block = this.matchInfo.allMatchedBlocks[i];
+        //     this._CreateDestroyBlockAnimation(block);
+        // }
 
-        this.destroyTweenGroup.onComplete(()=>{
-            this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
-        });
+        // this.destroyTweenGroup.onComplete(()=>{
+        //     this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
+        // });
     } // _DestroyBlocks
 
     //--------------------------------------------------------------------------
