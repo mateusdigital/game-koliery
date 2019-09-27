@@ -22,7 +22,7 @@
 //------------------------------------------------------------------------------
 const BOARD_FIELD_COLUMNS = 8;
 const BOARD_FIELD_ROWS    = 22;
-const BLOCK_SIZE = 32
+const BLOCK_SIZE          = 32
 // Tweens
 const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 1500;
 const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 500;

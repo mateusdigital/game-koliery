@@ -16,6 +16,9 @@
 //----------------------------------------------------------------------------//
 
 
+const GAME_DESIGN_WIDTH  = 700;
+const GAME_DESIGN_HEIGHT = 600;
+
 //----------------------------------------------------------------------------//
 // Globals                                                                    //
 //----------------------------------------------------------------------------//
@@ -26,6 +29,7 @@ let gPalette     = null;
 // Pixi aliases
 let gPixiLoader    = null;
 let gPixiLoaderRes = null;
+
 
 //------------------------------------------------------------------------------
 function PreInit()
@@ -44,17 +48,23 @@ function PreInit()
 }
 
 //------------------------------------------------------------------------------
-function Preload()
+async function Preload()
 {
+    await LoadFont(
+        "Commodore 64 Rounded",
+        "./res/fonts/Commodore64Rounded.woff"
+    );
+
     gPixiLoader.add([
-        "res/textures/pieces/1.png",
-        "res/textures/pieces/2.png",
-        "res/textures/pieces/3.png",
-        "res/textures/pieces/4.png",
-        "res/textures/pieces/5.png",
+        "res/textures/multi-color-raster.png",
+        "res/textures/mask.png"
     ]).load(Setup);
 }
+
+
 let board = null;
+let gameHud = null;
+let starfield = null;
 
 //------------------------------------------------------------------------------
 function Setup()
@@ -69,23 +79,36 @@ function Setup()
     //
     gPalette = new Palette();
 
-
-
     let screen_size = Get_Screen_Size();
+
+    // Board
     board = new Board();
+    board.scale.set(0.7);
     board.x = screen_size.x / 2 - board.width / 2
-    board.y = screen_size.y / 2 - board.height / 2;
-    // board.x = screen_size.x / 2 - board.width / 2;
+    board.y = screen_size.y - board.height;
+
+    // Game Hud
+    gameHud = new GameHud();
+
+    // Star field
+    starfield = new Starfield(new PIXI.Rectangle(
+        0,
+        gameHud.y + gameHud.height,
+        screen_size.x,
+        screen_size.y - gameHud.y + gameHud.height
+    ));
+
+    gApp.stage.addChild(gameHud);
+    gApp.stage.addChild(starfield);
     gApp.stage.addChild(board);
-
-
 }
 
 
 //------------------------------------------------------------------------------
 function GameLoop(delta)
 {
-    board.Update(delta);
+    // board.Update(delta);
+    starfield.Update(delta);
     Update_Input();
     // gLevel.update(delta);
 }
@@ -96,6 +119,9 @@ function GameLoop(delta)
 //------------------------------------------------------------------------------
 function MouseMove(e)
 {
+    const pos = e.data.getLocalPosition(gApp.stage);
+    // gameHud.x = pos.x;
+    // gameHud.y = pos.y;
 }
 
 //------------------------------------------------------------------------------
