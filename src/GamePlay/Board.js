@@ -20,36 +20,37 @@
 // Board                                                                      //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const BOARD_FIELD_COLUMNS   = 8;
-const BOARD_FIELD_ROWS      = 21;
-const BLOCK_SIZE            = 27
-const BLOCK_SPEED_DROP_FAST = 900;
+const BOARD_FIELD_COLUMNS     = 8;
+const BOARD_FIELD_ROWS        = 21;
+const BLOCK_SIZE              = 27
+const BLOCK_TIME_TO_MOVE_FAST = 0.025;
+const BLOCK_MOVE_SUBSTEPS     = 2;
 // Tweens
 const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 500;
 const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 500;
 const BOARD_DESTROY_EASING               = TWEEN.Easing.Circular.In
 const BOARD_FALL_EASING                  = TWEEN.Easing.Back.Out
 // State: Playing / Game Over
-BOARD_STATE_PLAYING                    = "BOARD_STATE_PLAYING";
-BOARD_STATE_GAME_OVER                  = "BOARD_STATE_GAME_OVER";
+const BOARD_STATE_PLAYING                    = "BOARD_STATE_PLAYING";
+const BOARD_STATE_GAME_OVER                  = "BOARD_STATE_GAME_OVER";
 // State: Generating Piece
-BOARD_STATE_GENERATING_PIECE           = "BOARD_STATE_GENERATING_PIECE";
-BOARD_STATE_GENERATING_PIECE_FINISHED  = "BOARD_STATE_GENERATING_PIECE_FINISHED";
+const BOARD_STATE_GENERATING_PIECE           = "BOARD_STATE_GENERATING_PIECE";
+const BOARD_STATE_GENERATING_PIECE_FINISHED  = "BOARD_STATE_GENERATING_PIECE_FINISHED";
 // State: Placing Piece
-BOARD_STATE_PLACING_PIECE              = "BOARD_STATE_PLACING_PIECE";
-BOARD_STATE_PLACING_PIECE_FINISHED     = "BOARD_STATE_PLACING_PIECE_FINISHED";
+const BOARD_STATE_PLACING_PIECE              = "BOARD_STATE_PLACING_PIECE";
+const BOARD_STATE_PLACING_PIECE_FINISHED     = "BOARD_STATE_PLACING_PIECE_FINISHED";
 // State: Finding Matches
-BOARD_STATE_FINDING_MATCHES            = "BOARD_STATE_FINDING_MATCHES";
-BOARD_STATE_FINDING_MATCHES_FINISHED   = "BOARD_STATE_FINDING_MATCHES_FINISHED";
+const BOARD_STATE_FINDING_MATCHES            = "BOARD_STATE_FINDING_MATCHES";
+const BOARD_STATE_FINDING_MATCHES_FINISHED   = "BOARD_STATE_FINDING_MATCHES_FINISHED";
 // State: Destroying Pieces
-BOARD_STATE_DESTROYING_PIECES          = "BOARD_STATE_DESTROYING_PIECES";
-BOARD_STATE_DESTROYING_PIECES_FINISHED = "BOARD_STATE_DESTROYING_PIECES_FINISHED";
+const BOARD_STATE_DESTROYING_PIECES          = "BOARD_STATE_DESTROYING_PIECES";
+const BOARD_STATE_DESTROYING_PIECES_FINISHED = "BOARD_STATE_DESTROYING_PIECES_FINISHED";
 // State: Finding Fall
-BOARD_STATE_FINDING_FALL               = "BOARD_STATE_FINDING_FALL";
-BOARD_STATE_FINDING_FALL_FINISHED      = "BOARD_STATE_FINDING_FALL_FINISHED";
+const BOARD_STATE_FINDING_FALL               = "BOARD_STATE_FINDING_FALL";
+const BOARD_STATE_FINDING_FALL_FINISHED      = "BOARD_STATE_FINDING_FALL_FINISHED";
 // State: Falling Pieces
-BOARD_STATE_FALLING_PIECES             = "BOARD_STATE_FALLING_PIECES";
-BOARD_STATE_FALLING_PIECES_FINISHED    = "BOARD_STATE_FALLING_PIECES_FINISHED";
+const BOARD_STATE_FALLING_PIECES             = "BOARD_STATE_FALLING_PIECES";
+const BOARD_STATE_FALLING_PIECES_FINISHED    = "BOARD_STATE_FALLING_PIECES_FINISHED";
 
 
 //------------------------------------------------------------------------------
@@ -73,15 +74,16 @@ class Board
         this.blockSize = Create_Point(BLOCK_SIZE, BLOCK_SIZE);
 
         // Infos.
-        this.matchInfo = new MatchInfo(this);
-        this.fallInfo  = new FallInfo (this);
+        this.matchInfo            = new MatchInfo(this);
+        this.fallInfo             = new FallInfo (this);
+        this.blocksToTryFindMatch = null;
 
         // Piece.
         this.currPiece           = null;
         this.currPiecePlaceCoord = null;
-        this.pieceSpeed          = 50;
-
-        this.blocksToTryFindMatch = null;
+        this.currTimeToMove      = 0;
+        this.maxTimeToMove       = 0.5;
+        this.movingFast          = false;
 
         // Tweens.
         this.destroyTweenGroup = new TWEEN.Group();
@@ -173,9 +175,11 @@ class Board
     //--------------------------------------------------------------------------
     _UpdateState_Playing(dt)
     {
-        let curr_speed = this.pieceSpeed;
-        if(IsKeyDown(KEY_SPACE)) {
-            curr_speed = BLOCK_SPEED_DROP_FAST;
+        if(IsKeyDown(KEY_SPACE) && !this.movingFast) {
+            this.currTimeToMove = 0;
+            this.movingFast     = true;
+        } else if(IsKeyUp(KEY_SPACE) && this.movingFast) {
+            this.movingFast = false;
         }
 
         this.currPiece.Update(dt);
@@ -208,8 +212,17 @@ class Board
         // Try to move vertically.
         //   Vertical movement is "pixel" based - So we need to move the piece
         //   by that amount of pixels and check if the resulting coord is valid.
-        let new_position_y = this.currPiece.GetBottomPositionY() + (curr_speed * dt);
-        new_coord.y = Math_Int(new_position_y / this.blockSize.y);
+        let new_position_y = this.currPiece.GetBottomPositionY();
+
+        this.currTimeToMove -= dt;
+        if(this.currTimeToMove <= 0) {
+            this.currTimeToMove += (this.movingFast)
+                ? BLOCK_TIME_TO_MOVE_FAST
+                : this.maxTimeToMove;
+
+            new_position_y += (BLOCK_SIZE / BLOCK_MOVE_SUBSTEPS);
+            new_coord.y = Math_Int(new_position_y / this.blockSize.y);
+        }
 
         if(new_coord.y >= BOARD_FIELD_ROWS ||
            !this.IsBoardEmptyAt(new_coord.x, new_coord.y))
