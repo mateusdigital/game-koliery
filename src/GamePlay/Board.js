@@ -20,12 +20,15 @@
 // Board                                                                      //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const BOARD_FIELD_COLUMNS = 8;
-const BOARD_FIELD_ROWS    = 21;
-const BLOCK_SIZE          = 27
+const BOARD_FIELD_COLUMNS   = 8;
+const BOARD_FIELD_ROWS      = 21;
+const BLOCK_SIZE            = 27
+const BLOCK_SPEED_DROP_FAST = 900;
 // Tweens
-const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 1500;
+const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 500;
 const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 500;
+const BOARD_DESTROY_EASING               = TWEEN.Easing.Circular.In
+const BOARD_FALL_EASING                  = TWEEN.Easing.Back.Out
 // State: Playing / Game Over
 BOARD_STATE_PLAYING                    = "BOARD_STATE_PLAYING";
 BOARD_STATE_GAME_OVER                  = "BOARD_STATE_GAME_OVER";
@@ -58,16 +61,6 @@ class Board
     {
         super();
 
-        const screen_size = Get_Screen_Size();
-        // var bg = new PIXI.Sprite(PIXI.Texture.WHITE);
-        // bg.tint = 0xff00FF;
-        // bg.alpha = 0.4;
-        // bg.x = 0;
-        // bg.y = 0;
-        // bg.width  = BLOCK_SIZE * BOARD_FIELD_COLUMNS;
-        // bg.height = BLOCK_SIZE * BOARD_FIELD_ROWS;
-        // this.addChild(bg);
-
         //
         // iVars
         // State
@@ -86,7 +79,7 @@ class Board
         // Piece.
         this.currPiece           = null;
         this.currPiecePlaceCoord = null;
-        this.pieceSpeed          = 100;
+        this.pieceSpeed          = 50;
 
         this.blocksToTryFindMatch = null;
 
@@ -99,17 +92,6 @@ class Board
     //--------------------------------------------------------------------------
     Update(dt)
     {
-        if(IsKeyDown(KEY_ENTER)) {
-            this.pieceSpeed = 900;
-        } else {
-            this.pieceSpeed = 100;
-        }
-
-        // if(IsKeyPress(KEY_SPACE)) {
-        //     this._CreateDestroyBlockAnimation(this.currPiece.blocks[0]);
-        // }
-        // this.pieceSpeed = 0;
-
         // State : Playing / Game Over
         if(this.currState == BOARD_STATE_PLAYING) {
             this._UpdateState_Playing(dt);
@@ -191,8 +173,13 @@ class Board
     //--------------------------------------------------------------------------
     _UpdateState_Playing(dt)
     {
+        let curr_speed = this.pieceSpeed;
+        if(IsKeyDown(KEY_SPACE)) {
+            curr_speed = BLOCK_SPEED_DROP_FAST;
+        }
+
         this.currPiece.Update(dt);
-        if(IsKeyPress(KEY_SPACE)) {
+        if(IsKeyPress(KEY_ARROW_DOWN) || IsKeyPress(KEY_ARROW_UP)) {
             this.currPiece.Rotate();
         }
 
@@ -221,7 +208,7 @@ class Board
         // Try to move vertically.
         //   Vertical movement is "pixel" based - So we need to move the piece
         //   by that amount of pixels and check if the resulting coord is valid.
-        let new_position_y = this.currPiece.GetBottomPositionY() + (this.pieceSpeed * dt);
+        let new_position_y = this.currPiece.GetBottomPositionY() + (curr_speed * dt);
         new_coord.y = Math_Int(new_position_y / this.blockSize.y);
 
         if(new_coord.y >= BOARD_FIELD_ROWS ||
@@ -427,6 +414,7 @@ class Board
                 // @XXX(stdmatt): Destroy piece....
                 this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
             })
+            .easing(BOARD_DESTROY_EASING)
             .start();
     } // _CreateDestroyBlockAnimation
 
@@ -446,7 +434,9 @@ class Board
                this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
                this._SetBlockAt(block, targetCoord.x, targetCoord.y);
             })
+            .easing(BOARD_FALL_EASING)
             .start();
+
     } // _CreateFallBlockAnimation
 
 

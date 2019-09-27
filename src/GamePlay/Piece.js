@@ -94,15 +94,19 @@ class Block
         const color = gPalette.GetBlockColor(this.colorIndex);
 
         this.graphics.clear();
+        const BORDER_SIZE = 1;
+        const x = BORDER_SIZE;
+        const y = size.y * (this.destroyValue / 2) + BORDER_SIZE/2;
+        const w = size.x - BORDER_SIZE;
+        const h = size.y - (y * 2) - BORDER_SIZE;
 
-        const x = 0;
-        const y = size.y * (this.destroyValue / 2);
-        const w = size.x;
-        const h = size.y - (y * 2);
-
+        let a = chroma(color).darken(1).hex().substr(1);
+        let b = parseInt(a, 16);
+        // debugger;
+        this.graphics.lineStyle(BORDER_SIZE * 2, b, 1);
         this.graphics.beginFill(color, 1);
             // this.graphics.drawRoundedRect(x, y, w, h, 4 * (1 - this.destroyValue));
-            this.graphics.drawRect(x +2, y+2, w-2, h-2);
+            this.graphics.drawRect(x, y, w, h);
         this.graphics.endFill();
     }
 }; // class Block

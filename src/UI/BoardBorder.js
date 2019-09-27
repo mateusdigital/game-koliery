@@ -10,8 +10,6 @@ class BoardBorder
         const blocks_x_count = BOARD_FIELD_COLUMNS * 2 + 4;
         const block_size     = BLOCK_SIZE / 2 ;
         const colors         = gPalette.GetBlockColors();
-        // debugger;
-
 
         for(let i = 0; i < blocks_y_count; ++i) {
             let c1 = colors[(i     % colors.length)];
@@ -39,11 +37,6 @@ class BoardBorder
                         block_size
                     );
                 this.graphics.endFill()
-
-                // this.graphics.beginFill(c2);
-                //     this.graphics.drawRect(j *-block_size, block_size * i, block_size, block_size);
-                //     this.graphics.drawRect(board_width + 2 * block_size, block_size * i, block_size, block_size);
-                // this.graphics.endFill()
             }
         }
 
