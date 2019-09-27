@@ -58,16 +58,6 @@ class GameHud
         this.addChild(this.hiScoreText);
         this.addChild(this.marqueeText);
         this.addChild(this.levelText  );
-
-
-        // var bg = new PIXI.Sprite(PIXI.Texture.WHITE);
-        // bg.tint = 0xff00FF;
-        // bg.alpha = 0.2;
-        // bg.x = 0;
-        // bg.y = 0;
-        // bg.width  = this.width;
-        // bg.height = this.height
-        // this.addChild(bg);
     } // ctor
 
 

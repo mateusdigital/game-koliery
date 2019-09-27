@@ -83,11 +83,19 @@ function Update_Input()
     }
 }
 
+//------------------------------------------------------------------------------
 function IsKeyDown(keyCode)
 {
     return Keyboard[keyCode] == true;
 }
 
+
+function IsKeyUp(keyCode)
+{
+    return Keyboard[keyCode] == false;
+}
+
+//------------------------------------------------------------------------------
 function IsKeyPress(keyCode)
 {
     return Keyboard[keyCode] == true && PrevKeyboard[keyCode] == false;
