@@ -15,6 +15,19 @@
 //                                                                            //
 //----------------------------------------------------------------------------//
 
+
+//----------------------------------------------------------------------------//
+// GameHud                                                                    //
+//----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
+const TEXT_GAME_NAME    = "GAME";
+const TEXT_PREFIX_SCORE = "Score:";
+const TEXT_PREFIX_HI    = "Hi   :";
+const TEXT_PREFIX_LEVEL = "Level";
+const TEXT_DIGITS_SCORE = 6;
+const TEXT_DIGITS_LEVEL = 2;
+
+//------------------------------------------------------------------------------
 class GameHud
     extends PIXI.Container
 {
@@ -23,13 +36,14 @@ class GameHud
     {
         super();
 
+        let s = "";
         //
         // iVars
         // Properties.
-        this.scoreText   = this._CreateText("Score:12345");
-        this.hiScoreText = this._CreateText("Hi   :67890");
-        this.marqueeText = this._CreateText("AMAZIGN");
-        this.levelText   = this._CreateText("Level 99");
+        this.scoreText   = this._CreateText(this._BuildString(TEXT_PREFIX_SCORE, TEXT_DIGITS_SCORE, 0));
+        this.hiScoreText = this._CreateText(this._BuildString(TEXT_PREFIX_HI,    TEXT_DIGITS_SCORE, 0));
+        this.marqueeText = this._CreateText(TEXT_GAME_NAME);
+        this.levelText   = this._CreateText(this._BuildString(TEXT_PREFIX_LEVEL, TEXT_DIGITS_LEVEL, 1));
 
         //
         // Initialize.
@@ -60,6 +74,11 @@ class GameHud
         this.addChild(this.levelText  );
     } // ctor
 
+    SetScore(score, hiScore)
+    {
+        this.scoreText  .text = this._BuildString(TEXT_PREFIX_SCORE, TEXT_DIGITS_SCORE, score  );
+        this.hiScoreText.text = this._BuildString(TEXT_PREFIX_HI,    TEXT_DIGITS_SCORE, hiScore);
+    }
 
     //--------------------------------------------------------------------------
     _CreateText(str)
@@ -98,5 +117,16 @@ class GameHud
         console.log(text.height, MASK_HEIGHT_SCALE);
         mask.mask = text;
         this.addChild(mask);
+    }
+
+    //--------------------------------------------------------------------------
+    _BuildString(prefix, digits, value)
+    {
+        const value_str = value.toString();
+        return String_Cat(
+            prefix.toUpperCase(),
+            "0".repeat(digits - value_str.length),
+            value
+        );
     }
 }; // class GameHud

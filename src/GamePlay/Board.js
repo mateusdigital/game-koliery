@@ -25,6 +25,7 @@ const BOARD_FIELD_ROWS        = 21;
 const BLOCK_SIZE              = 27
 const BLOCK_TIME_TO_MOVE_FAST = 0.025;
 const BLOCK_MOVE_SUBSTEPS     = 2;
+const SCORE_VALUE_MOVING_FAST = 1;
 // Tweens
 const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 500;
 const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 500;
@@ -88,6 +89,10 @@ class Board
         // Tweens.
         this.destroyTweenGroup = new TWEEN.Group();
         this.fallTweenGroup    = new TWEEN.Group();
+
+        // Score.
+        this.score   = 0;
+        this.hiScore = 0;
     } // ctor
 
 
@@ -221,7 +226,12 @@ class Board
                 : this.maxTimeToMove;
 
             new_position_y += (BLOCK_SIZE / BLOCK_MOVE_SUBSTEPS);
-            new_coord.y = Math_Int(new_position_y / this.blockSize.y);
+            new_coord.y     = Math_Int(new_position_y / this.blockSize.y);
+
+            if(this.movingFast) {
+                this.score += SCORE_VALUE_MOVING_FAST;
+                gGameHud.SetScore(this.score, 0);
+            }
         }
 
         if(new_coord.y >= BOARD_FIELD_ROWS ||
