@@ -24,7 +24,7 @@
 function Get_Screen_Size()
 {
     // @TODO(stdmatt): cache the values...
-    return Create_Point(gApp.screen.width, gApp.screen.height);
+    return Create_Point(GAME_DESIGN_WIDTH, GAME_DESIGN_HEIGHT);
 }
 
 //------------------------------------------------------------------------------

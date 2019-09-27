@@ -1,3 +1,20 @@
+//----------------------------------------------------------------------------//
+//                       __      __                  __   __                  //
+//               .-----.|  |_.--|  |.--------.---.-.|  |_|  |_                //
+//               |__ --||   _|  _  ||        |  _  ||   _|   _|               //
+//               |_____||____|_____||__|__|__|___._||____|____|               //
+//                                                                            //
+//  File      : GameHud.js                                                    //
+//  Project   : columns                                                       //
+//  Date      : Sep 27, 2019                                                  //
+//  License   : GPLv3                                                         //
+//  Author    : stdmatt <stdmatt@pixelwizards.io>                             //
+//  Copyright : stdmatt - 2019                                                //
+//                                                                            //
+//  Description :                                                             //
+//                                                                            //
+//----------------------------------------------------------------------------//
+
 class GameHud
     extends PIXI.Container
 {
@@ -41,6 +58,16 @@ class GameHud
         this.addChild(this.hiScoreText);
         this.addChild(this.marqueeText);
         this.addChild(this.levelText  );
+
+
+        // var bg = new PIXI.Sprite(PIXI.Texture.WHITE);
+        // bg.tint = 0xff00FF;
+        // bg.alpha = 0.2;
+        // bg.x = 0;
+        // bg.y = 0;
+        // bg.width  = this.width;
+        // bg.height = this.height
+        // this.addChild(bg);
     } // ctor
 
 
@@ -61,6 +88,7 @@ class GameHud
     _ApplyMask(text, color)
     {
         let mask = Create_Sprite("multi-color-raster");
+
         const MASK_COLORS_COUNT = 6;
         const MASK_COLOR_HEIGHT = (mask.height / MASK_COLORS_COUNT);
         const MASK_WIDTH_SCALE  = (text.width  / mask.width);

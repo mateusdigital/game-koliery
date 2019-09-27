@@ -64,6 +64,7 @@ async function Preload()
 
 let board = null;
 let gameHud = null;
+let starfield = null;
 
 //------------------------------------------------------------------------------
 function Setup()
@@ -86,11 +87,20 @@ function Setup()
     board.x = screen_size.x / 2 - board.width / 2
     board.y = screen_size.y - board.height;
 
-    gApp.stage.addChild(board);
-
     // Game Hud
     gameHud = new GameHud();
+
+    // Star field
+    starfield = new Starfield(new PIXI.Rectangle(
+        0,
+        gameHud.y + gameHud.height,
+        screen_size.x,
+        screen_size.y - gameHud.y + gameHud.height
+    ));
+
     gApp.stage.addChild(gameHud);
+    gApp.stage.addChild(starfield);
+    gApp.stage.addChild(board);
 }
 
 
@@ -98,6 +108,7 @@ function Setup()
 function GameLoop(delta)
 {
     // board.Update(delta);
+    starfield.Update(delta);
     Update_Input();
     // gLevel.update(delta);
 }
@@ -109,6 +120,8 @@ function GameLoop(delta)
 function MouseMove(e)
 {
     const pos = e.data.getLocalPosition(gApp.stage);
+    // gameHud.x = pos.x;
+    // gameHud.y = pos.y;
 }
 
 //------------------------------------------------------------------------------
