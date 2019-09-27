@@ -21,8 +21,8 @@
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
 const BOARD_FIELD_COLUMNS = 8;
-const BOARD_FIELD_ROWS    = 22;
-const BLOCK_SIZE          = 32
+const BOARD_FIELD_ROWS    = 21;
+const BLOCK_SIZE          = 27
 // Tweens
 const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 1500;
 const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 500;
@@ -59,14 +59,14 @@ class Board
         super();
 
         const screen_size = Get_Screen_Size();
-        var bg = new PIXI.Sprite(PIXI.Texture.WHITE);
-        bg.tint = 0xff0000;
-        bg.alpha = 0.2;
-        bg.x = 0;
-        bg.y = 0;
-        bg.width  = BLOCK_SIZE * BOARD_FIELD_COLUMNS;
-        bg.height = BLOCK_SIZE * BOARD_FIELD_ROWS;
-        this.addChild(bg);
+        // var bg = new PIXI.Sprite(PIXI.Texture.WHITE);
+        // bg.tint = 0xff00FF;
+        // bg.alpha = 0.4;
+        // bg.x = 0;
+        // bg.y = 0;
+        // bg.width  = BLOCK_SIZE * BOARD_FIELD_COLUMNS;
+        // bg.height = BLOCK_SIZE * BOARD_FIELD_ROWS;
+        // this.addChild(bg);
 
         //
         // iVars

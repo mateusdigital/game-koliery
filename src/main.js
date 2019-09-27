@@ -16,8 +16,13 @@
 //----------------------------------------------------------------------------//
 
 
-const GAME_DESIGN_WIDTH  = 700;
-const GAME_DESIGN_HEIGHT = 600;
+//----------------------------------------------------------------------------//
+// Constants                                                                  //
+//----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
+const GAME_DESIGN_WIDTH  = 500;
+const GAME_DESIGN_HEIGHT = 700;
+
 
 //----------------------------------------------------------------------------//
 // Globals                                                                    //
@@ -26,6 +31,10 @@ const GAME_DESIGN_HEIGHT = 600;
 let gApp         = null;
 let gSpriteSheet = null;
 let gPalette     = null;
+let gBoard       = null;
+let gBoardBorder = null;
+let gGameHud     = null;
+let gStarfield   = null;
 // Pixi aliases
 let gPixiLoader    = null;
 let gPixiLoaderRes = null;
@@ -47,24 +56,25 @@ function PreInit()
     gPixiLoaderRes = PIXI.Loader.shared.resources;
 }
 
+font_names = null;
+gFontIndex = 0;
 //------------------------------------------------------------------------------
 async function Preload()
 {
+
     await LoadFont(
         "Commodore 64 Rounded",
         "./res/fonts/Commodore64Rounded.woff"
     );
 
     gPixiLoader.add([
-        "res/textures/multi-color-raster.png",
-        "res/textures/mask.png"
+        "res/textures/mask_0.png",
+        "res/textures/mask_1.png",
+        "res/textures/mask_2.png",
+        "res/textures/mask_3.png",
     ]).load(Setup);
 }
 
-
-let board = null;
-let gameHud = null;
-let starfield = null;
 
 //------------------------------------------------------------------------------
 function Setup()
@@ -76,39 +86,43 @@ function Setup()
     // Install Game Loop callbacks.
     gApp.ticker.add(delta => GameLoop(gApp.ticker.deltaMS / 1000));
 
+    const screen_size = Get_Screen_Size();
+    const SCREEN_GAP = 10;
+
     //
     gPalette = new Palette();
 
-    let screen_size = Get_Screen_Size();
+    // Game Hud
+    gGameHud = new GameHud();
+    gGameHud.y += SCREEN_GAP;
 
     // Board
-    board = new Board();
-    board.scale.set(0.7);
-    board.x = screen_size.x / 2 - board.width / 2
-    board.y = screen_size.y - board.height;
-
-    // Game Hud
-    gameHud = new GameHud();
+    const GAME_HUD_BOTTOM_Y = (gGameHud.y + gGameHud.height + SCREEN_GAP);
+    gBoard       = new Board();
+    gBoardBorder = new BoardBorder(gBoard);
+    // gBoardBorder.scale.set((screen_size.y - GAME_HUD_BOTTOM_Y) / gBoardBorder.height);
+    gBoardBorder.x = (screen_size.x / 2) - (gBoardBorder.width / 2);
+    gBoardBorder.y = (GAME_HUD_BOTTOM_Y);
 
     // Star field
-    starfield = new Starfield(new PIXI.Rectangle(
+    gStarfield = new Starfield(new PIXI.Rectangle(
         0,
-        gameHud.y + gameHud.height,
+        gGameHud.y + gGameHud.height + SCREEN_GAP,
         screen_size.x,
-        screen_size.y - gameHud.y + gameHud.height
+        screen_size.y - gGameHud.y + gGameHud.height - SCREEN_GAP
     ));
 
-    gApp.stage.addChild(gameHud);
-    gApp.stage.addChild(starfield);
-    gApp.stage.addChild(board);
+    gApp.stage.addChild(gGameHud  );
+    gApp.stage.addChild(gStarfield);
+    gApp.stage.addChild(gBoardBorder);
 }
 
 
 //------------------------------------------------------------------------------
 function GameLoop(delta)
 {
-    // board.Update(delta);
-    starfield.Update(delta);
+    gBoard.Update(delta);
+    gStarfield.Update(delta);
     Update_Input();
     // gLevel.update(delta);
 }
@@ -120,8 +134,10 @@ function GameLoop(delta)
 function MouseMove(e)
 {
     const pos = e.data.getLocalPosition(gApp.stage);
-    // gameHud.x = pos.x;
-    // gameHud.y = pos.y;
+    // gGameHud.x = pos.x;
+    // gGameHud.y = pos.y;
+    gFontIndex = pos.y;
+
 }
 
 //------------------------------------------------------------------------------

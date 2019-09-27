@@ -26,6 +26,11 @@ class Palette
         this._InitializeBlockColors();
     } // ctor
 
+    //--------------------------------------------------------------------------
+    GetBlockColors()
+    {
+        return this.blockColors;
+    }
 
     //--------------------------------------------------------------------------
     GetBlockColor(colorIndex)
@@ -36,10 +41,15 @@ class Palette
     //--------------------------------------------------------------------------
     _InitializeBlockColors()
     {
-        for(let i = 0; i < PALETTE_BLOCK_COLORS_COUNT; ++i) {
-            let color = 0xFFFFFF * Math_Random();
-            this.blockColors.push(color);
-        }
+        this.blockColors = [
+            0x985c23, // brown
+            0xedcf61, // yellow
+            0x4dad86, // green
+            0x283fb1, // dark blue
+            0x8873f4, // light blue
+            0xc56382, // pink
+            0x812a18, // red
+        ];
     }
 
 

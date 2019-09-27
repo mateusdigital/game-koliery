@@ -26,10 +26,10 @@ class GameHud
         //
         // iVars
         // Properties.
-        this.scoreText   = this._CreateText("Score:00000");
-        this.hiScoreText = this._CreateText("Hi   :00000");
-        this.marqueeText = this._CreateText("- acid -");
-        this.levelText   = this._CreateText("Level 01");
+        this.scoreText   = this._CreateText("Score:12345");
+        this.hiScoreText = this._CreateText("Hi   :67890");
+        this.marqueeText = this._CreateText("AMAZIGN");
+        this.levelText   = this._CreateText("Level 99");
 
         //
         // Initialize.
@@ -43,16 +43,16 @@ class GameHud
 
         this.scoreText  .x = TEXT_GAP;
         this.hiScoreText.x = this.scoreText.x;
-        this.hiScoreText.y = this.scoreText.y + this.scoreText.height;
+        this.hiScoreText.y = this.scoreText.y + this.scoreText.height - 5;
 
         this.marqueeText.x = screen_size.x - TEXT_GAP;
         this.levelText  .x = this.marqueeText.x;
-        this.levelText  .y = this.marqueeText.y + this.marqueeText.height;
+        this.levelText  .y = this.hiScoreText.y
 
-        this._ApplyMask(this.scoreText  , 5);
-        this._ApplyMask(this.hiScoreText, 4);
-        this._ApplyMask(this.marqueeText, 3);
-        this._ApplyMask(this.levelText  , 2);
+        this._ApplyMask(this.scoreText  , 0);
+        this._ApplyMask(this.hiScoreText, 1);
+        this._ApplyMask(this.marqueeText, 2);
+        this._ApplyMask(this.levelText  , 3);
 
         this.addChild(this.scoreText  );
         this.addChild(this.hiScoreText);
@@ -75,31 +75,37 @@ class GameHud
     _CreateText(str)
     {
         const style = new PIXI.TextStyle({
-            fontFamily : 'Commodore 64 Rounded',
-            fontSize   : 42,
-            fill       : 0xffffff
+            fontFamily    : "Commodore 64 Rounded",
+            fontSize      : 35,
+            fontWeight    : "bold",
+            fill          : 0xffffff,
+            letterSpacing : -5,
         });
 
         let text = new PIXI.Text(str.toUpperCase(), style);
+
         return text;
     } // _CreateText
 
     //--------------------------------------------------------------------------
     _ApplyMask(text, color)
     {
-        let mask = Create_Sprite("multi-color-raster");
+        let mask = Create_Sprite("mask_" + color);
 
+        const MAGIC = 0//0.045; // This makes the mask height scale looks better...
         const MASK_COLORS_COUNT = 6;
         const MASK_COLOR_HEIGHT = (mask.height / MASK_COLORS_COUNT);
         const MASK_WIDTH_SCALE  = (text.width  / mask.width);
-        const MASK_HEIGHT_SCALE = (text.height / MASK_COLOR_HEIGHT);
+        const MASK_HEIGHT_SCALE = (text.height  / (mask.height)) //(text.height / MASK_COLOR_HEIGHT) + MAGIC;
         const MASK_COLOR_Y      = (color * MASK_HEIGHT_SCALE * -MASK_COLOR_HEIGHT)
 
         mask.scale   .set(MASK_WIDTH_SCALE, MASK_HEIGHT_SCALE);
-        mask.position.set(text.x, text.y + MASK_COLOR_Y);
+        // mask.position.set(text.x, text.y + MASK_COLOR_Y);
+        mask.position.set(text.x, text.y);
         mask.anchor  .set(text.anchor.x, 0);
-        // text.tint = color;
 
+
+        console.log(text.height, MASK_HEIGHT_SCALE);
         mask.mask = text;
         this.addChild(mask);
     }

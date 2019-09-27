@@ -23,7 +23,7 @@
 // Block                                                                      //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const BLOCK_COLOR_INDEX_COUNT = 2;
+const BLOCK_COLOR_INDEX_COUNT = 7;
 //------------------------------------------------------------------------------
 let S_BLOCK_OBJECT_ID = 0;
 
@@ -61,10 +61,10 @@ class Block
         this.addChild(this.graphics);
 
         // Debug.
-        let text = new PIXI.Text(this.colorIndex,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'left'});
-        text.x = this.width  / 2 - text.width  / 2;
-        text.y = this.height / 2 - text.height / 2;
-        this.addChild(text);
+        // let text = new PIXI.Text(this.colorIndex,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'left'});
+        // text.x = this.width  / 2 - text.width  / 2;
+        // text.y = this.height / 2 - text.height / 2;
+        // this.addChild(text);
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -101,7 +101,8 @@ class Block
         const h = size.y - (y * 2);
 
         this.graphics.beginFill(color, 1);
-            this.graphics.drawRoundedRect(x, y, w, h, 4 * (1 - this.destroyValue));
+            // this.graphics.drawRoundedRect(x, y, w, h, 4 * (1 - this.destroyValue));
+            this.graphics.drawRect(x +2, y+2, w-2, h-2);
         this.graphics.endFill();
     }
 }; // class Block
