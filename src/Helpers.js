@@ -15,6 +15,11 @@
 //                                                                            //
 //----------------------------------------------------------------------------//
 
+//----------------------------------------------------------------------------//
+//                                                                            //
+// Game General Functions                                                     //
+//                                                                            //
+//----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
 function Get_Screen_Size()
 {
@@ -76,6 +81,24 @@ const POINT_RIGHT  = Create_Point(+1, 0);
 const POINT_TOP    = Create_Point(0, -1);
 const POINT_BOTTOM = Create_Point(0, +1);
 
+
+
+
+//------------------------------------------------------------------------------
+// @notice(stdmatt): Pretty sure that we can do better with:
+//    https://pixijs.download/dev/docs/PIXI.loaders.Loader.html
+async function
+LoadFont(fontFace, path)
+{
+    let font_face = new FontFace(
+        fontFace,
+        "url(" + path + ")"
+    );
+    console.log("before await");
+    await font_face.load();
+    document.fonts.add(font_face);
+    console.log("after await");
+}
 
 //----------------------------------------------------------------------------//
 //                                                                            //
