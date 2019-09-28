@@ -74,6 +74,7 @@ function Install_KeyboardHandlers()
     );
 }
 
+//------------------------------------------------------------------------------
 function Update_Input()
 {
     // @XXX(stdmatt): Cheesy... how to make the events based input
@@ -89,7 +90,7 @@ function IsKeyDown(keyCode)
     return Keyboard[keyCode] == true;
 }
 
-
+//------------------------------------------------------------------------------
 function IsKeyUp(keyCode)
 {
     return Keyboard[keyCode] == false;
