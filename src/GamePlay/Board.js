@@ -20,12 +20,14 @@
 // Board                                                                      //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const BOARD_FIELD_COLUMNS     = 8;
-const BOARD_FIELD_ROWS        = 21;
-const BLOCK_SIZE              = 27
-const BLOCK_TIME_TO_MOVE_FAST = 0.025;
-const BLOCK_MOVE_SUBSTEPS     = 2;
-const SCORE_VALUE_MOVING_FAST = 1;
+const BOARD_FIELD_COLUMNS  = 8;
+const BOARD_FIELD_ROWS     = 21;
+const BOARD_BLOCK_SIZE     = 27;
+
+const BOARD_BLOCK_TIME_TO_MOVE_FAST = 0.025;
+const BOARD_BLOCK_MOVE_SUBSTEPS     = 2;
+
+const BOARD_SCORE_VALUE_MOVING_FAST = 1;
 // Tweens
 const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 500;
 const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 500;
@@ -72,7 +74,7 @@ class Board
 
         // Field.
         this.field     = Array_Create2D(BOARD_FIELD_ROWS, BOARD_FIELD_COLUMNS);
-        this.blockSize = Create_Point(BLOCK_SIZE, BLOCK_SIZE);
+        this.blockSize = Create_Point(BOARD_BLOCK_SIZE, BOARD_BLOCK_SIZE);
 
         // Infos.
         this.matchInfo            = new MatchInfo(this);
@@ -222,14 +224,14 @@ class Board
         this.currTimeToMove -= dt;
         if(this.currTimeToMove <= 0) {
             this.currTimeToMove += (this.movingFast)
-                ? BLOCK_TIME_TO_MOVE_FAST
+                ? BOARD_BLOCK_TIME_TO_MOVE_FAST
                 : this.maxTimeToMove;
 
-            new_position_y += (BLOCK_SIZE / BLOCK_MOVE_SUBSTEPS);
+            new_position_y += (this.blockSize.y / BOARD_BLOCK_MOVE_SUBSTEPS);
             new_coord.y     = Math_Int(new_position_y / this.blockSize.y);
 
             if(this.movingFast) {
-                this._AddScore(SCORE_VALUE_MOVING_FAST)
+                this._AddScore(BOARD_SCORE_VALUE_MOVING_FAST)
             }
         }
 

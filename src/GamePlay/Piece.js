@@ -24,6 +24,8 @@
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
 const BLOCK_COLOR_INDEX_COUNT = 7;
+const BLOCK_BORDER_SIZE       = 1;
+
 //------------------------------------------------------------------------------
 let S_BLOCK_OBJECT_ID = 0;
 
@@ -31,7 +33,8 @@ let S_BLOCK_OBJECT_ID = 0;
 function Create_Random_Block(boardRef)
 {
     let color_index = Math_RandomInt(0, BLOCK_COLOR_INDEX_COUNT);
-    let block = new Block(boardRef, color_index);
+    let block       = new Block(boardRef, color_index);
+
     return block;
 } // Create_Random_Block
 
@@ -94,18 +97,18 @@ class Block
         const color = gPalette.GetBlockColor(this.colorIndex);
 
         this.graphics.clear();
-        const BORDER_SIZE = 1;
-        const x = BORDER_SIZE;
-        const y = size.y * (this.destroyValue / 2) + BORDER_SIZE/2;
-        const w = size.x - BORDER_SIZE;
-        const h = size.y - (y * 2) - BORDER_SIZE;
+        const x = BLOCK_BORDER_SIZE;
+        const y = size.y * (this.destroyValue / 2) + (BLOCK_BORDER_SIZE / 2);
+        const w = size.x - BLOCK_BORDER_SIZE;
+        const h = size.y - (y * 2) - BLOCK_BORDER_SIZE;
+
 
         // @XXX(stdmatt): chroma get a function to get the packed rgb value.
         let a = chroma(color).darken(1).hex().substr(1);
         let b = parseInt(a, 16);
 
         // debugger;
-        this.graphics.lineStyle(BORDER_SIZE * 2, b, 1);
+        this.graphics.lineStyle(BLOCK_BORDER_SIZE * 2, b, 1);
         this.graphics.beginFill(color, 1);
             // this.graphics.drawRoundedRect(x, y, w, h, 4 * (1 - this.destroyValue));
             this.graphics.drawRect(x, y, w, h);
@@ -118,8 +121,8 @@ class Block
 // Piece                                                                      //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const PIECE_ANCHOR       = 0.5;
-const PIECE_BLOCKS_COUNT = 3;
+const PIECE_ANCHOR                   = 0.5;
+const PIECE_BLOCKS_COUNT             = 2;
 const PIECE_ROTATE_COOLDOWN_DURATION = 0.5;
 
 //------------------------------------------------------------------------------

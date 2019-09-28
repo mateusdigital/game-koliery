@@ -15,14 +15,22 @@
 //                                                                            //
 //----------------------------------------------------------------------------//
 
-const PALETTE_BLOCK_COLORS_COUNT = 10;
-
+//----------------------------------------------------------------------------//
+// Palette                                                                    //
+//----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
 class Palette
 {
     //--------------------------------------------------------------------------
     constructor()
     {
+        //
+        // iVars
+        // Properties.
         this.blockColors = [];
+
+        //
+        // Initialize.
         this._InitializeBlockColors();
     } // ctor
 
@@ -30,13 +38,13 @@ class Palette
     GetBlockColors()
     {
         return this.blockColors;
-    }
+    } // GetBlockColors
 
     //--------------------------------------------------------------------------
     GetBlockColor(colorIndex)
     {
         return this.blockColors[colorIndex];
-    }
+    } // GetBlockColor
 
     //--------------------------------------------------------------------------
     _InitializeBlockColors()
@@ -50,7 +58,5 @@ class Palette
             0xc56382, // pink
             0x812a18, // red
         ];
-    }
-
-
+    } // _InitializeBlockColors
 }; // class Palette

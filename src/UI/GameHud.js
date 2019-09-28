@@ -20,14 +20,13 @@
 // GameHud                                                                    //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const TEXT_PREFIX_SCORE = "Score:";
-const TEXT_PREFIX_HI    = "Hi   :";
-const TEXT_PREFIX_LEVEL = "Level ";
-const TEXT_GAME_NAME    = "--------";
-const TEXT_DIGITS_SCORE = 6;
-const TEXT_DIGITS_LEVEL = 2;
-
-
+const GAME_HUD_TEXT_PREFIX_SCORE = "Score:";
+const GAME_HUD_TEXT_PREFIX_HI    = "Hi   :";
+const GAME_HUD_TEXT_PREFIX_LEVEL = "Level ";
+const GAME_HUD_TEXT_GAME_NAME    = "--------";
+const GAME_HUD_TEXT_DIGITS_SCORE = 6;
+const GAME_HUD_TEXT_DIGITS_LEVEL = 2;
+const GAME_HUD_TEXT_GAP          = 20;
 
 //------------------------------------------------------------------------------
 class GameHud
@@ -38,14 +37,21 @@ class GameHud
     {
         super();
 
-        let s = "";
         //
         // iVars
         // Properties.
-        this.scoreText   = this._CreateText(this._BuildString(TEXT_PREFIX_SCORE, TEXT_DIGITS_SCORE, 0));
-        this.hiScoreText = this._CreateText(this._BuildString(TEXT_PREFIX_HI,    TEXT_DIGITS_SCORE, 0));
-        this.marqueeText = this._CreateText(TEXT_GAME_NAME);
-        this.levelText   = this._CreateText(this._BuildString(TEXT_PREFIX_LEVEL, TEXT_DIGITS_LEVEL, 1));
+        let s = "";
+        s = this._BuildString(GAME_HUD_TEXT_PREFIX_SCORE, GAME_HUD_TEXT_DIGITS_SCORE, 0);
+        this.scoreText = this._CreateText(s);
+
+        s = this._BuildString(GAME_HUD_TEXT_PREFIX_HI, GAME_HUD_TEXT_DIGITS_SCORE, 0);
+        this.hiScoreText = this._CreateText(s);
+
+        s = GAME_HUD_TEXT_GAME_NAME;
+        this.marqueeText = this._CreateText(s);
+
+        s = this._BuildString(GAME_HUD_TEXT_PREFIX_LEVEL, GAME_HUD_TEXT_DIGITS_LEVEL, 1)
+        this.levelText = this._CreateText(s);
 
         //
         // Initialize.
@@ -54,14 +60,13 @@ class GameHud
         this.marqueeText.anchor.set(1, 0);
         this.levelText  .anchor.set(1, 0);
 
-        const TEXT_GAP    = 20;
         const screen_size = Get_Screen_Size();
 
-        this.scoreText  .x = TEXT_GAP;
+        this.scoreText  .x = GAME_HUD_TEXT_GAP;
         this.hiScoreText.x = this.scoreText.x;
         this.hiScoreText.y = this.scoreText.y + this.scoreText.height - 5;
 
-        this.marqueeText.x = screen_size.x - TEXT_GAP;
+        this.marqueeText.x = screen_size.x - GAME_HUD_TEXT_GAP;
         this.levelText  .x = this.marqueeText.x;
         this.levelText  .y = this.hiScoreText.y
 
@@ -79,9 +84,10 @@ class GameHud
     //--------------------------------------------------------------------------
     SetScore(score, hiScore)
     {
-        this.scoreText  .text = this._BuildString(TEXT_PREFIX_SCORE, TEXT_DIGITS_SCORE, score  );
-        this.hiScoreText.text = this._BuildString(TEXT_PREFIX_HI,    TEXT_DIGITS_SCORE, hiScore);
+        this.scoreText  .text = this._BuildString(GAME_HUD_TEXT_PREFIX_SCORE, GAME_HUD_TEXT_DIGITS_SCORE, score  );
+        this.hiScoreText.text = this._BuildString(GAME_HUD_TEXT_PREFIX_HI,    GAME_HUD_TEXT_DIGITS_SCORE, hiScore);
     }
+
 
     //--------------------------------------------------------------------------
     SetMarqueeWithMatchInfo(matchInfo)
@@ -95,16 +101,18 @@ class GameHud
         }
 
         if(count == 0) {
-            this._SetMarqueeText(TEXT_GAME_NAME);
+            this._SetMarqueeText(GAME_HUD_TEXT_GAME_NAME);
         } else {
             this._SetMarqueeText(String_Cat("Match ", count));
         }
     }
 
+
+    //--------------------------------------------------------------------------
     _SetMarqueeText(str)
     {
-        this.marqueeText.text = str;
-    }
+        this.marqueeText.text = str.toUpperCase();
+    } // _SetMarqueeText
 
     //--------------------------------------------------------------------------
     _CreateText(str)
