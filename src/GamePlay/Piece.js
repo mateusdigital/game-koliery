@@ -100,8 +100,10 @@ class Block
         const w = size.x - BORDER_SIZE;
         const h = size.y - (y * 2) - BORDER_SIZE;
 
+        // @XXX(stdmatt): chroma get a function to get the packed rgb value.
         let a = chroma(color).darken(1).hex().substr(1);
         let b = parseInt(a, 16);
+
         // debugger;
         this.graphics.lineStyle(BORDER_SIZE * 2, b, 1);
         this.graphics.beginFill(color, 1);

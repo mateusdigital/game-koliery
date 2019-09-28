@@ -20,12 +20,14 @@
 // GameHud                                                                    //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const TEXT_GAME_NAME    = "GAME";
 const TEXT_PREFIX_SCORE = "Score:";
 const TEXT_PREFIX_HI    = "Hi   :";
-const TEXT_PREFIX_LEVEL = "Level";
+const TEXT_PREFIX_LEVEL = "Level ";
+const TEXT_GAME_NAME    = "--------";
 const TEXT_DIGITS_SCORE = 6;
 const TEXT_DIGITS_LEVEL = 2;
+
+
 
 //------------------------------------------------------------------------------
 class GameHud
@@ -74,10 +76,34 @@ class GameHud
         this.addChild(this.levelText  );
     } // ctor
 
+    //--------------------------------------------------------------------------
     SetScore(score, hiScore)
     {
         this.scoreText  .text = this._BuildString(TEXT_PREFIX_SCORE, TEXT_DIGITS_SCORE, score  );
         this.hiScoreText.text = this._BuildString(TEXT_PREFIX_HI,    TEXT_DIGITS_SCORE, hiScore);
+    }
+
+    //--------------------------------------------------------------------------
+    SetMarqueeWithMatchInfo(matchInfo)
+    {
+        let count = 0;
+        for(let i = 0; i < matchInfo.infos.length; ++i) {
+            const info = matchInfo.infos[i];
+            if(info.has_match) {
+                ++count;
+            }
+        }
+
+        if(count == 0) {
+            this._SetMarqueeText(TEXT_GAME_NAME);
+        } else {
+            this._SetMarqueeText(String_Cat("Match ", count));
+        }
+    }
+
+    _SetMarqueeText(str)
+    {
+        this.marqueeText.text = str;
     }
 
     //--------------------------------------------------------------------------

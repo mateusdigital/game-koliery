@@ -14,13 +14,15 @@ class MatchInfo
         // Properties.
         this.allMatchedBlocks = [];
         this.hasMatches       = false;
+        this.infos = [];
     } // CTOR
 
     //--------------------------------------------------------------------------
     Reset()
     {
         this.allMatchedBlocks = [];
-        this.hasMatches         = false;
+        this.infos            = [];
+        this.hasMatches       = false;
     } // Reset
 
     //--------------------------------------------------------------------------
@@ -28,52 +30,62 @@ class MatchInfo
     {
         this.Reset();
         for(let i = 0; i < blocksToCheck.length; ++i) {
-            let block = blocksToCheck[i];
-            this._CheckMatches(block);
+            const block = blocksToCheck[i];
+            const info  = this._CheckMatches(block);
+            this.infos.push(info);
         }
+
     } // FindMatches
 
     //--------------------------------------------------------------------------
     _CheckMatches(targetBlock)
     {
-        let horizontal_blocks = [];
-        this._GetMatchingBlocks(targetBlock, POINT_LEFT , horizontal_blocks);
-        this._GetMatchingBlocks(targetBlock, POINT_RIGHT, horizontal_blocks);
+        let info = {};
+        info.horizontal_blocks = [];
+        info.vertical_blocks   = [];
+        info.diagonal1_blocks  = [];
+        info.diagonal2_blocks  = [];
+        info.has_match         = false;
 
-        let vertical_blocks = [];
-        this._GetMatchingBlocks(targetBlock, POINT_TOP   , vertical_blocks);
-        this._GetMatchingBlocks(targetBlock, POINT_BOTTOM, vertical_blocks);
+        this._GetMatchingBlocks(targetBlock, POINT_LEFT , info.horizontal_blocks);
+        this._GetMatchingBlocks(targetBlock, POINT_RIGHT, info.horizontal_blocks);
 
-        let diagonal1_blocks = [];
-        this._GetMatchingBlocks(targetBlock, Create_Point(-1, -1), diagonal1_blocks);
-        this._GetMatchingBlocks(targetBlock, Create_Point(+1, +1), diagonal1_blocks);
+        this._GetMatchingBlocks(targetBlock, POINT_TOP   , info.vertical_blocks);
+        this._GetMatchingBlocks(targetBlock, POINT_BOTTOM, info.vertical_blocks);
 
-        let diagonal2_blocks = [];
-        this._GetMatchingBlocks(targetBlock, Create_Point(+1, -1), diagonal2_blocks);
-        this._GetMatchingBlocks(targetBlock, Create_Point(-1, +1), diagonal2_blocks);
+        this._GetMatchingBlocks(targetBlock, Create_Point(-1, -1), info.diagonal1_blocks);
+        this._GetMatchingBlocks(targetBlock, Create_Point(+1, +1), info.diagonal1_blocks);
 
-        let has_match = false;
-        if(horizontal_blocks.length + 1 >= 3) {
-            has_match = true;
-            this._AddUnique(horizontal_blocks);
+        this._GetMatchingBlocks(targetBlock, Create_Point(+1, -1), info.diagonal2_blocks);
+        this._GetMatchingBlocks(targetBlock, Create_Point(-1, +1), info.diagonal2_blocks);
+
+        if(info.horizontal_blocks.length + 1 >= 3) {
+            info.has_match = true;
+            info.horizontal_blocks.push(targetBlock);
+            this._AddUnique(info.horizontal_blocks);
         }
-        if(vertical_blocks.length + 1 >= 3) {
-            has_match = true;
-            this._AddUnique(vertical_blocks);
+        if(info.vertical_blocks.length + 1 >= 3) {
+            info.has_match = true;
+            info.vertical_blocks.push(targetBlock);
+            this._AddUnique(info.vertical_blocks);
         }
-        if(diagonal1_blocks.length + 1 >= 3) {
-            has_match = true;
-            this._AddUnique(diagonal1_blocks);
+        if(info.diagonal1_blocks.length + 1 >= 3) {
+            info.has_match = true;
+            info.diagonal1_blocks.push(targetBlock);
+            this._AddUnique(info.diagonal1_blocks);
         }
-        if(diagonal2_blocks.length + 1 >= 3) {
-            has_match = true;
-            this._AddUnique(diagonal2_blocks);
+        if(info.diagonal2_blocks.length + 1 >= 3) {
+            info.has_match = true;
+            info.diagonal2_blocks.push(targetBlock);
+            this._AddUnique(info.diagonal2_blocks);
         }
 
-        if(has_match) {
+        if(info.has_match) {
             this.hasMatches = true;
             this.allMatchedBlocks.push(targetBlock);
         }
+
+        return info;
     } // _CheckMatches
 
     //--------------------------------------------------------------------------

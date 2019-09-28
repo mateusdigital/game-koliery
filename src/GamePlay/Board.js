@@ -229,8 +229,7 @@ class Board
             new_coord.y     = Math_Int(new_position_y / this.blockSize.y);
 
             if(this.movingFast) {
-                this.score += SCORE_VALUE_MOVING_FAST;
-                gGameHud.SetScore(this.score, 0);
+                this._AddScore(SCORE_VALUE_MOVING_FAST)
             }
         }
 
@@ -313,6 +312,11 @@ class Board
     {
         this.matchInfo.FindMatches(this.blocksToTryFindMatch);
         this._ChangeState(BOARD_STATE_FINDING_MATCHES_FINISHED);
+
+        if(this.matchInfo.hasMatches) {
+            gGameHud.SetMarqueeWithMatchInfo(this.matchInfo);
+            this._AddScore(1234);
+        }
     } // _FindMatches
 
     //--------------------------------------------------------------------------
@@ -461,6 +465,20 @@ class Board
             .start();
 
     } // _CreateFallBlockAnimation
+
+
+    //--------------------------------------------------------------------------
+    _AddScore(value)
+    {
+        this.score += value;
+        gGameHud.SetScore(this.score, 0);
+
+        if(value == 1234){
+            this.maxTimeToMove -= (0.03);
+        }
+
+        console.log(this.maxTimeToMove);
+    }
 
 
     //--------------------------------------------------------------------------
