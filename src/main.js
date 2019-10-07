@@ -27,8 +27,6 @@ const GAME_DESIGN_HEIGHT = 700;
 // Globals                                                                    //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-let gApp         = null;
-let gSpriteSheet = null;
 let gPalette     = null;
 let gBoard       = null;
 let gBoardBorder = null;
@@ -110,10 +108,6 @@ function Setup()
 //------------------------------------------------------------------------------
 function GameLoop(delta)
 {
-    if(delta > 1/30) {
-        delta = 1/30;
-    }
-
     // console.log("DLTA: ", delta);
     if(!editorMode) {
         gBoard    .Update(delta);
