@@ -32,7 +32,7 @@ let S_BLOCK_OBJECT_ID = 0;
 //------------------------------------------------------------------------------
 function Create_Random_Block(boardRef)
 {
-    let color_index = Math_RandomInt(0, BLOCK_COLOR_INDEX_COUNT);
+    let color_index = Random_Int(0, BLOCK_COLOR_INDEX_COUNT);
     let block       = new Block(boardRef, color_index);
 
     return block;
@@ -53,7 +53,7 @@ class Block
         this.boardRef = boardRef;
         // HouseKeeping.
         this.objectId     = S_BLOCK_OBJECT_ID++;
-        this.coordInBoard = Create_Point(0, 0);
+        this.coordInBoard = Vector_Create(0, 0);
         this.colorIndex   = colorIndex;
         this.isDestroying = false;
         this.destroyValue = 0;
@@ -142,10 +142,10 @@ class Piece
         this.blocks = [];
         this._InitializeBlocks();
 
-        this.rotateTimer = new BaseTimer(PIECE_ROTATE_COOLDOWN_DURATION);
+        this.rotateTimer = new Base_Timer(PIECE_ROTATE_COOLDOWN_DURATION);
         this.rotateTimer.Start();
 
-        this.coord = Create_Point(0, 0);
+        this.coord = Vector_Create(0, 0);
     } // ctor
 
     //--------------------------------------------------------------------------

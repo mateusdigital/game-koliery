@@ -69,7 +69,7 @@ class FallInfo
                 let block = this._FindFirstNonNullBlock(x, y-1);
                 if(block != null) {
                     this.allFallingBlocks.push(block);
-                    this.allTargetCoords .push(Create_Point(x, y));
+                    this.allTargetCoords .push(Vector_Create(x, y));
                 }
             }
         }

@@ -133,7 +133,7 @@ class GameHud
     //--------------------------------------------------------------------------
     _ApplyMask(text, color)
     {
-        let mask = Create_Sprite("mask_" + color);
+        let mask = Sprite_Create("mask_" + color);
 
         const MAGIC = 0//0.045; // This makes the mask height scale looks better...
         const MASK_COLORS_COUNT = 6;
