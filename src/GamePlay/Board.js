@@ -74,7 +74,7 @@ class Board
 
         // Field.
         this.field     = Array_Create2D(BOARD_FIELD_ROWS, BOARD_FIELD_COLUMNS);
-        this.blockSize = Create_Point(BOARD_BLOCK_SIZE, BOARD_BLOCK_SIZE);
+        this.blockSize = Vector_Create(BOARD_BLOCK_SIZE, BOARD_BLOCK_SIZE);
 
         // Infos.
         this.matchInfo            = new MatchInfo(this);
@@ -202,7 +202,7 @@ class Board
         }
 
         const curr_coord = this.currPiece.coord;
-        let   new_coord  = Copy_Point(curr_coord);
+        let   new_coord  = Vector_Copy(curr_coord);
 
         //
         // Try to move horizontally.
@@ -396,7 +396,7 @@ class Board
         block.x = (this.blockSize.x * indexX);
         block.y = (this.blockSize.y * indexY);
 
-        block.coordInBoard = Create_Point(indexX, indexY);
+        block.coordInBoard = Vector_Create(indexX, indexY);
         this.field[indexY][indexX] = block;
 
         // this.ascii();
@@ -450,8 +450,8 @@ class Board
     //--------------------------------------------------------------------------
     _CreateFallBlockAnimation(block, targetCoord)
     {
-        let position = Copy_Point(block.position);
-        let target   = Create_Point(position.x, targetCoord.y * this.blockSize.y);
+        let position = Vector_Copy(block.position);
+        let target   = Vector_Create(position.x, targetCoord.y * this.blockSize.y);
 
         let tween = new TWEEN.Tween(position, this.fallTweenGroup)
             .to(target, BOARD_FALL_PIECES_TWEEN_TIME_MS)

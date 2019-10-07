@@ -64,17 +64,17 @@ class MatchInfo
         info.diagonal2_blocks  = [];
         info.has_match         = false;
 
-        this._GetMatchingBlocks(targetBlock, POINT_LEFT , info.horizontal_blocks);
-        this._GetMatchingBlocks(targetBlock, POINT_RIGHT, info.horizontal_blocks);
+        this._GetMatchingBlocks(targetBlock, VECTOR_LEFT , info.horizontal_blocks);
+        this._GetMatchingBlocks(targetBlock, VECTOR_RIGHT, info.horizontal_blocks);
 
-        this._GetMatchingBlocks(targetBlock, POINT_TOP   , info.vertical_blocks);
-        this._GetMatchingBlocks(targetBlock, POINT_BOTTOM, info.vertical_blocks);
+        this._GetMatchingBlocks(targetBlock, VECTOR_TOP   , info.vertical_blocks);
+        this._GetMatchingBlocks(targetBlock, VECTOR_BOTTOM, info.vertical_blocks);
 
-        this._GetMatchingBlocks(targetBlock, Create_Point(-1, -1), info.diagonal1_blocks);
-        this._GetMatchingBlocks(targetBlock, Create_Point(+1, +1), info.diagonal1_blocks);
+        this._GetMatchingBlocks(targetBlock, Vector_Create(-1, -1), info.diagonal1_blocks);
+        this._GetMatchingBlocks(targetBlock, Vector_Create(+1, +1), info.diagonal1_blocks);
 
-        this._GetMatchingBlocks(targetBlock, Create_Point(+1, -1), info.diagonal2_blocks);
-        this._GetMatchingBlocks(targetBlock, Create_Point(-1, +1), info.diagonal2_blocks);
+        this._GetMatchingBlocks(targetBlock, Vector_Create(+1, -1), info.diagonal2_blocks);
+        this._GetMatchingBlocks(targetBlock, Vector_Create(-1, +1), info.diagonal2_blocks);
 
         if(info.horizontal_blocks.length + 1 >= 3) {
             info.has_match = true;

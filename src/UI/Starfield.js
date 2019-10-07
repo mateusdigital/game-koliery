@@ -56,9 +56,9 @@ class Starfield
     _CreateStar()
     {
         return {
-            x : Math_RandomInt(this.bounds.x, this.bounds.width ),
-            y : Math_RandomInt(this.bounds.y, this.bounds.height),
-            z : Math_Random   (START_FIELD_START_Z_MIN, START_FIELD_START_Z_MAX)
+            x : Random_Int(this.bounds.x, this.bounds.width ),
+            y : Random_Int(this.bounds.y, this.bounds.height),
+            z : Random_Number   (START_FIELD_START_Z_MIN, START_FIELD_START_Z_MAX)
         }
     } // _CreateStar
 
@@ -66,8 +66,8 @@ class Starfield
     _ResetStar(star)
     {
         star.x = 0;
-        star.y = Math_RandomInt(this.bounds.y, this.bounds.height);
-        star.z = Math_Random   (START_FIELD_START_Z_MIN, START_FIELD_START_Z_MAX)
+        star.y = Random_Int(this.bounds.y, this.bounds.height);
+        star.z = Random_Number   (START_FIELD_START_Z_MIN, START_FIELD_START_Z_MAX)
     } // _ResetStar
 
     //--------------------------------------------------------------------------
