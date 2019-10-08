@@ -50,7 +50,6 @@ class SceneSplash
         const tween = new TWEEN.Tween(progress)
             .to(final, SPLASH_SCENE_TEXT_EFFECT_DURATION_MS)
             .onUpdate(()=>{
-                console.log(progress.t);
                 this.stdmattTextEffect .progress = progress.t;
                 this.presentsTextEffect.progress = progress.t;
             })
