@@ -27,15 +27,17 @@ const GAME_DESIGN_HEIGHT = 700;
 // Globals                                                                    //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-let gPalette     = null;
-let gBoard       = null;
-let gBoardBorder = null;
-let gGameHud     = null;
-let gStarfield   = null;
+// let gPalette     = null;
+// let gBoard       = null;
+// let gBoardBorder = null;
+// let gGameHud     = null;
+// let gStarfield   = null;
 
-let editorMode    = false;
-let MousePosition = null;
-let editorBlock   = null;
+// let editorMode    = false;
+// let MousePosition = null;
+// let editorBlock   = null;
+
+let game = null;
 
 //------------------------------------------------------------------------------
 function PreInit()
@@ -71,35 +73,38 @@ function Setup()
     g_App.stage.interactive = true;
     g_App.stage.buttonMode  = true;
 
-    const screen_size = Get_Screen_Size();
-    const SCREEN_GAP = 10;
+    // const screen_size = Get_Screen_Size();
+    // const SCREEN_GAP = 10;
 
-    //
-    gPalette = new Palette();
+    // //
+    // gPalette = new Palette();
 
-    // Game Hud
-    gGameHud = new GameHud();
-    gGameHud.y += SCREEN_GAP;
+    // // Game Hud
+    // gGameHud = new GameHud();
+    // gGameHud.y += SCREEN_GAP;
 
-    // Board
-    const GAME_HUD_BOTTOM_Y = (gGameHud.y + gGameHud.height + SCREEN_GAP);
-    gBoard       = new Board();
-    gBoardBorder = new BoardBorder(gBoard);
-    // gBoardBorder.scale.set((screen_size.y - GAME_HUD_BOTTOM_Y) / gBoardBorder.height);
-    gBoardBorder.x = (screen_size.x / 2) - (gBoardBorder.width / 2);
-    gBoardBorder.y = (GAME_HUD_BOTTOM_Y);
+    // // Board
+    // const GAME_HUD_BOTTOM_Y = (gGameHud.y + gGameHud.height + SCREEN_GAP);
+    // gBoard       = new Board();
+    // gBoardBorder = new BoardBorder(gBoard);
+    // // gBoardBorder.scale.set((screen_size.y - GAME_HUD_BOTTOM_Y) / gBoardBorder.height);
+    // gBoardBorder.x = (screen_size.x / 2) - (gBoardBorder.width / 2);
+    // gBoardBorder.y = (GAME_HUD_BOTTOM_Y);
 
-    // Star field
-    gStarfield = new Starfield(new PIXI.Rectangle(
-        0,
-        gGameHud.y + gGameHud.height + SCREEN_GAP,
-        screen_size.x,
-        screen_size.y - gGameHud.y + gGameHud.height - SCREEN_GAP
-    ));
+    // // Star field
+    // gStarfield = new Starfield(new PIXI.Rectangle(
+    //     0,
+    //     gGameHud.y + gGameHud.height + SCREEN_GAP,
+    //     screen_size.x,
+    //     screen_size.y - gGameHud.y + gGameHud.height - SCREEN_GAP
+    // ));
 
-    g_App.stage.addChild(gGameHud  );
-    g_App.stage.addChild(gStarfield);
-    g_App.stage.addChild(gBoardBorder);
+    // g_App.stage.addChild(gGameHud  );
+    // g_App.stage.addChild(gStarfield);
+    // g_App.stage.addChild(gBoardBorder);
+
+    game = new Base_Game();
+    game.PushScene(new SceneSplash());
 
     Application_Start(GameLoop);
 }
@@ -108,23 +113,25 @@ function Setup()
 //------------------------------------------------------------------------------
 function GameLoop(delta)
 {
-    // console.log("DLTA: ", delta);
-    if(!editorMode) {
-        gBoard    .Update(delta);
-        gStarfield.Update(delta);
-    } else {
-        Update_Editor(delta);
-    }
+
+    // if(!editorMode) {
+    //     gBoard    .Update(delta);
+    //     gStarfield.Update(delta);
+    // } else {
+    //     Update_Editor(delta);
+    // }
 
 
-    if(IsKeyPress(KEY_E)) {
-        if(editorMode) {
-            ExitEditor();
-        } else {
-            EnterEditor();
-        }
-    }
-    // gLevel.update(delta);
+    // if(IsKeyPress(KEY_E)) {
+    //     if(editorMode) {
+    //         ExitEditor();
+    //     } else {
+    //         EnterEditor();
+    //     }
+    // }
+    // // gLevel.update(delta);
+
+    game.Update(delta);
 }
 
 function EnterEditor()
