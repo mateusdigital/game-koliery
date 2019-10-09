@@ -60,7 +60,7 @@ class SceneSplash
             .yoyo(true)
             .repeat(1)
             .onComplete(()=>{
-                g_Game.SetScene(new SceneHighScore());
+                this._Game.SetScene(new SceneHighScore());
             })
             .start();
 

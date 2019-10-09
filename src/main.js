@@ -27,7 +27,7 @@ const GAME_DESIGN_HEIGHT = 700;
 // Globals                                                                    //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-// let gPalette     = null;
+let gPalette     = null;
 // let gBoard       = null;
 // let gBoardBorder = null;
 // let gGameHud     = null;
@@ -61,6 +61,7 @@ async function Preload()
         "res/textures/mask_2.png",
         "res/textures/mask_3.png",
 
+        "src/FX/Shaders/Debug.frag",
         "src/FX/Shaders/TextUncover.frag",
         "src/FX/Shaders/TextGradient.frag",
     ]).load(Setup);
@@ -80,7 +81,7 @@ function Setup()
     // const SCREEN_GAP = 10;
 
     // //
-    // gPalette = new Palette();
+    gPalette = new Palette();
 
     // // Game Hud
     // gGameHud = new GameHud();
@@ -107,6 +108,7 @@ function Setup()
     // g_App.stage.addChild(gBoardBorder);
 
     game = new Base_Game();
+    // game.PushScene(new SceneHighScore());
     game.PushScene(new SceneSplash());
 
     Application_Start(GameLoop);

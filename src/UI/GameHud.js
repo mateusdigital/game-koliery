@@ -42,16 +42,16 @@ class GameHud
         // iVars
         // Properties.
         let s = "";
-        s = this._BuildString(GAME_HUD_TEXT_PREFIX_SCORE, GAME_HUD_TEXT_DIGITS_SCORE, 0);
+        s = Build_Digits_String(GAME_HUD_TEXT_PREFIX_SCORE, GAME_HUD_TEXT_DIGITS_SCORE, 0);
         this.scoreText = new Text(s, GAME_HUD_FONT_SIZE);
 
-        s = this._BuildString(GAME_HUD_TEXT_PREFIX_HI, GAME_HUD_TEXT_DIGITS_SCORE, 0);
+        s = Build_Digits_String(GAME_HUD_TEXT_PREFIX_HI, GAME_HUD_TEXT_DIGITS_SCORE, 0);
         this.hiScoreText = new Text(s, GAME_HUD_FONT_SIZE);
 
         s = GAME_HUD_TEXT_GAME_NAME;
         this.marqueeText = new Text(s, GAME_HUD_FONT_SIZE);
 
-        s = this._BuildString(GAME_HUD_TEXT_PREFIX_LEVEL, GAME_HUD_TEXT_DIGITS_LEVEL, 1)
+        s = Build_Digits_String(GAME_HUD_TEXT_PREFIX_LEVEL, GAME_HUD_TEXT_DIGITS_LEVEL, 1)
         this.levelText = new Text(s, GAME_HUD_FONT_SIZE);
 
         //
@@ -80,8 +80,8 @@ class GameHud
     //--------------------------------------------------------------------------
     SetScore(score, hiScore)
     {
-        this.scoreText  .text = this._BuildString(GAME_HUD_TEXT_PREFIX_SCORE, GAME_HUD_TEXT_DIGITS_SCORE, score  );
-        this.hiScoreText.text = this._BuildString(GAME_HUD_TEXT_PREFIX_HI,    GAME_HUD_TEXT_DIGITS_SCORE, hiScore);
+        this.scoreText  .text = Build_Digits_String(GAME_HUD_TEXT_PREFIX_SCORE, GAME_HUD_TEXT_DIGITS_SCORE, score  );
+        this.hiScoreText.text = Build_Digits_String(GAME_HUD_TEXT_PREFIX_HI,    GAME_HUD_TEXT_DIGITS_SCORE, hiScore);
     }
 
     //--------------------------------------------------------------------------
@@ -108,14 +108,4 @@ class GameHud
         this.marqueeText.text = str.toUpperCase();
     } // _SetMarqueeText
 
-    //--------------------------------------------------------------------------
-    _BuildString(prefix, digits, value)
-    {
-        const value_str = value.toString();
-        return String_Cat(
-            prefix.toUpperCase(),
-            "0".repeat(digits - value_str.length),
-            value
-        );
-    }
 }; // class GameHud
