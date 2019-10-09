@@ -47,6 +47,25 @@ class Palette
     } // GetBlockColor
 
     //--------------------------------------------------------------------------
+    GetScoreColor(colorIndex)
+    {
+        const colors = [
+            "#8C2000",
+            "#C17D00",
+            "#C5B50C",
+            "#009427",
+            "#00B385",
+            "#266DC3",
+            "#7037D9",
+            "#8D24C1",
+            "#B0325E",
+            "#8C2000",
+        ];
+
+        return chroma(colors[colorIndex]);
+    }
+
+    //--------------------------------------------------------------------------
     _InitializeBlockColors()
     {
         this.blockColors = [
