@@ -10,6 +10,8 @@ class Text
         super();
 
         this.text = this._CreateText(str, fontSize);
+        this.text.anchor.set(0.5);
+
         this.addChild(this.text);
     } // ctor
 
