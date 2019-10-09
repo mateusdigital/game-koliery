@@ -2,8 +2,9 @@ precision mediump float;
 
 varying vec2      vTextureCoord;
 uniform sampler2D uSampler;
-uniform vec2      dimensions;
 uniform vec4      inputPixel;
+uniform vec2      dimensions;
+uniform vec4      targetColor;
 
 
 float steep_step(float y, float steps)
@@ -25,7 +26,7 @@ void main()
     vec4 c0 = texture2D(uSampler, vTextureCoord);
     float a = 0.0;
     float c = 0.9;
-    vec4 c1 = vec4(a, a, a, 1.0);
+    vec4 c1 = targetColor;
     vec4 c2 = vec4(c, c, c, 1.0);
 
     float y = uv.y;

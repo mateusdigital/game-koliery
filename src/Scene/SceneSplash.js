@@ -17,13 +17,19 @@ class SceneSplash
         //
         // iVars.
         // Properties.
-        this.stdmattText  = new Text("stdmatt",  SPLASH_SCENE_FONT_SIZE);
-        this.presentsText = new Text("presents", SPLASH_SCENE_FONT_SIZE);
-
-        this.stdmattTextEffect  = new TextUncoverEffect(this.stdmattText );
-        this.presentsTextEffect = new TextUncoverEffect(this.presentsText);
-
         this.effectTween = this._CreateEffectTween();
+
+        this.stdmattText = new Text("stdmatt",  SPLASH_SCENE_FONT_SIZE);
+        this.stdmattText.filters = [
+            new TextUncoverEffect (this.stdmattText,  this.effectTween),
+            new TextGradientEffect(this.stdmattText,  chroma("red")   )
+        ];
+
+        this.presentsText = new Text("presents", SPLASH_SCENE_FONT_SIZE);
+        this.presentsText.filters = [
+            new TextUncoverEffect (this.presentsText,  this.effectTween),
+            new TextGradientEffect(this.presentsText,  chroma("red")   )
+        ];
 
         //
         // Initialize.
@@ -49,13 +55,11 @@ class SceneSplash
 
         const tween = new TWEEN.Tween(progress)
             .to(final, SPLASH_SCENE_TEXT_EFFECT_DURATION_MS)
-            .onUpdate(()=>{
-                this.stdmattTextEffect .progress = progress.t;
-                this.presentsTextEffect.progress = progress.t;
-            })
             .delay(500)
             .yoyo(true)
             .repeat(1)
             .start();
+
+        return tween;
     } // _CreateEffectTween
 }; // class SceneSplash

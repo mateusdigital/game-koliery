@@ -61,7 +61,8 @@ async function Preload()
         "res/textures/mask_2.png",
         "res/textures/mask_3.png",
 
-        "src/FX/Shaders/TextUncover.frag"
+        "src/FX/Shaders/TextUncover.frag",
+        "src/FX/Shaders/TextGradient.frag",
     ]).load(Setup);
 }
 
