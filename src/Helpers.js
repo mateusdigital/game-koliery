@@ -47,3 +47,15 @@ function Points_Are_Valid_For_Swap(p1, p2)
     return (dx == 1 && dy == 0)
         || (dx == 0 && dy == 1);
 }
+
+
+//------------------------------------------------------------------------------
+function Build_Digits_String(prefix, digits, value)
+{
+    const value_str = value.toString();
+    return String_Cat(
+        prefix.toUpperCase(),
+        "0".repeat(digits - value_str.length),
+        value
+    );
+}
