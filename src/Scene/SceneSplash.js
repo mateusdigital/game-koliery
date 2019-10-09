@@ -18,14 +18,17 @@ class SceneSplash
         //
         // iVars.
         // Properties.
-        this.effectTween = this._CreateEffectTween();
+        this.sceneTweenGroup = new TWEEN.Group();
+        this.effectTween     = this._CreateEffectTween();
 
+        // stdmatt Text.
         this.stdmattText = new Text("stdmatt",  SPLASH_SCENE_FONT_SIZE);
         this.stdmattText.filters = [
             new TextUncoverEffect (this.stdmattText,  this.effectTween),
             new TextGradientEffect(this.stdmattText,  chroma("black")   )
         ];
 
+        // Presents Text.
         this.presentsText = new Text("presents", SPLASH_SCENE_FONT_SIZE);
         this.presentsText.filters = [
             new TextUncoverEffect (this.presentsText,  this.effectTween),
@@ -36,34 +39,73 @@ class SceneSplash
         // Initialize.
         const screen_size = Get_Screen_Size();
 
+        // stdmatt Text.
         this.stdmattText.pivot.set(0.5);
         this.stdmattText.x = (screen_size.x * 0.5);
         this.stdmattText.y = (screen_size.y * 0.5) - this.stdmattText.height;
 
+        // Presents Text.
         this.presentsText.pivot.set(0.5);
         this.presentsText.x = (screen_size.x * 0.5);
         this.presentsText.y = (screen_size.y * 0.5) + this.presentsText.height;
 
         this.addChild(this.stdmattText );
         this.addChild(this.presentsText);
+
     } // ctor
+
+    //--------------------------------------------------------------------------
+    Update(dt)
+    {
+        this.sceneTweenGroup.update();
+    } // Update
+
+    //--------------------------------------------------------------------------
+    OnEnter()
+    {
+        this._SetupEffectTween();
+        this.StartIntro();
+    } // OnEnter
+
+
+    //--------------------------------------------------------------------------
+    StartIntro()
+    {
+        this.effectTween.start();
+
+    } // StartIntro
+
+    //--------------------------------------------------------------------------
+    _OnIntroFinished()
+    {
+        const scene = new SceneHighScore(()=>{
+            this._Game.PopScene();
+        });
+        this._Game.PushScene(scene);
+    } // _OnIntroFinished
 
     //--------------------------------------------------------------------------
     _CreateEffectTween()
     {
         let progress = {t: 0};
+        const tween = new TWEEN.Tween(progress, this.sceneTweenGroup);
+        return tween;
+    } // _CreateEffectTween
+
+    //--------------------------------------------------------------------------
+    _SetupEffectTween()
+    {
+        let progress = {t: 0};
         let final    = {t: 1};
 
-        const tween = new TWEEN.Tween(progress)
+        this.effectTween
+            .from(progress)
             .to(final, SPLASH_SCENE_TEXT_EFFECT_DURATION_MS)
             .delay(SPLASH_SCENE_TEXT_EFFECT_DELAY_DURATION_MS)
             .yoyo(true)
             .repeat(1)
             .onComplete(()=>{
-                this._Game.SetScene(new SceneHighScore());
-            })
-            .start();
-
-        return tween;
-    } // _CreateEffectTween
+                this._OnIntroFinished();
+            });
+    } // _SetupEffectTween
 }; // class SceneSplash

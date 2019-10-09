@@ -11,7 +11,7 @@ class SceneHighScore
     extends Base_Scene
 {
     //--------------------------------------------------------------------------
-    constructor()
+    constructor(onFinishCallback)
     {
         super();
 
@@ -30,16 +30,17 @@ class SceneHighScore
             {name:"mm9", score:"99999"},
             {name:"m10", score:"99999"},
         ];
-
-        this.titleText = null;
-        this.titleLine = null;
-        this.scoreTexts = [];
+        this.titleText           = null;
+        this.titleLine           = null;
+        this.scoreTexts          = [];
+        this.scoreTweenGroup     = new TWEEN.Group();
+        this.sceneFinishCallback = onFinishCallback;
 
         //
         // Initialize.
         const screen_size = Get_Screen_Size();
 
-        // Title Text
+        // Title Text.
         this.titleText = new Text("HIGH SCORES", 50);
         this.titleText.filters = [
             new TextGradientEffect(this.titleText, gPalette.GetScoreColor(0))
@@ -48,7 +49,7 @@ class SceneHighScore
         this.titleText.y = (this.titleText.height * 0.5) + 50;
         this.addChild(this.titleText);
 
-        // Title Line
+        // Title Line.
         this.titleLine = new PIXI.Sprite(PIXI.Texture.WHITE);
         this.titleLine.filters = [
             new TextGradientEffect(this.titleLine, chroma("#5a5a5a"))
@@ -60,10 +61,24 @@ class SceneHighScore
 
         this.addChild(this.titleLine);
 
-        // Scores
+        // Scores.
         this._CreateScoreUI();
+
+        // Tween Completion.
+        this.scoreTweenGroup.onComplete(()=>{
+            onFinishCallback();
+        });
     } // ctor
 
+
+    //--------------------------------------------------------------------------
+    Update(dt)
+    {
+        this.scoreTweenGroup.update();
+    } // Update
+
+
+    //--------------------------------------------------------------------------
     _CreateScoreUI()
     {
         const screen_size = Get_Screen_Size();
@@ -89,7 +104,7 @@ class SceneHighScore
             this.addChild(text);
             this.scoreTexts.push(text);
         }
-    }
+    } // _CreateScoreUI
 
     //--------------------------------------------------------------------------
     _BuildScoreString(index, info)
@@ -101,14 +116,13 @@ class SceneHighScore
         return String_Cat(pos_str, ".", " ", name_str, " ", score_str);
     } // _BuildScoreString
 
-
     //--------------------------------------------------------------------------
     _CreateEffectTween(index)
     {
         let progress = {t: 0};
         let final    = {t: 1};
 
-        const tween = new TWEEN.Tween(progress)
+        const tween = new TWEEN.Tween(progress, this.scoreTweenGroup)
             .to(final, HIGHSCORE_SCENE_TEXT_EFFECT_DURATION_MS)
             .delay(HIGHSCORE_SCENE_TEXT_EFFECT_DELAY_DURATION_MS * index)
             .onUpdate(()=>{
