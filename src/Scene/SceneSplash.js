@@ -2,8 +2,9 @@
 // SceneSplash                                                                //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const SPLASH_SCENE_FONT_SIZE               = 40;
-const SPLASH_SCENE_TEXT_EFFECT_DURATION_MS = 1300;
+const SPLASH_SCENE_FONT_SIZE                     = 40;
+const SPLASH_SCENE_TEXT_EFFECT_DURATION_MS       = 1300;
+const SPLASH_SCENE_TEXT_EFFECT_DELAY_DURATION_MS = 500;
 
 //------------------------------------------------------------------------------
 class SceneSplash
@@ -22,13 +23,13 @@ class SceneSplash
         this.stdmattText = new Text("stdmatt",  SPLASH_SCENE_FONT_SIZE);
         this.stdmattText.filters = [
             new TextUncoverEffect (this.stdmattText,  this.effectTween),
-            new TextGradientEffect(this.stdmattText,  chroma("red")   )
+            new TextGradientEffect(this.stdmattText,  chroma("black")   )
         ];
 
         this.presentsText = new Text("presents", SPLASH_SCENE_FONT_SIZE);
         this.presentsText.filters = [
             new TextUncoverEffect (this.presentsText,  this.effectTween),
-            new TextGradientEffect(this.presentsText,  chroma("red")   )
+            new TextGradientEffect(this.presentsText,  chroma("black")   )
         ];
 
         //
@@ -55,9 +56,12 @@ class SceneSplash
 
         const tween = new TWEEN.Tween(progress)
             .to(final, SPLASH_SCENE_TEXT_EFFECT_DURATION_MS)
-            .delay(500)
+            .delay(SPLASH_SCENE_TEXT_EFFECT_DELAY_DURATION_MS)
             .yoyo(true)
             .repeat(1)
+            .onComplete(()=>{
+                g_Game.SetScene(new SceneHighScore());
+            })
             .start();
 
         return tween;
