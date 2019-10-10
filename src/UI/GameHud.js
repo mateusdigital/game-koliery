@@ -24,10 +24,10 @@ const GAME_HUD_TEXT_PREFIX_SCORE = "Score:";
 const GAME_HUD_TEXT_PREFIX_HI    = "Hi   :";
 const GAME_HUD_TEXT_PREFIX_LEVEL = "Level ";
 const GAME_HUD_TEXT_GAME_NAME    = "--------";
-const GAME_HUD_TEXT_DIGITS_SCORE = 6;
+const GAME_HUD_TEXT_DIGITS_SCORE = HISCORE_MAX_DIGITS;
 const GAME_HUD_TEXT_DIGITS_LEVEL = 2;
-const GAME_HUD_TEXT_GAP          = 20;
-const GAME_HUD_FONT_SIZE         = 35;
+const GAME_HUD_TEXT_GAP          = 15;
+const GAME_HUD_FONT_SIZE         = 31;
 
 //------------------------------------------------------------------------------
 class GameHud
