@@ -41,7 +41,7 @@ class SceneHighScore
         const screen_size = Get_Screen_Size();
 
         // Title Text.
-        this.titleText = new Text("HIGH SCORES", 50);
+        this.titleText = Create_Normal_Text("HIGH SCORES", 50);
         this.titleText.filters = [
             new TextGradientEffect(this.titleText, gPalette.GetScoreColor(0))
         ];
@@ -87,7 +87,7 @@ class SceneHighScore
         for(let i = 0; i < this.scoresInfo.length; ++i) {
             const info = this.scoresInfo[i];
             const str  = this._BuildScoreString(i + 1, info);
-            const text = new Text(str, 40);
+            const text = Create_Normal_Text(str, 40);
 
             const tween = this._CreateEffectTween(i + 1);
             tween.start();
