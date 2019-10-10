@@ -2,6 +2,15 @@
 // TextUncoverEffect                                                          //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
+function Apply_TextUncoverEffect(textRef, tweenRef)
+{
+    if(!textRef.filters) {
+        textRef.filters = [];
+    }
+    textRef.filters.push(new TextUncoverEffect(textRef, tweenRef));
+}
+
+//------------------------------------------------------------------------------
 class TextUncoverEffect
     extends PIXI.Filter
 {
