@@ -2,6 +2,16 @@ const SCENE_GAME_LEVEL_EASY   = 0;
 const SCENE_GAME_LEVEL_MEDIUM = 1;
 const SCENE_GAME_LEVEL_HARD   = 2;
 
+
+function Tween_Create(group)
+{
+    return new TWEEN.Tween(null, group);
+}
+function Tween_CreateGroup()
+{
+    return new TWEEN.Group();
+
+}
 class SceneGame
     extends Base_Scene
 {
@@ -14,10 +24,11 @@ class SceneGame
 
         //
         // iVars
-        this.hud         = new GameHud();
-        this.board       = new Board();
-        this.boardBorder = new BoardBorder(this.board);
-
+        this.hud              = new GameHud();
+        this.board            = new Board();
+        this.boardBorder      = new BoardBorder(this.board);
+        this.boardBorderTweenGroup = Tween_CreateGroup();
+        this.boardBorderTween = Tween_Create(this.boardBorderTweenGroup);
         //
         // Initialize.
         // Hud
@@ -32,11 +43,22 @@ class SceneGame
 
         this.addChild(this.hud);
         this.addChild(this.boardBorder);
+
+        Apply_BoardBorderEffect(this.boardBorder, this.boardBorderTween);
+
+        const start = {t:0};
+        const final = {t:1};
+        this.boardBorderTween
+            .from(start)
+            .delay(500)
+            .to(final, 1000)
+            .start();
     } // ctor
 
     Update(dt)
     {
         this.board.Update(dt);
+        this.boardBorderTweenGroup.update();
     }
 
 }; // class SceneGame

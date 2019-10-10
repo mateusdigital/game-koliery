@@ -68,6 +68,7 @@ class Board
         //
         // iVars
         // State
+        this.paused    = true;
         this.prevState = null;
         this.currState = null;
         this._ChangeState(BOARD_STATE_GENERATING_PIECE);
@@ -97,10 +98,26 @@ class Board
         this.hiScore = 0;
     } // ctor
 
+    //--------------------------------------------------------------------------
+    Start()
+    {
+        this.paused = false;
+    } // Start
+
+    //--------------------------------------------------------------------------
+    Pause()
+    {
+        this.paused = true;
+    } // Pause
+
 
     //--------------------------------------------------------------------------
     Update(dt)
     {
+        if(this.paused) {
+            return;
+        }
+
         // State : Playing / Game Over
         if(this.currState == BOARD_STATE_PLAYING) {
             this._UpdateState_Playing(dt);

@@ -69,6 +69,7 @@ async function Preload()
         "src/FX/Shaders/Debug.frag",
         "src/FX/Shaders/TextUncover.frag",
         "src/FX/Shaders/TextGradient.frag",
+        "src/FX/Shaders/BoardBorder.frag",
     ]).load(Setup);
 }
 
@@ -179,7 +180,7 @@ function Update_Editor(dt)
 //------------------------------------------------------------------------------
 function MouseMove(e)
 {
-    console.log(e.getLocalPosition(g_App.stage));
+    // console.log(e.getLocalPosition(g_App.stage));
     // MousePosition = e.data.getLocalPosition(gBoard);
 }
 
