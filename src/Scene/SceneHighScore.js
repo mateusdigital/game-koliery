@@ -11,7 +11,7 @@ class SceneHighScore
     extends Base_Scene
 {
     //--------------------------------------------------------------------------
-    constructor(onFinishCallback)
+    constructor(sceneToGoBackClass)
     {
         super();
 
@@ -34,7 +34,6 @@ class SceneHighScore
         this.titleLine           = null;
         this.scoreTexts          = [];
         this.scoreTweenGroup     = new TWEEN.Group();
-        this.sceneFinishCallback = onFinishCallback;
 
         //
         // Initialize.
@@ -66,7 +65,7 @@ class SceneHighScore
 
         // Tween Completion.
         this.scoreTweenGroup.onComplete(()=>{
-            onFinishCallback();
+            this._Game.SetScene(new sceneToGoBackClass());
         });
     } // ctor
 
