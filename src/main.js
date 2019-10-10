@@ -69,6 +69,7 @@ async function Preload()
         "src/FX/Shaders/Debug.frag",
         "src/FX/Shaders/TextUncover.frag",
         "src/FX/Shaders/TextGradient.frag",
+        "src/FX/Shaders/BoardBorder.frag",
     ]).load(Setup);
 }
 
@@ -97,8 +98,8 @@ function Setup()
     // game.PushScene(new SceneHighScore());
     // game.PushScene(new SceneSplash());
 
-    // game.PushScene(new SceneMenu());
-    game.PushScene(new SceneGame(0));
+    game.PushScene(new SceneMenu());
+    // game.PushScene(new SceneGame(0));
     Application_Start(GameLoop);
 }
 
