@@ -21,33 +21,30 @@ class SceneSplash
         this.sceneTweenGroup = new TWEEN.Group();
         this.effectTween     = this._CreateEffectTween();
 
-        // stdmatt Text.
-        this.stdmattText = Create_Normal_Text("stdmatt",  SPLASH_SCENE_FONT_SIZE);
-        this.stdmattText.filters = [
-            new TextUncoverEffect (this.stdmattText,  this.effectTween),
-            new TextGradientEffect(this.stdmattText,  chroma("black")   )
-        ];
-
-        // Presents Text.
+        // Texts.
+        this.stdmattText  = Create_Normal_Text("stdmatt",  SPLASH_SCENE_FONT_SIZE);
         this.presentsText = Create_Normal_Text("presents", SPLASH_SCENE_FONT_SIZE);
-        this.presentsText.filters = [
-            new TextUncoverEffect (this.presentsText,  this.effectTween),
-            new TextGradientEffect(this.presentsText,  chroma("black")   )
-        ];
 
         //
         // Initialize.
         const screen_size = Get_Screen_Size();
+        const color       = chroma("black");
 
         // stdmatt Text.
         this.stdmattText.pivot.set(0.5);
         this.stdmattText.x = (screen_size.x * 0.5);
         this.stdmattText.y = (screen_size.y * 0.5) - this.stdmattText.height;
 
+        Apply_TextUncoverEffect (this.stdmattText, this.effectTween);
+        Apply_TextGradientEffect(this.stdmattText, color           );
+
         // Presents Text.
         this.presentsText.pivot.set(0.5);
         this.presentsText.x = (screen_size.x * 0.5);
         this.presentsText.y = (screen_size.y * 0.5) + this.presentsText.height;
+
+        Apply_TextUncoverEffect (this.presentsText, this.effectTween);
+        Apply_TextGradientEffect(this.presentsText, color           );
 
         this.addChild(this.stdmattText );
         this.addChild(this.presentsText);
@@ -76,12 +73,7 @@ class SceneSplash
     //--------------------------------------------------------------------------
     _OnIntroFinished()
     {
-        // const scene = new SceneHighScore(()=>{
-        //     this._Game.PopScene();
-        // });
-
-        const scene = new SceneMenu();
-        this._Game.PushScene(scene);
+        this._Game.SetScene(new SceneMenu());
     } // _OnIntroFinished
 
     //--------------------------------------------------------------------------

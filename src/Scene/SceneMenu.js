@@ -143,13 +143,12 @@ class SceneMenu
                 .start();
 
             // Text.
-            const str  = strs[i];
-            const text = Create_Normal_Text(str, SCENE_MENU_LEVEL_FONT_SIZE);
+            const str   = strs[i];
+            const text  = Create_Normal_Text(str, SCENE_MENU_LEVEL_FONT_SIZE);
+            const color = chroma("black");
 
-            text.filters = [
-                new TextUncoverEffect (text, tween),
-                new TextGradientEffect(text,  chroma("black"))
-            ];
+            Apply_TextUncoverEffect (text, tween);
+            Apply_TextGradientEffect(text, color);
 
             text.anchor.set(0.0, 0.5);
             text.x = 0;
@@ -184,12 +183,11 @@ class SceneMenu
         // Text.
         const screen_size = Get_Screen_Size();
         const str         = this.marqueeStrings[0];
+        const color       = chroma("black");
 
         this.marqueeText = Create_Title_Text(str, SCENE_MENU_MARQUEE_FONT_SIZE);
-        this.marqueeText.filters = [
-            new TextUncoverEffect (this.marqueeText,  this.marqueeTween),
-            new TextGradientEffect(this.marqueeText,  chroma("black")   )
-        ];
+        Apply_TextUncoverEffect (this.marqueeText, this.marqueeTween);
+        Apply_TextGradientEffect(this.marqueeText, color            );
 
         this.marqueeText.anchor.set(0.5, 0.5);
         this.marqueeText.x = screen_size.x * 0.5;

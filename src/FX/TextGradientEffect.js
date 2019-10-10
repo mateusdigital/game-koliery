@@ -2,6 +2,15 @@
 // TextGradientEffect                                                         //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
+function Apply_TextGradientEffect(textRef, color)
+{
+    if(!textRef.filters) {
+        textRef.filters = [];
+    }
+    textRef.filters.push(new TextGradientEffect(textRef, color));
+}
+
+//------------------------------------------------------------------------------
 class TextGradientEffect
     extends PIXI.Filter
 {

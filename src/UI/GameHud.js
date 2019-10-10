@@ -71,6 +71,12 @@ class GameHud
         this.levelText  .x = this.marqueeText.x;
         this.levelText  .y = this.hiScoreText.y
 
+        // @XXX
+        Apply_TextGradientEffect(this.scoreText   , gPalette.GetScoreColor(0));
+        Apply_TextGradientEffect(this.hiScoreText , gPalette.GetScoreColor(1));
+        Apply_TextGradientEffect(this.marqueeText , gPalette.GetScoreColor(2));
+        Apply_TextGradientEffect(this.levelText   , gPalette.GetScoreColor(3));
+
         this.addChild(this.scoreText  );
         this.addChild(this.hiScoreText);
         this.addChild(this.marqueeText);
