@@ -28,10 +28,11 @@ const GAME_DESIGN_HEIGHT = 700;
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
 let gPalette     = null;
+let gStarfield   = null;
 // let gBoard       = null;
 // let gBoardBorder = null;
 // let gGameHud     = null;
-// let gStarfield   = null;
+
 
 // let editorMode    = false;
 // let MousePosition = null;
@@ -81,7 +82,7 @@ function Setup()
     g_App.stage.interactive = true;
     g_App.stage.buttonMode  = true;
 
-    // const screen_size = Get_Screen_Size();
+
     // const SCREEN_GAP = 10;
 
     // //
@@ -99,23 +100,23 @@ function Setup()
     // gBoardBorder.x = (screen_size.x / 2) - (gBoardBorder.width / 2);
     // gBoardBorder.y = (GAME_HUD_BOTTOM_Y);
 
-    // // Star field
-    // gStarfield = new Starfield(new PIXI.Rectangle(
-    //     0,
+    const screen_size = Get_Screen_Size();
+
+    // Star field
+    gStarfield = new Starfield(new PIXI.Rectangle(
+        0, 0, screen_size.x, screen_size.y
+    ));
     //     gGameHud.y + gGameHud.height + SCREEN_GAP,
-    //     screen_size.x,
-    //     screen_size.y - gGameHud.y + gGameHud.height - SCREEN_GAP
+    //     ,
+    //      - gGameHud.y + gGameHud.height - SCREEN_GAP
     // ));
 
-    // g_App.stage.addChild(gGameHud  );
-    // g_App.stage.addChild(gStarfield);
-    // g_App.stage.addChild(gBoardBorder);
-
+    g_App.stage.addChild(gStarfield);
     game = new Base_Game();
     // game.PushScene(new SceneHighScore());
-    // game.PushScene(new SceneSplash());
+    game.PushScene(new SceneSplash());
 
-    game.PushScene(new SceneMenu());
+    // game.PushScene(new SceneMenu());
     Application_Start(GameLoop);
 }
 
@@ -123,10 +124,11 @@ function Setup()
 //------------------------------------------------------------------------------
 function GameLoop(delta)
 {
+    gStarfield.Update(delta);
 
     // if(!editorMode) {
     //     gBoard    .Update(delta);
-    //     gStarfield.Update(delta);
+
     // } else {
     //     Update_Editor(delta);
     // }
@@ -195,6 +197,7 @@ function Update_Editor(dt)
 //------------------------------------------------------------------------------
 function MouseMove(e)
 {
+    console.log(e.getLocalPosition(g_App.stage));
     // MousePosition = e.data.getLocalPosition(gBoard);
 }
 

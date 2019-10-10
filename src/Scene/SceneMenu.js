@@ -30,8 +30,9 @@ class SceneMenu
         this.titleTextSinFrequency = SCENE_MENU_TITLE_SIN_FREQUENCY;
 
         // Level Text.
-        this.levelText      = [];
-        this.levelTextLayer = new PIXI.Container();
+        this.levelText       = [];
+        this.levelTextLayer  = new PIXI.Container();
+        this.levelTweenGroup = new TWEEN.Group();
 
         // Marquee Text.
         this.marqueeStrings = [
@@ -50,18 +51,15 @@ class SceneMenu
         this.marqueeTextIndex = 0;
         this.marqueeTweenGroup = new TWEEN.Group();
 
-
-        this._InitializeTitleText   ();
-        this._InitializeLevelText   ();
-        this._InitializeMarqueeTween();
-        this._InitializeMarqueeText ();
-
-        this._SetupMarqueeTween();
+        this._InitializeTitleText  ();
+        this._InitializeLevelText  ();
+        this._InitializeMarqueeText();
     } // ctor
 
      //--------------------------------------------------------------------------
      Update(dt)
      {
+         this.levelTweenGroup.update();
          this.marqueeTweenGroup.update(TWEEN.now(), true);
 
          for(let i = 0; i < this.titleText.length; ++i) {
@@ -105,7 +103,7 @@ class SceneMenu
             this.titleTextLayer.height * 0.5
         );
         this.titleTextLayer.x = (screen_size.x * 0.50)
-        this.titleTextLayer.y = (screen_size.y * 0.35) - (this.titleTextSinAmplitude * 2);
+        this.titleTextLayer.y = (screen_size.y * 0.30) - (this.titleTextSinAmplitude * 2);
 
         this.addChild(this.titleTextLayer);
     } // _InitializeTitleText
@@ -117,10 +115,20 @@ class SceneMenu
         const screen_size = Get_Screen_Size();
 
         for(let i = 0; i < strs.length; ++i) {
+            // Tween.
+            const progress = {t: 0};
+            const final    = {t: 1};
+            const tween = new TWEEN.Tween(progress, this.levelTweenGroup)
+                .to(final, 200)
+                .delay(300 * (i + 1))
+                .start();
+
+            // Text.
             const str  = strs[i];
             const text = Create_Normal_Text(str, SCENE_MENU_LEVEL_FONT_SIZE);
 
             text.filters = [
+                new TextUncoverEffect (text, tween),
                 new TextGradientEffect(text,  chroma("black"))
             ];
 
@@ -132,19 +140,32 @@ class SceneMenu
             this.levelTextLayer.addChild(text);
         }
 
+        // Text Layer.
         this.levelTextLayer.pivot.set(
             this.levelTextLayer.width  * 0.5,
-            this.levelTextLayer.height * 0.5
+            0
         );
-        this.levelTextLayer.x = (screen_size.x * 0.5 );
-        this.levelTextLayer.y = (screen_size.y * 0.6);
+        this.levelTextLayer.x = (screen_size.x * 0.5);
+        this.levelTextLayer.y = (screen_size.y * 0.5);
 
         this.addChild(this.levelTextLayer);
+
+        // Tween Group
+        this.levelTweenGroup.onComplete(()=>{
+            this._SetupMarqueeTween();
+        });
     } // _InitializeLevelText
 
     //--------------------------------------------------------------------------
     _InitializeMarqueeText()
     {
+        // Tween.
+        let progress = {t: 0};
+        let final    = {t: 1};
+
+        this.marqueeTween = new TWEEN.Tween(progress, this.marqueeTweenGroup);
+
+        // Text.
         const screen_size = Get_Screen_Size();
         const str         = this.marqueeStrings[0];
 
@@ -160,15 +181,6 @@ class SceneMenu
 
         this.addChild(this.marqueeText);
     } // _InitializeMarqueeText
-
-    //--------------------------------------------------------------------------
-    _InitializeMarqueeTween()
-    {
-        let progress = {t: 0};
-        let final    = {t: 1};
-
-        this.marqueeTween = new TWEEN.Tween(progress, this.marqueeTweenGroup);
-    } //
 
     //--------------------------------------------------------------------------
     _SetupMarqueeTween()

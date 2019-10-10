@@ -51,16 +51,11 @@ class SceneSplash
 
         this.addChild(this.stdmattText );
         this.addChild(this.presentsText);
-
-        this.starfield = new Starfield(new PIXI.Rectangle(0, 0, 500, 700));
-        this.addChild(this.starfield);
-
     } // ctor
 
     //--------------------------------------------------------------------------
     Update(dt)
     {
-        this.starfield.Update(dt);
         this.sceneTweenGroup.update();
     } // Update
 
@@ -76,7 +71,6 @@ class SceneSplash
     StartIntro()
     {
         this.effectTween.start();
-
     } // StartIntro
 
     //--------------------------------------------------------------------------
@@ -111,8 +105,11 @@ class SceneSplash
             .yoyo(true)
             .repeat(1)
             .onComplete(()=>{
-                this._OnIntroFinished();
+                // @XXX
+                setTimeout(()=>{
+                    this._OnIntroFinished();
+                }, 400)
             });
-    }
+    } // _SetupEffectTween
 
 }; // class SceneSplash
