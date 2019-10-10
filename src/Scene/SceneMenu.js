@@ -46,33 +46,52 @@ class SceneMenu
             "OF PROGRAMMERS HIDEOUT",
             "",
         ];
-        this.marqueeText = null;
-        this.marqueeTween = null;
-        this.marqueeTextIndex = 0;
+        this.marqueeText       = null;
+        this.marqueeTween      = null;
+        this.marqueeTextIndex  = 0;
         this.marqueeTweenGroup = new TWEEN.Group();
 
+        // Change Scene Timer.
+        this.changeSceneTimer = new Base_Timer(1.0);
+
+        //
+        // Initialize.
         this._InitializeTitleText  ();
         this._InitializeLevelText  ();
         this._InitializeMarqueeText();
+
+        this.changeSceneTimer.Start();
     } // ctor
 
-     //--------------------------------------------------------------------------
-     Update(dt)
-     {
-         this.levelTweenGroup.update();
-         this.marqueeTweenGroup.update(TWEEN.now(), true);
+    //--------------------------------------------------------------------------
+    Update(dt)
+    {
+        if(IsKeyPress(KEY_1)) {
+            this._Game.SetScene(new SceneGame(SCENE_GAME_LEVEL_EASY));
+        } else if(IsKeyPress(KEY_2)) {
+            this._Game.SetScene(new SceneGame(SCENE_GAME_LEVEL_MEDIUM));
+        } else if(IsKeyPress(KEY_3)) {
+            this._Game.SetScene(new SceneGame(SCENE_GAME_LEVEL_HARD));
+        } else if(IsKeyPress(KEY_H)){
+            this._Game.SetScene(new SceneHighScore(SceneMenu));
+        }
 
-         for(let i = 0; i < this.titleText.length; ++i) {
-             const text = this.titleText[i];
-             const len_i = (this.titleText.length - i);
+        // Tweens.
+        this.levelTweenGroup.update();
+        this.marqueeTweenGroup.update(TWEEN.now(), true);
 
-             const value = -Math_Sin(
-                 (Application_Total_Time * MATH_2PI + len_i) / this.titleTextSinFrequency
-             );
+        // Title.
+        for(let i = 0; i < this.titleText.length; ++i) {
+            const text = this.titleText[i];
+            const len_i = (this.titleText.length - i);
 
-             text.y = (value * this.titleTextSinAmplitude);
-         }
-     } // Update
+            const value = -Math_Sin(
+                (Application_Total_Time * MATH_2PI + len_i) / this.titleTextSinFrequency
+            );
+
+            text.y = (value * this.titleTextSinAmplitude);
+        }
+    } // Update
 
 
     //--------------------------------------------------------------------------
@@ -141,10 +160,7 @@ class SceneMenu
         }
 
         // Text Layer.
-        this.levelTextLayer.pivot.set(
-            this.levelTextLayer.width  * 0.5,
-            0
-        );
+        this.levelTextLayer.pivot.set(this.levelTextLayer.width  * 0.5, 0);
         this.levelTextLayer.x = (screen_size.x * 0.5);
         this.levelTextLayer.y = (screen_size.y * 0.5);
 
@@ -205,6 +221,10 @@ class SceneMenu
 
                 this.marqueeTextIndex = (index + 1) % strings_len;
                 this.marqueeText.text = this.marqueeStrings[index];
+
+                // @XXX
+                if(this.marqueeTextIndex == 0) {
+                }
             })
             .onComplete(()=>{
                 this._SetupMarqueeTween();
