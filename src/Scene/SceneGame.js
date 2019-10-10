@@ -24,11 +24,15 @@ class SceneGame
 
         //
         // iVars
-        this.hud              = new GameHud();
-        this.board            = new Board();
-        this.boardBorder      = new BoardBorder(this.board);
+        this.hud     = new GameHud();
+        this.board   = new Board  ();
+        this.hiscore = 0;
+
+        // Board Border
+        this.boardBorder           = new BoardBorder(this.board);
         this.boardBorderTweenGroup = Tween_CreateGroup();
-        this.boardBorderTween = Tween_Create(this.boardBorderTweenGroup);
+        this.boardBorderTween      = Tween_Create(this.boardBorderTweenGroup);
+
         //
         // Initialize.
         // Hud
@@ -45,20 +49,53 @@ class SceneGame
         this.addChild(this.boardBorder);
 
         Apply_BoardBorderEffect(this.boardBorder, this.boardBorderTween);
+        this._SetupBoardCallbacks       ();
+        this._InitializeBoardBorderTween();
+    } // ctor
 
+    //--------------------------------------------------------------------------
+    Update(dt)
+    {
+        this.board.Update(dt);
+        this.boardBorderTweenGroup.update();
+    } // Update
+
+    //--------------------------------------------------------------------------
+    _SetupBoardCallbacks()
+    {
+        this.board.onScoreChangeCallback = ()=>{ this._OnScoreChanged() };
+        this.board.onMatchCallback       = ()=>{ this._OnMatch       () };
+    } // _SetupBoardCallbacks
+
+    //--------------------------------------------------------------------------
+    _OnScoreChanged()
+    {
+        const score = this.board.score;
+        if(score >= this.hiscore) {
+            this.hiscore = score;
+        }
+
+        this.hud.SetScore(score, this.hiscore);
+    } // _OnScoreChanged
+
+    _OnMatch()
+    {
+        const match_info = this.board.matchInfo;
+        debugger;
+    } // _OnMatch
+
+    //--------------------------------------------------------------------------
+    _InitializeBoardBorderTween()
+    {
         const start = {t:0};
         const final = {t:1};
         this.boardBorderTween
             .from(start)
             .delay(500)
             .to(final, 1000)
+            .onComplete(()=>{
+                this.board.Start();
+            })
             .start();
-    } // ctor
-
-    Update(dt)
-    {
-        this.board.Update(dt);
-        this.boardBorderTweenGroup.update();
-    }
-
+    } // _InitializeBoardBorderTween
 }; // class SceneGame

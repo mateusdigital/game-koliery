@@ -61,7 +61,7 @@ class Board
     extends PIXI.Container
 {
     //--------------------------------------------------------------------------
-    constructor(board)
+    constructor()
     {
         super();
 
@@ -94,8 +94,12 @@ class Board
         this.fallTweenGroup    = new TWEEN.Group();
 
         // Score.
-        this.score   = 0;
-        this.hiScore = 0;
+        this.score = 0;
+
+        // Callbacks.
+        this.onScoreChangeCallback = null;
+        this.onMatchCallback       = null;
+
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -333,7 +337,7 @@ class Board
         this._ChangeState(BOARD_STATE_FINDING_MATCHES_FINISHED);
 
         if(this.matchInfo.hasMatches) {
-            gGameHud.SetMarqueeWithMatchInfo(this.matchInfo);
+            this.onMatchCallback();
             this._AddScore(1234);
         }
     } // _FindMatches
@@ -490,13 +494,7 @@ class Board
     _AddScore(value)
     {
         this.score += value;
-        gGameHud.SetScore(this.score, 0);
-
-        if(value == 1234){
-            this.maxTimeToMove -= (0.03);
-        }
-
-        console.log(this.maxTimeToMove);
+        this.onScoreChangeCallback();
     }
 
 

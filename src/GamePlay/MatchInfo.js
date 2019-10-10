@@ -51,7 +51,6 @@ class MatchInfo
             const info  = this._CheckMatches(block);
             this.infos.push(info);
         }
-
     } // FindMatches
 
     //--------------------------------------------------------------------------

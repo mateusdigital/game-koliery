@@ -64,10 +64,10 @@ class Block
         this.addChild(this.graphics);
 
         // Debug.
-        // let text = new PIXI.Text(this.colorIndex,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'left'});
-        // text.x = this.width  / 2 - text.width  / 2;
-        // text.y = this.height / 2 - text.height / 2;
-        // this.addChild(text);
+        let text = new PIXI.Text(this.objectId,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'left'});
+        text.x = this.width  / 2 - text.width  / 2;
+        text.y = this.height / 2 - text.height / 2;
+        this.addChild(text);
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -122,7 +122,7 @@ class Block
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
 const PIECE_ANCHOR                   = 0.5;
-const PIECE_BLOCKS_COUNT             = 2;
+const PIECE_BLOCKS_COUNT             = 3;
 const PIECE_ROTATE_COOLDOWN_DURATION = 0.5;
 
 //------------------------------------------------------------------------------
