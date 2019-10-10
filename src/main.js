@@ -98,8 +98,8 @@ function Setup()
     // game.PushScene(new SceneHighScore());
     // game.PushScene(new SceneSplash());
 
-    game.PushScene(new SceneMenu());
-    // game.PushScene(new SceneGame(0));
+    // game.PushScene(new SceneMenu());
+    game.PushScene(new SceneGame(0));
     Application_Start(GameLoop);
 }
 
@@ -180,7 +180,7 @@ function Update_Editor(dt)
 //------------------------------------------------------------------------------
 function MouseMove(e)
 {
-    console.log(e.getLocalPosition(g_App.stage));
+    // console.log(e.getLocalPosition(g_App.stage));
     // MousePosition = e.data.getLocalPosition(gBoard);
 }
 
