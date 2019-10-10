@@ -77,6 +77,8 @@ async function Preload()
 //------------------------------------------------------------------------------
 function Setup()
 {
+    Random_Seed(0);
+
     // Install the Input Handlers.
     Install_MouseHandlers   ();
     Install_KeyboardHandlers();
