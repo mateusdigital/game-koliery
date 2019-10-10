@@ -53,6 +53,10 @@ async function Preload()
         "Commodore 64 Rounded",
         "./res/fonts/Commodore64Rounded.woff"
     );
+    await Font_Load(
+        "PixelForce",
+        "./res/fonts/PixelForce.ttf"
+    );
 
     Texture_SetBasePath("res/textures/");
     PIXI_LOADER.add([
@@ -109,8 +113,9 @@ function Setup()
 
     game = new Base_Game();
     // game.PushScene(new SceneHighScore());
-    game.PushScene(new SceneSplash());
+    // game.PushScene(new SceneSplash());
 
+    game.PushScene(new SceneMenu());
     Application_Start(GameLoop);
 }
 

@@ -43,16 +43,16 @@ class GameHud
         // Properties.
         let s = "";
         s = Build_Digits_String(GAME_HUD_TEXT_PREFIX_SCORE, GAME_HUD_TEXT_DIGITS_SCORE, 0);
-        this.scoreText = new Text(s, GAME_HUD_FONT_SIZE);
+        this.scoreText = Create_Normal_Text(s, GAME_HUD_FONT_SIZE);
 
         s = Build_Digits_String(GAME_HUD_TEXT_PREFIX_HI, GAME_HUD_TEXT_DIGITS_SCORE, 0);
-        this.hiScoreText = new Text(s, GAME_HUD_FONT_SIZE);
+        this.hiScoreText = Create_Normal_Text(s, GAME_HUD_FONT_SIZE);
 
         s = GAME_HUD_TEXT_GAME_NAME;
-        this.marqueeText = new Text(s, GAME_HUD_FONT_SIZE);
+        this.marqueeText = Create_Normal_Text(s, GAME_HUD_FONT_SIZE);
 
         s = Build_Digits_String(GAME_HUD_TEXT_PREFIX_LEVEL, GAME_HUD_TEXT_DIGITS_LEVEL, 1)
-        this.levelText = new Text(s, GAME_HUD_FONT_SIZE);
+        this.levelText = Create_Normal_Text(s, GAME_HUD_FONT_SIZE);
 
         //
         // Initialize.

@@ -22,14 +22,14 @@ class SceneSplash
         this.effectTween     = this._CreateEffectTween();
 
         // stdmatt Text.
-        this.stdmattText = new Text("stdmatt",  SPLASH_SCENE_FONT_SIZE);
+        this.stdmattText = Create_Normal_Text("stdmatt",  SPLASH_SCENE_FONT_SIZE);
         this.stdmattText.filters = [
             new TextUncoverEffect (this.stdmattText,  this.effectTween),
             new TextGradientEffect(this.stdmattText,  chroma("black")   )
         ];
 
         // Presents Text.
-        this.presentsText = new Text("presents", SPLASH_SCENE_FONT_SIZE);
+        this.presentsText = Create_Normal_Text("presents", SPLASH_SCENE_FONT_SIZE);
         this.presentsText.filters = [
             new TextUncoverEffect (this.presentsText,  this.effectTween),
             new TextGradientEffect(this.presentsText,  chroma("black")   )
@@ -52,11 +52,15 @@ class SceneSplash
         this.addChild(this.stdmattText );
         this.addChild(this.presentsText);
 
+        this.starfield = new Starfield(new PIXI.Rectangle(0, 0, 500, 700));
+        this.addChild(this.starfield);
+
     } // ctor
 
     //--------------------------------------------------------------------------
     Update(dt)
     {
+        this.starfield.Update(dt);
         this.sceneTweenGroup.update();
     } // Update
 
@@ -78,9 +82,11 @@ class SceneSplash
     //--------------------------------------------------------------------------
     _OnIntroFinished()
     {
-        const scene = new SceneHighScore(()=>{
-            this._Game.PopScene();
-        });
+        // const scene = new SceneHighScore(()=>{
+        //     this._Game.PopScene();
+        // });
+
+        const scene = new SceneMenu();
         this._Game.PushScene(scene);
     } // _OnIntroFinished
 
@@ -107,5 +113,6 @@ class SceneSplash
             .onComplete(()=>{
                 this._OnIntroFinished();
             });
-    } // _SetupEffectTween
+    }
+
 }; // class SceneSplash
