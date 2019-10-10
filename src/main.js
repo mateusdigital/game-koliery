@@ -83,40 +83,22 @@ function Setup()
     g_App.stage.buttonMode  = true;
 
 
-    // const SCREEN_GAP = 10;
-
     // //
     gPalette = new Palette();
-
-    // // Game Hud
-    // gGameHud = new GameHud();
-    // gGameHud.y += SCREEN_GAP;
-
-    // // Board
-    // const GAME_HUD_BOTTOM_Y = (gGameHud.y + gGameHud.height + SCREEN_GAP);
-    // gBoard       = new Board();
-    // gBoardBorder = new BoardBorder(gBoard);
-    // // gBoardBorder.scale.set((screen_size.y - GAME_HUD_BOTTOM_Y) / gBoardBorder.height);
-    // gBoardBorder.x = (screen_size.x / 2) - (gBoardBorder.width / 2);
-    // gBoardBorder.y = (GAME_HUD_BOTTOM_Y);
-
     const screen_size = Get_Screen_Size();
 
     // Star field
     gStarfield = new Starfield(new PIXI.Rectangle(
         0, 0, screen_size.x, screen_size.y
     ));
-    //     gGameHud.y + gGameHud.height + SCREEN_GAP,
-    //     ,
-    //      - gGameHud.y + gGameHud.height - SCREEN_GAP
-    // ));
 
     g_App.stage.addChild(gStarfield);
     game = new Base_Game();
     // game.PushScene(new SceneHighScore());
-    game.PushScene(new SceneSplash());
+    // game.PushScene(new SceneSplash());
 
     // game.PushScene(new SceneMenu());
+    game.PushScene(new SceneGame(0));
     Application_Start(GameLoop);
 }
 
