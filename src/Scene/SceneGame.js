@@ -2,16 +2,6 @@ const SCENE_GAME_LEVEL_EASY   = 0;
 const SCENE_GAME_LEVEL_MEDIUM = 1;
 const SCENE_GAME_LEVEL_HARD   = 2;
 
-
-function Tween_Create(group)
-{
-    return new TWEEN.Tween(null, group);
-}
-function Tween_CreateGroup()
-{
-    return new TWEEN.Group();
-
-}
 class SceneGame
     extends Base_Scene
 {
@@ -81,7 +71,7 @@ class SceneGame
     _OnMatch()
     {
         const match_info = this.board.matchInfo;
-        debugger;
+        // debugger;
     } // _OnMatch
 
     //--------------------------------------------------------------------------
@@ -91,8 +81,8 @@ class SceneGame
         const final = {t:1};
         this.boardBorderTween
             .from(start)
-            .delay(500)
-            .to(final, 1000)
+            .delay(0)
+            .to(final,0 )
             .onComplete(()=>{
                 this.board.Start();
             })

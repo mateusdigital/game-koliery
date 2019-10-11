@@ -29,8 +29,8 @@ const BOARD_BLOCK_MOVE_SUBSTEPS     = 2;
 
 const BOARD_SCORE_VALUE_MOVING_FAST = 1;
 // Tweens
-const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 500;
-const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 500;
+const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 3500;
+const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 3500;
 const BOARD_DESTROY_EASING               = TWEEN.Easing.Circular.In
 const BOARD_FALL_EASING                  = TWEEN.Easing.Back.Out
 // State: Playing / Game Over
@@ -100,6 +100,18 @@ class Board
         this.onScoreChangeCallback = null;
         this.onMatchCallback       = null;
 
+        this.blocksToTryFindMatch = [
+            new Block(this, 0),
+            new Block(this, 0),
+            new Block(this, 0),
+        ];
+
+
+        for(let i = BOARD_FIELD_ROWS-1; i >= BOARD_FIELD_ROWS-10; --i) {
+            for(let j = 0; j < BOARD_FIELD_COLUMNS; ++j) {
+                this._SetBlockAt(Create_Random_Block(this), j, i);
+            }
+        }
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -486,7 +498,6 @@ class Board
             })
             .easing(BOARD_FALL_EASING)
             .start();
-
     } // _CreateFallBlockAnimation
 
 
