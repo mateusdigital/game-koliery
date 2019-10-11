@@ -444,7 +444,7 @@ class Board
         this.prevState = this.currState;
         this.currState = newState;
 
-        console.log("[STATE] ", this.prevState, " -> ", this.currState);
+        // console.log("[STATE] ", this.prevState, " -> ", this.currState);
     } // _ChangeState
 
 
