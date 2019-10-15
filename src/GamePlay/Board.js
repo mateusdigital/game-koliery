@@ -363,6 +363,7 @@ class Board
             return;
         }
 
+        this.destroyTweenGroup = Tween_CreateGroup();
         for(let i = 0; i < this.matchInfo.allMatchedBlocks.length; ++i) {
             let block = this.matchInfo.allMatchedBlocks[i];
             this._CreateDestroyBlockAnimation(block);
