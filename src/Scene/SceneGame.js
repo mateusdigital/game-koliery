@@ -55,7 +55,9 @@ class SceneGame
     Update(dt)
     {
         this.board.Update(dt);
-        this.boardBorderTweenGroup.update();
+        if(!this.boardBorderTweenGroup.isCompleted()) {
+            this.boardBorderTweenGroup.update();
+        }
     } // Update
 
     //--------------------------------------------------------------------------
