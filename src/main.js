@@ -71,6 +71,7 @@ async function Preload()
         "src/FX/Shaders/TextGradient.frag",
         "src/FX/Shaders/BoardBorder.frag",
         "src/FX/Shaders/BlockTint.frag",
+        "src/FX/Shaders/BlockSquash.frag",
     ]).load(Setup);
 }
 
