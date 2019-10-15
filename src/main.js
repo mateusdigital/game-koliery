@@ -70,6 +70,7 @@ async function Preload()
         "src/FX/Shaders/TextUncover.frag",
         "src/FX/Shaders/TextGradient.frag",
         "src/FX/Shaders/BoardBorder.frag",
+        "src/FX/Shaders/BlockTint.frag",
     ]).load(Setup);
 }
 
