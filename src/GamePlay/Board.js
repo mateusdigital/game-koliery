@@ -175,8 +175,8 @@ class Board
         //
         // State : Destroying Pieces
         else if(this.currState == BOARD_STATE_DESTROYING_PIECES) {
-            const done = (this.destroyTweenGroup.update() == false);
-            if(done) {
+            this.destroyTweenGroup.update();
+            if(this.destroyTweenGroup.isCompleted()) {
                 this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
             }
         }
