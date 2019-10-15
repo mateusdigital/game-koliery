@@ -6,8 +6,8 @@ const SCENE_GAME_LEVEL_EASY   = 0;
 const SCENE_GAME_LEVEL_MEDIUM = 1;
 const SCENE_GAME_LEVEL_HARD   = 2;
 
-const SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DURATION_MS = 0;
-const SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DELAY_MS    = 0;
+const SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DURATION_MS = 1000;
+const SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DELAY_MS    = 500;
 
 //------------------------------------------------------------------------------
 class SceneGame
