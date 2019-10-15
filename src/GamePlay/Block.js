@@ -9,10 +9,10 @@
 const BLOCK_COLOR_INDEX_COUNT = 2;
 const BLOCK_BORDER_SIZE       = 1;
 
-const BLOCK_DESTROY_TWEEN_DURATION_MS = 1500;
+const BLOCK_DESTROY_TWEEN_DURATION_MS = 500;
 const BLOCK_DESTROY_TWEEN_EASING      = TWEEN.Easing.Circular.In
 
-const BLOCK_BLINK_TWEEN_DURATION_MS       = 300;
+const BLOCK_BLINK_TWEEN_DURATION_MS       = 200;
 const BLOCK_BLINK_TWEEN_BLINK_COUNT       = 4;
 const BLOCK_BLINK_TWEEN_BLINK_DURATION_MS = (BLOCK_BLINK_TWEEN_DURATION_MS / BLOCK_BLINK_TWEEN_BLINK_COUNT);
 
@@ -84,13 +84,13 @@ class Block
     _CreateSquashAnimation()
     {
         let tween = Tween_CreateBasic(
-                BLOCK_DESTROY_TWEEN_DURATION_MS,
-                this.boardRef.destroyTweenGroup
-            )
-            .onComplete(()=>{
-                this.boardRef.RemoveBlock(this);
-            })
-            .easing(BLOCK_DESTROY_TWEEN_EASING)
+            BLOCK_DESTROY_TWEEN_DURATION_MS,
+            this.boardRef.destroyTweenGroup
+        )
+        .onComplete(()=>{
+            this.boardRef.RemoveBlock(this);
+        })
+        .easing(BLOCK_DESTROY_TWEEN_EASING)
 
         return tween;
     } // _CreateSquashAnimation
@@ -106,23 +106,23 @@ class Block
             ? BLOCK_BLINK_TWEEN_BLINK_COUNT + 2
             : BLOCK_BLINK_TWEEN_BLINK_COUNT + 1;
 
-        let tween = Tween_Create()
-            .from({t:0})
-            .to({t:1}, BLOCK_BLINK_TWEEN_BLINK_DURATION_MS)
-            .repeat(repeat_ms)
-            .yoyo(true)
-            .onRepeat(()=>{
-                const color = (!tween._reversed)
-                    ? gPalette.GetBlockColor     (this.colorIndex)
-                    : gPalette.GetBlockBlinkColor(this.colorIndex);
+        let tween = Tween_CreateBasic(
+            BLOCK_BLINK_TWEEN_BLINK_DURATION_MS
+        )
+        .repeat(repeat_ms)
+        .yoyo(true)
+        .onRepeat(()=>{
+            const color = (!tween._reversed)
+                ? gPalette.GetBlockColor     (this.colorIndex)
+                : gPalette.GetBlockBlinkColor(this.colorIndex);
 
-                this.sprite.blockTintEffect.SetColor(color);
-            })
-            .onComplete(()=>{
-                const squash = this._CreateSquashAnimation();
-                Apply_BlockSquashEffect(this.sprite, squash);
-                squash.start();
-            });
+            this.sprite.blockTintEffect.SetColor(color);
+        })
+        .onComplete(()=>{
+            const squash = this._CreateSquashAnimation();
+            Apply_BlockSquashEffect(this.sprite, squash);
+            squash.start();
+        });
 
         return tween;
     } // _CreateBlinkAnimation
