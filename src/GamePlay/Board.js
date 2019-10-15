@@ -88,8 +88,8 @@ class Board
         this.movingFast          = false;
 
         // Tweens.
-        this.destroyTweenGroup = new TWEEN.Group();
-        this.fallTweenGroup    = new TWEEN.Group();
+        this.destroyTweenGroup = Tween_CreateGroup();
+        this.fallTweenGroup    = Tween_CreateGroup();
 
         // Score.
         this.score = 0;
