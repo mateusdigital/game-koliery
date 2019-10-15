@@ -1,7 +1,15 @@
+//----------------------------------------------------------------------------//
+// SceneGame                                                                  //
+//----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
 const SCENE_GAME_LEVEL_EASY   = 0;
 const SCENE_GAME_LEVEL_MEDIUM = 1;
 const SCENE_GAME_LEVEL_HARD   = 2;
 
+const SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DURATION_MS = 0;
+const SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DELAY_MS    = 0;
+
+//------------------------------------------------------------------------------
 class SceneGame
     extends Base_Scene
 {
@@ -20,8 +28,8 @@ class SceneGame
 
         // Board Border
         this.boardBorder           = new BoardBorder(this.board);
-        this.boardBorderTweenGroup = Tween_CreateGroup();
-        this.boardBorderTween      = Tween_Create(this.boardBorderTweenGroup);
+        this.boardBorderTweenGroup = null;
+        this.boardBorderTween      = null;
 
         //
         // Initialize.
@@ -29,6 +37,10 @@ class SceneGame
         this.hud.y += SCREEN_GAP;
 
         // Board
+        this._SetupBoardCallbacks       ();
+        this._InitializeBoardBorderTween();
+        Apply_BoardBorderEffect(this.boardBorder, this.boardBorderTween);
+
         const screen_size       = Get_Screen_Size();
         const GAME_HUD_BOTTOM_Y = (this.hud.y + this.hud.height + SCREEN_GAP);
 
@@ -37,10 +49,6 @@ class SceneGame
 
         this.addChild(this.hud);
         this.addChild(this.boardBorder);
-
-        Apply_BoardBorderEffect(this.boardBorder, this.boardBorderTween);
-        this._SetupBoardCallbacks       ();
-        this._InitializeBoardBorderTween();
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -68,24 +76,24 @@ class SceneGame
         this.hud.SetScore(score, this.hiscore);
     } // _OnScoreChanged
 
+    //--------------------------------------------------------------------------
     _OnMatch()
     {
         const match_info = this.board.matchInfo;
-        // debugger;
     } // _OnMatch
 
     //--------------------------------------------------------------------------
     _InitializeBoardBorderTween()
     {
-        const start = {t:0};
-        const final = {t:1};
-        this.boardBorderTween
-            .from(start)
-            .delay(0)
-            .to(final,0 )
-            .onComplete(()=>{
-                this.board.Start();
-            })
-            .start();
+        this.boardBorderTweenGroup = Tween_CreateGroup();
+        this.boardBorderTween = Tween_CreateBasic(
+            SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DURATION_MS,
+            this.boardBorderTweenGroup
+        )
+        .delay(SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DELAY_MS)
+        .onComplete(()=>{
+            this.board.Start();
+        })
+        .start();
     } // _InitializeBoardBorderTween
 }; // class SceneGame
