@@ -28,11 +28,6 @@ const BOARD_BLOCK_TIME_TO_MOVE_FAST = 0.025;
 const BOARD_BLOCK_MOVE_SUBSTEPS     = 2;
 
 const BOARD_SCORE_VALUE_MOVING_FAST = 1;
-// Tweens
-const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 3500;
-const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 3500;
-const BOARD_DESTROY_EASING               = TWEEN.Easing.Circular.In
-const BOARD_FALL_EASING                  = TWEEN.Easing.Back.Out
 // State: Playing / Game Over
 const BOARD_STATE_PLAYING                    = "BOARD_STATE_PLAYING";
 const BOARD_STATE_GAME_OVER                  = "BOARD_STATE_GAME_OVER";
@@ -90,8 +85,8 @@ class Board
         this.movingFast          = false;
 
         // Tweens.
-        this.destroyTweenGroup = new TWEEN.Group();
-        this.fallTweenGroup    = new TWEEN.Group();
+        this.destroyTweenGroup = Tween_CreateGroup();
+        this.fallTweenGroup    = Tween_CreateGroup();
 
         // Score.
         this.score = 0;
@@ -107,12 +102,13 @@ class Board
         ];
 
 
-        for(let i = BOARD_FIELD_ROWS-1; i >= BOARD_FIELD_ROWS-10; --i) {
+        for(let i = BOARD_FIELD_ROWS-1; i >= BOARD_FIELD_ROWS-12; --i) {
             for(let j = 0; j < BOARD_FIELD_COLUMNS; ++j) {
                 this._SetBlockAt(Create_Random_Block(this), j, i);
             }
         }
     } // ctor
+
 
     //--------------------------------------------------------------------------
     Start()
@@ -176,8 +172,8 @@ class Board
         //
         // State : Destroying Pieces
         else if(this.currState == BOARD_STATE_DESTROYING_PIECES) {
-            const done = (this.destroyTweenGroup.update() == false);
-            if(done) {
+            this.destroyTweenGroup.update();
+            if(this.destroyTweenGroup.isCompleted()) {
                 this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
             }
         }
@@ -201,8 +197,8 @@ class Board
         //
         // State : Falling Pieces
         else if(this.currState == BOARD_STATE_FALLING_PIECES) {
-            const done = (this.fallTweenGroup.update() == false);
-            if(done) {
+            this.fallTweenGroup.update();
+            if(this.fallTweenGroup.isCompleted()) {
                 this._ChangeState(BOARD_STATE_FALLING_PIECES_FINISHED);
             }
         }
@@ -364,6 +360,7 @@ class Board
             return;
         }
 
+        this.destroyTweenGroup = Tween_CreateGroup();
         for(let i = 0; i < this.matchInfo.allMatchedBlocks.length; ++i) {
             let block = this.matchInfo.allMatchedBlocks[i];
             this._CreateDestroyBlockAnimation(block);
@@ -404,6 +401,17 @@ class Board
         }
         return this.field[indexY][indexX];
     } // GetBlockAt
+
+    //--------------------------------------------------------------------------
+    SetBlock(block, coord)
+    {
+        this._SetBlockAt(block, coord.x, coord.y);
+    }
+    //--------------------------------------------------------------------------
+    RemoveBlock(block)
+    {
+        this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
+    }
 
     //--------------------------------------------------------------------------
     _RemoveBlockAt(indexX, indexY)
@@ -463,41 +471,13 @@ class Board
     //--------------------------------------------------------------------------
     _CreateDestroyBlockAnimation(block)
     {
-        let curr = {value: 0};
-        let end  = {value: 1};
-
         block.StartDestroyAnimation();
-        let tween = new TWEEN.Tween(curr, this.destroyTweenGroup)
-            .to(end, BOARD_DESTROY_PIECES_TWEEN_TIME_MS)
-            .onUpdate(()=>{
-                block.SetDestroyAnimationValue(curr.value);
-            })
-            .onComplete(()=>{
-                // @XXX(stdmatt): Destroy piece....
-                this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
-            })
-            .easing(BOARD_DESTROY_EASING)
-            .start();
     } // _CreateDestroyBlockAnimation
 
     //--------------------------------------------------------------------------
     _CreateFallBlockAnimation(block, targetCoord)
     {
-        let position = Vector_Copy(block.position);
-        let target   = Vector_Create(position.x, targetCoord.y * this.blockSize.y);
-
-        let tween = new TWEEN.Tween(position, this.fallTweenGroup)
-            .to(target, BOARD_FALL_PIECES_TWEEN_TIME_MS)
-            .onUpdate(()=>{
-                block.x = position.x;
-                block.y = position.y;
-            })
-            .onComplete(()=>{
-               this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
-               this._SetBlockAt(block, targetCoord.x, targetCoord.y);
-            })
-            .easing(BOARD_FALL_EASING)
-            .start();
+        block.StartFallAnimation(targetCoord);
     } // _CreateFallBlockAnimation
 
 
