@@ -94,19 +94,6 @@ class Board
         // Callbacks.
         this.onScoreChangeCallback = null;
         this.onMatchCallback       = null;
-
-        this.blocksToTryFindMatch = [
-            new Block(this, 0),
-            new Block(this, 0),
-            new Block(this, 0),
-        ];
-
-
-        for(let i = BOARD_FIELD_ROWS-1; i >= BOARD_FIELD_ROWS-12; --i) {
-            for(let j = 0; j < BOARD_FIELD_COLUMNS; ++j) {
-                this._SetBlockAt(Create_Random_Block(this), j, i);
-            }
-        }
     } // ctor
 
 
