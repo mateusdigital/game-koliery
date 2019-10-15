@@ -35,7 +35,7 @@ class BoardBorderEffect
     //--------------------------------------------------------------------------
     apply(filterManager, input, output, clear)
     {
-        this.uniforms.progress      = this.tweenRef.getValue().t;
+        this.uniforms.progress      = this.tweenRef.getValue().value;
         this.uniforms.dimensions[0] = this.boardBorderRef.width;
         this.uniforms.dimensions[1] = this.boardBorderRef.height;
         filterManager.applyFilter(this, input, output, clear);

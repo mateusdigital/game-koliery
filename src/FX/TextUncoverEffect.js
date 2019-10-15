@@ -37,7 +37,7 @@ class TextUncoverEffect
     //--------------------------------------------------------------------------
     apply(filterManager, input, output, clear)
     {
-        this.uniforms.progress      = this.tweenRef.getValue().t;
+        this.uniforms.progress      = this.tweenRef.getValue().value;
         this.uniforms.dimensions[0] = this.textRef.width;
         this.uniforms.dimensions[1] = this.textRef.height;
         filterManager.applyFilter(this, input, output, clear);

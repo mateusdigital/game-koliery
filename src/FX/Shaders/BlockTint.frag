@@ -19,8 +19,6 @@ void main()
     float bs2 = 3.0 * 2.0;
     float bs3 = 3.0 * 3.0;
 
-
-
     if(
         (
             coord.x >= bs1 && coord.x <= bs2 &&
