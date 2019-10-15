@@ -55,7 +55,7 @@ class BoardBorder
                 }
 
                 let p = Math.abs(colors.length - i + j) % colors.length;
-                let c = colors[p];
+                let c = colors[p].num();
 
                 this.graphics.beginFill(c, 1);
                     // Left side.

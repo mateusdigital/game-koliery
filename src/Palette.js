@@ -69,13 +69,14 @@ class Palette
     _InitializeBlockColors()
     {
         this.blockColors = [
-            0x985c23, // brown
-            0xedcf61, // yellow
-            0x4dad86, // green
-            0x283fb1, // dark blue
-            0x8873f4, // light blue
-            0xc56382, // pink
-            0x812a18, // red
+            chroma("#985c23"), // brown
+            chroma("#edcf61"), // yellow
+            chroma("#4dad86"), // green
+            chroma("#283fb1"), // dark blue
+            chroma("#8873f4"), // light blue
+            chroma("#c56382"), // pink
+            chroma("#812a18"), // red
         ];
+
     } // _InitializeBlockColors
 }; // class Palette
