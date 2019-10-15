@@ -200,8 +200,8 @@ class Board
         //
         // State : Falling Pieces
         else if(this.currState == BOARD_STATE_FALLING_PIECES) {
-            const done = (this.fallTweenGroup.update() == false);
-            if(done) {
+            this.fallTweenGroup.update();
+            if(this.fallTweenGroup.isCompleted()) {
                 this._ChangeState(BOARD_STATE_FALLING_PIECES_FINISHED);
             }
         }
