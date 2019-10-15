@@ -33,7 +33,7 @@ class SceneHighScore
         this.titleText           = null;
         this.titleLine           = null;
         this.scoreTexts          = [];
-        this.scoreTweenGroup     = new TWEEN.Group();
+        this.scoreTweenGroup     = Tween_CreateGroup();
 
         //
         // Initialize.
@@ -114,18 +114,11 @@ class SceneHighScore
     //--------------------------------------------------------------------------
     _CreateEffectTween(index)
     {
-        let progress = {t: 0};
-        let final    = {t: 1};
-
-        const tween = new TWEEN.Tween(progress, this.scoreTweenGroup)
-            .to(final, HIGHSCORE_SCENE_TEXT_EFFECT_DURATION_MS)
-            .delay(HIGHSCORE_SCENE_TEXT_EFFECT_DELAY_DURATION_MS * index)
-            .onUpdate(()=>{
-
-            })
-            .onComplete(()=>{
-            })
-            .start();
+        const tween = Tween_CreateBasic(
+                HIGHSCORE_SCENE_TEXT_EFFECT_DURATION_MS,
+                this.scoreTweenGroup
+            )
+            .delay(HIGHSCORE_SCENE_TEXT_EFFECT_DELAY_DURATION_MS * index);
 
         return tween;
     } // _CreateEffectTween

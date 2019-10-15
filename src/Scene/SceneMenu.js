@@ -32,7 +32,7 @@ class SceneMenu
         // Level Text.
         this.levelText       = [];
         this.levelTextLayer  = new PIXI.Container();
-        this.levelTweenGroup = new TWEEN.Group();
+        this.levelTweenGroup = Tween_CreateGroup();
 
         // Marquee Text.
         this.marqueeStrings = [
@@ -49,7 +49,7 @@ class SceneMenu
         this.marqueeText       = null;
         this.marqueeTween      = null;
         this.marqueeTextIndex  = 0;
-        this.marqueeTweenGroup = new TWEEN.Group();
+        this.marqueeTweenGroup = Tween_CreateGroup();
 
         // Change Scene Timer.
         this.changeSceneTimer = new Base_Timer(1.0);
@@ -135,10 +135,8 @@ class SceneMenu
 
         for(let i = 0; i < strs.length; ++i) {
             // Tween.
-            const progress = {t: 0};
-            const final    = {t: 1};
-            const tween = new TWEEN.Tween(progress, this.levelTweenGroup)
-                .to(final, 200)
+            // @XXX
+            const tween = Tween_CreateBasic(200, this.levelTweenGroup)
                 .delay(300 * (i + 1))
                 .start();
 
@@ -175,10 +173,10 @@ class SceneMenu
     _InitializeMarqueeText()
     {
         // Tween.
-        let progress = {t: 0};
-        let final    = {t: 1};
-
-        this.marqueeTween = new TWEEN.Tween(progress, this.marqueeTweenGroup);
+        this.marqueeTween = Tween_CreateBasic(
+            SCENE_MENU_MARQUEE_TWEEN_DURATION_MS,
+            this.marqueeTweenGroup
+        );
 
         // Text.
         const screen_size = Get_Screen_Size();
@@ -199,13 +197,8 @@ class SceneMenu
     //--------------------------------------------------------------------------
     _SetupMarqueeTween()
     {
-        const progress = {t: 0};
-        const final    = {t: 1};
-
         console.log("_SetupMarqueeTween...");
         this.marqueeTween
-            .from(progress)
-            .to(final, SCENE_MENU_MARQUEE_TWEEN_DURATION_MS)
             .delay(SCENE_MENU_MARQUEE_TWEEN_DELAY_MS)
             .repeatDelay(SCENE_MENU_MARQUEE_TWEEN_REPEAT_DELAY_MS)
             .yoyo(true)
