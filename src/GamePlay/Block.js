@@ -6,17 +6,17 @@
 // Block                                                                      //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const BLOCK_COLOR_INDEX_COUNT = 2;
+const BLOCK_COLOR_INDEX_COUNT = 5;
 const BLOCK_BORDER_SIZE       = 1;
 
 // Tweens
 const BLOCK_DESTROY_TWEEN_DURATION_MS = 500;
 const BLOCK_DESTROY_TWEEN_EASING      = TWEEN.Easing.Circular.In
 
-const BOARD_FALL_PIECES_TWEEN_TIME_MS = 600;
-const BOARD_FALL_EASING               = TWEEN.Easing.Back.Out
+const BLOCK_FALL_TWEEN_DURATION_MS = 600;
+const BLOCK_FALL_TWEEN_EASING      = TWEEN.Easing.Back.Out
 
-const BLOCK_BLINK_TWEEN_DURATION_MS       = 300;
+const BLOCK_BLINK_TWEEN_DURATION_MS       = 150;
 const BLOCK_BLINK_TWEEN_BLINK_COUNT       = 2;
 const BLOCK_BLINK_TWEEN_BLINK_DURATION_MS = (BLOCK_BLINK_TWEEN_DURATION_MS / BLOCK_BLINK_TWEEN_BLINK_COUNT);
 
@@ -92,7 +92,7 @@ class Block
 
         // debugger;
         let tween = new TWEEN.Tween(position, this.boardRef.fallTweenGroup)
-            .to(target, BOARD_FALL_PIECES_TWEEN_TIME_MS)
+            .to(target, BLOCK_FALL_TWEEN_DURATION_MS)
             .onUpdate(()=>{
                 this.x = position.x;
                 this.y = position.y;
@@ -101,7 +101,7 @@ class Block
                this.boardRef.RemoveBlock(this);
                this.boardRef.SetBlock(this, targetCoord);
             })
-            .easing(BOARD_FALL_EASING)
+            .easing(BLOCK_FALL_TWEEN_EASING)
             .start();
     }
 
