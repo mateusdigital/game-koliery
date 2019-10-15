@@ -47,6 +47,12 @@ class Palette
     } // GetBlockColor
 
     //--------------------------------------------------------------------------
+    GetBlockBlinkColor(colorIndex)
+    {
+        return chroma("gray");
+    } // GetBlockColor
+
+    //--------------------------------------------------------------------------
     GetScoreColor(colorIndex)
     {
         const colors = [
