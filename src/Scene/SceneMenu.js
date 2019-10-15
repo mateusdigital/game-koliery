@@ -197,7 +197,6 @@ class SceneMenu
     //--------------------------------------------------------------------------
     _SetupMarqueeTween()
     {
-        console.log("_SetupMarqueeTween...");
         this.marqueeTween
             .delay(SCENE_MENU_MARQUEE_TWEEN_DELAY_MS)
             .repeatDelay(SCENE_MENU_MARQUEE_TWEEN_REPEAT_DELAY_MS)
@@ -207,6 +206,7 @@ class SceneMenu
                 const strings_len = this.marqueeStrings.length;
                 const index       = this.marqueeTextIndex;
 
+                // @XXX
                 const color = chroma.hsl((360 / strings_len) * index, 0.5, 0.5);
                 this.marqueeText.filters[1].SetColor(color);
 
