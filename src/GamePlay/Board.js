@@ -29,7 +29,7 @@ const BOARD_BLOCK_MOVE_SUBSTEPS     = 2;
 
 const BOARD_SCORE_VALUE_MOVING_FAST = 1;
 // Tweens
-const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 3500;
+const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 600;
 const BOARD_FALL_EASING                  = TWEEN.Easing.Back.Out
 // State: Playing / Game Over
 const BOARD_STATE_PLAYING                    = "BOARD_STATE_PLAYING";
