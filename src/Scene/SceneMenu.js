@@ -76,8 +76,8 @@ class SceneMenu
         }
 
         // Tweens.
-        this.levelTweenGroup.update();
-        this.marqueeTweenGroup.update(TWEEN.now(), true);
+        this.levelTweenGroup  .update();
+        this.marqueeTweenGroup.update();
 
         // Title.
         for(let i = 0; i < this.titleText.length; ++i) {
