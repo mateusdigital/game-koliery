@@ -53,6 +53,10 @@ class SceneSplash
     //--------------------------------------------------------------------------
     Update(dt)
     {
+        if(IsKeyPress(KEY_SPACE) || IsKeyPress(KEY_ENTER)) {
+            Go_To_Scene(SceneMenu);
+        }
+
         this.sceneTweenGroup.update();
     } // Update
 
@@ -70,11 +74,6 @@ class SceneSplash
         this.effectTween.start();
     } // StartIntro
 
-    //--------------------------------------------------------------------------
-    _OnIntroFinished()
-    {
-        this._Game.SetScene(new SceneMenu());
-    } // _OnIntroFinished
 
     //--------------------------------------------------------------------------
     _CreateEffectTween()
@@ -97,7 +96,7 @@ class SceneSplash
             .onComplete(()=>{
                 // @XXX
                 setTimeout(()=>{
-                    this._OnIntroFinished();
+                    Go_To_Scene(SceneMenu);
                 }, 400)
             });
     } // _SetupEffectTween
