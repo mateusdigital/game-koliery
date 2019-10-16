@@ -58,12 +58,13 @@ class SceneHighScore
         this._CreateEditUI ();
     } // ctor
 
+    //--------------------------------------------------------------------------
     OnEnter()
     {
         if(this.options == HISCORE_SCENE_OPTIONS_EDITABLE) {
             Input_AddKeyboardListener(this);
         }
-    }
+    } // OnEnter
 
     //--------------------------------------------------------------------------
     OnExit()
@@ -71,7 +72,7 @@ class SceneHighScore
         if(this.options == HISCORE_SCENE_OPTIONS_EDITABLE) {
             Input_RemoveKeyboardListener(this);
         }
-    }
+    } // OnExit
 
     //--------------------------------------------------------------------------
     OnKeyUp(keyCode)
