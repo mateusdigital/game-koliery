@@ -68,13 +68,13 @@ class SceneMenu
     Update(dt)
     {
         if(IsKeyPress(KEY_1)) {
-            this._Game.SetScene(new SceneGame(SCENE_GAME_LEVEL_EASY));
+            Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
         } else if(IsKeyPress(KEY_2)) {
-            this._Game.SetScene(new SceneGame(SCENE_GAME_LEVEL_MEDIUM));
+            Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_MEDIUM);
         } else if(IsKeyPress(KEY_3)) {
-            this._Game.SetScene(new SceneGame(SCENE_GAME_LEVEL_HARD));
+            Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_HARD);
         } else if(IsKeyPress(KEY_H)){
-            this._Game.SetScene(new SceneHighScore(SceneMenu));
+            Go_To_Scene(SceneHighScore, SceneMenu, false);
         }
 
         // Tweens.
