@@ -47,7 +47,9 @@ class SceneMenu
             // "",
             "AND A BIG BIG KISS",
             "TO MY MOM AND PINGO",
-            "-- I MISS YOU --"
+            "-- I MISS YOU --",
+            "",
+            "",
         ];
         this.marqueeText       = null;
         this.marqueeTween      = null;
@@ -212,15 +214,16 @@ class SceneMenu
                 this.marqueeTextIndex = (index + 1) % strings_len;
                 this.marqueeText.text = this.marqueeStrings[index];
 
-                // @XXX
+                // @notice(stdmatt): After we loop thru all the marquee texts
+                // go to another scene.
                 if(this.marqueeTextIndex == 0) {
+                    Go_To_Scene(SceneHighScore, SceneMenu, true);
                 }
             })
             .start();
 
             this.marqueeTweenGroup.onComplete(()=>{
                 this._SetupMarqueeTween();
-
             });
     } // _SetupMarqueeTween
 }; // class SceneMenu
