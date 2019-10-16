@@ -38,6 +38,16 @@ function Get_Screen_Size()
     return Vector_Create(GAME_DESIGN_WIDTH, GAME_DESIGN_HEIGHT);
 }
 
+//------------------------------------------------------------------------------
+function Go_To_Scene(...args)
+{
+    const scene_class = args[0];
+    Array_RemoveFront(args);
+
+    const scene = new scene_class(...args);
+    SCENE_MANAGER.SetScene(scene);
+}
+
 
 //------------------------------------------------------------------------------
 function Points_Are_Orthogonal(p1, p2)
@@ -58,6 +68,7 @@ function Points_Are_Valid_For_Swap(p1, p2)
     return (dx == 1 && dy == 0)
         || (dx == 0 && dy == 1);
 }
+
 
 //------------------------------------------------------------------------------
 function Build_Digits_String(prefix, digits, value)

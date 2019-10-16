@@ -98,12 +98,8 @@ function Setup()
     ));
 
     g_App.stage.addChild(gStarfield);
-    game = new Base_Game();
-    // game.PushScene(new SceneHighScore());
-    // game.PushScene(new SceneSplash());
 
-    // game.PushScene(new SceneMenu());
-    game.PushScene(new SceneGame(0));
+    Go_To_Scene(SceneSplash);
     Application_Start(GameLoop);
 }
 
@@ -112,25 +108,6 @@ function Setup()
 function GameLoop(delta)
 {
     gStarfield.Update(delta);
-
-    // if(!editorMode) {
-    //     gBoard    .Update(delta);
-
-    // } else {
-    //     Update_Editor(delta);
-    // }
-
-
-    // if(IsKeyPress(KEY_E)) {
-    //     if(editorMode) {
-    //         ExitEditor();
-    //     } else {
-    //         EnterEditor();
-    //     }
-    // }
-    // // gLevel.update(delta);
-
-    game.Update(delta);
 }
 
 function EnterEditor()
