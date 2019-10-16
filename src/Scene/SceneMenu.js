@@ -51,16 +51,12 @@ class SceneMenu
         this.marqueeTextIndex  = 0;
         this.marqueeTweenGroup = Tween_CreateGroup();
 
-        // Change Scene Timer.
-        this.changeSceneTimer = new Base_Timer(1.0);
-
         //
         // Initialize.
         this._InitializeTitleText  ();
         this._InitializeLevelText  ();
         this._InitializeMarqueeText();
 
-        this.changeSceneTimer.Start();
     } // ctor
 
     //--------------------------------------------------------------------------
