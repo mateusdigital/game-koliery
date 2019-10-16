@@ -37,14 +37,17 @@ class SceneMenu
         // Marquee Text.
         this.marqueeStrings = [
             "DEVELOPED BY",
-            "STDMATT",
+            "STDMATT",\
             // "",
             "THANKS TO",
             "ALEX",
             // "",
-            "BIG HELLO TO ALL FRIENDS",
+            "GREETINGS TO THE FRIENDS",
             "OF PROGRAMMERS HIDEOUT",
-            "",
+            // "",
+            "AND A BIG BIG KISS",
+            "TO MY MOM AND PINGO",
+            "-- I MISS YOU --"
         ];
         this.marqueeText       = null;
         this.marqueeTween      = null;
