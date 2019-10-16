@@ -213,9 +213,11 @@ class SceneMenu
                 if(this.marqueeTextIndex == 0) {
                 }
             })
-            .onComplete(()=>{
-                this._SetupMarqueeTween();
-            })
             .start();
+
+            this.marqueeTweenGroup.onComplete(()=>{
+                this._SetupMarqueeTween();
+
+            });
     } // _SetupMarqueeTween
 }; // class SceneMenu
