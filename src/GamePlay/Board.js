@@ -430,7 +430,6 @@ class Board
         // this.ascii();
     } // _SetBlockAt
 
-
     //--------------------------------------------------------------------------
     _CheckGameOver()
     {
@@ -443,6 +442,12 @@ class Board
 
         this._ChangeState(BOARD_STATE_GENERATING_PIECE);
     }
+
+    //--------------------------------------------------------------------------
+    GetState()
+    {
+        return this.currState;
+    } // GetState
 
     //--------------------------------------------------------------------------
     _ChangeState(newState)

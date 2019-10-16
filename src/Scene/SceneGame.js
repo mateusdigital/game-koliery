@@ -9,13 +9,14 @@ const SCENE_GAME_LEVEL_HARD   = 2;
 // Tween
 const SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DURATION_MS = 1000;
 const SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DELAY_MS    = 500;
-
-const SCENE_GAME_BOARD_BLINK_TWEEN_DURATION_MS = 500;
+const SCENE_GAME_BOARD_BLINK_TWEEN_DURATION_MS       = 500;
 // State
 const SCENE_GAME_STATE_INITIALING = 0;
 const SCENE_GAME_STATE_PLAYING    = 1;
 const SCENE_GAME_STATE_PAUSED     = 2;
 const SCENE_GAME_STATE_EXITING    = 3;
+// UI
+const SCENE_GAME_SCREEN_GAP = 10;
 
 //------------------------------------------------------------------------------
 class SceneGame
@@ -26,18 +27,15 @@ class SceneGame
     {
         super();
 
-        const SCREEN_GAP = 10;
-
         //
         // iVars
-        this.hud       = new GameHud();
-        this.board     = new Board  ();
-        this.hiscore   = 0;
+        // State.
         this.prevState = null;
         this.currState = null;
 
-        // Board Border.
-        this.boardBorder           = new BoardBorder(this.board);
+        // Board.
+        this.board                 = null;
+        this.boardBorder           = null;
         this.boardBorderTweenGroup = null;
         this.boardBorderTween      = null;
 
@@ -48,27 +46,12 @@ class SceneGame
 
         //
         // Initialize.
-        // Hud
-        this.hud.y += SCREEN_GAP;
+        this._CreateHud       ();
+        this._CreateBoard     ();
+        this._CreateStateTexts();
 
-        // Board
-        this._SetupBoardCallbacks       ();
-        this._InitializeBoardBorderTween();
-        Apply_BoardBorderEffect(this.boardBorder, this.boardBorderTween);
-
-        const screen_size       = Get_Screen_Size();
-        const GAME_HUD_BOTTOM_Y = (this.hud.y + this.hud.height + SCREEN_GAP);
-
-        this.boardBorder.x = (screen_size.x / 2) - (this.boardBorder.width / 2);
-        this.boardBorder.y = (GAME_HUD_BOTTOM_Y);
-
-        this.addChild(this.hud);
-        this.addChild(this.boardBorder);
-
-        // State.
         this._ChangeState(SCENE_GAME_STATE_INITIALING);
-
-        this._InitializeStateTexts();
+        this._OnScoreChanged();
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -84,6 +67,9 @@ class SceneGame
             this.boardBorder.visible = true;
 
             this.board.Update(dt);
+            if(this.board.GetState() == BOARD_STATE_GAME_OVER) {
+                Go_To_Scene(SceneHighScore, SceneMenu, HISCORE_SCENE_OPTIONS_EDITABLE);
+            }
 
             // Change state.
             if(IsKeyPress(KEY_P)) {
@@ -129,22 +115,12 @@ class SceneGame
         console.log("[STATE] ", this.prevState, " -> ", this.currState);
     } // _ChangeState
 
-    //--------------------------------------------------------------------------
-    _SetupBoardCallbacks()
-    {
-        this.board.onScoreChangeCallback = ()=>{ this._OnScoreChanged() };
-        this.board.onMatchCallback       = ()=>{ this._OnMatch       () };
-    } // _SetupBoardCallbacks
 
     //--------------------------------------------------------------------------
     _OnScoreChanged()
     {
-        const score = this.board.score;
-        if(score >= this.hiscore) {
-            this.hiscore = score;
-        }
-
-        this.hud.SetScore(score, this.hiscore);
+        HIGHSCORE_MANAGER.UpdateCurrentScoreValue(this.board.score);
+        this.hud.SetScore(this.board.score, HIGHSCORE_MANAGER.GetHighScoreValue());
     } // _OnScoreChanged
 
     //--------------------------------------------------------------------------
@@ -153,24 +129,53 @@ class SceneGame
         const match_info = this.board.matchInfo;
     } // _OnMatch
 
-    //--------------------------------------------------------------------------
-    _InitializeBoardBorderTween()
-    {
-        this.boardBorderTweenGroup = Tween_CreateGroup();
-        this.boardBorderTween = Tween_CreateBasic(
-            SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DURATION_MS,
-            this.boardBorderTweenGroup
-        )
-        .delay(SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DELAY_MS)
-        .onComplete(()=>{
-            this._ChangeState(SCENE_GAME_STATE_PLAYING);
-            this.board.Start();
-        })
-        .start();
-    } // _InitializeBoardBorderTween
 
     //--------------------------------------------------------------------------
-    _InitializeStateTexts()
+    _CreateHud()
+    {
+        this.hud = new GameHud();
+        this.hud.y += SCENE_GAME_SCREEN_GAP
+
+        this.addChild(this.hud);
+    } // _CreateHud
+
+    //--------------------------------------------------------------------------
+    _CreateBoard()
+    {
+        this.board       = new Board();
+        this.boardBorder = new BoardBorder(this.board);
+        this.addChild(this.boardBorder);
+
+        const screen_size       = Get_Screen_Size();
+        const game_hud_bottom_y = (this.hud.y + this.hud.height + SCENE_GAME_SCREEN_GAP);
+
+        this.boardBorder.x = (screen_size.x / 2) - (this.boardBorder.width / 2);
+        this.boardBorder.y = (game_hud_bottom_y);
+
+        // Setup Callbacks.
+        this.board.onScoreChangeCallback = ()=>{ this._OnScoreChanged() };
+        this.board.onMatchCallback       = ()=>{ this._OnMatch       () };
+
+        // Create the Board Border Tween.
+        this.boardBorderTweenGroup = Tween_CreateGroup();
+        this.boardBorderTween      = Tween_CreateBasic(
+                SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DURATION_MS,
+                this.boardBorderTweenGroup
+            )
+            .delay(SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DELAY_MS)
+            .onComplete(()=>{
+                this._ChangeState(SCENE_GAME_STATE_PLAYING);
+                this.board.Start();
+            })
+            .start();
+
+        Apply_BoardBorderEffect(this.boardBorder, this.boardBorderTween);
+
+
+    } // _CreateBoard
+
+    //--------------------------------------------------------------------------
+    _CreateStateTexts()
     {
         const screen_size = Get_Screen_Size();
         const color       = chroma("black");
@@ -219,5 +224,5 @@ class SceneGame
             this.pauseText.visible = !this.pauseText.visible;
         })
         .start();
-    } // _InitializeStateTexts
+    } // _CreateStateTexts
 }; // class SceneGame

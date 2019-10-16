@@ -99,6 +99,11 @@ function Setup()
 
     g_App.stage.addChild(gStarfield);
 
+    HIGHSCORE_MANAGER.FetchScores();
+
+    // Go_To_Scene(SceneSplash);
+    // Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
+    // Go_To_Scene(SceneHighScore, null, HISCORE_SCENE_OPTIONS_EDITABLE);
     Go_To_Scene(SceneSplash);
     Application_Start(GameLoop);
 }
