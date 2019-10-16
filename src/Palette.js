@@ -15,14 +15,22 @@
 //                                                                            //
 //----------------------------------------------------------------------------//
 
-const PALETTE_BLOCK_COLORS_COUNT = 10;
-
+//----------------------------------------------------------------------------//
+// Palette                                                                    //
+//----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
 class Palette
 {
     //--------------------------------------------------------------------------
     constructor()
     {
+        //
+        // iVars
+        // Properties.
         this.blockColors = [];
+
+        //
+        // Initialize.
         this._InitializeBlockColors();
     } // ctor
 
@@ -30,27 +38,51 @@ class Palette
     GetBlockColors()
     {
         return this.blockColors;
-    }
+    } // GetBlockColors
 
     //--------------------------------------------------------------------------
     GetBlockColor(colorIndex)
     {
         return this.blockColors[colorIndex];
+    } // GetBlockColor
+
+    //--------------------------------------------------------------------------
+    GetBlockBlinkColor(colorIndex)
+    {
+        return chroma("gray");
+    } // GetBlockColor
+
+    //--------------------------------------------------------------------------
+    GetScoreColor(colorIndex)
+    {
+        const colors = [
+            "#8C2000",
+            "#C17D00",
+            "#C5B50C",
+            "#009427",
+            "#00B385",
+            "#266DC3",
+            "#7037D9",
+            "#8D24C1",
+            "#B0325E",
+            "#8C2000",
+        ];
+
+        return chroma(colors[colorIndex]);
     }
 
     //--------------------------------------------------------------------------
     _InitializeBlockColors()
     {
         this.blockColors = [
-            0x985c23, // brown
-            0xedcf61, // yellow
-            0x4dad86, // green
-            0x283fb1, // dark blue
-            0x8873f4, // light blue
-            0xc56382, // pink
-            0x812a18, // red
+            chroma("#985c23"), // brown
+            chroma("#edcf61"), // yellow
+            chroma("#4dad86"), // green
+            chroma("#283fb1"), // dark blue
+            chroma("#8873f4"), // light blue
+            chroma("#c56382"), // pink
+            chroma("#812a18"), // red
         ];
-    }
 
-
+    } // _InitializeBlockColors
 }; // class Palette

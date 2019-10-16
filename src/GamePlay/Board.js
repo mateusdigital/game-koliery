@@ -20,16 +20,14 @@
 // Board                                                                      //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const BOARD_FIELD_COLUMNS     = 8;
-const BOARD_FIELD_ROWS        = 21;
-const BLOCK_SIZE              = 27
-const BLOCK_TIME_TO_MOVE_FAST = 0.025;
-const BLOCK_MOVE_SUBSTEPS     = 2;
-// Tweens
-const BOARD_DESTROY_PIECES_TWEEN_TIME_MS = 500;
-const BOARD_FALL_PIECES_TWEEN_TIME_MS    = 500;
-const BOARD_DESTROY_EASING               = TWEEN.Easing.Circular.In
-const BOARD_FALL_EASING                  = TWEEN.Easing.Back.Out
+const BOARD_FIELD_COLUMNS  = 8;
+const BOARD_FIELD_ROWS     = 21;
+const BOARD_BLOCK_SIZE     = 27;
+
+const BOARD_BLOCK_TIME_TO_MOVE_FAST = 0.025;
+const BOARD_BLOCK_MOVE_SUBSTEPS     = 2;
+
+const BOARD_SCORE_VALUE_MOVING_FAST = 1;
 // State: Playing / Game Over
 const BOARD_STATE_PLAYING                    = "BOARD_STATE_PLAYING";
 const BOARD_STATE_GAME_OVER                  = "BOARD_STATE_GAME_OVER";
@@ -58,20 +56,21 @@ class Board
     extends PIXI.Container
 {
     //--------------------------------------------------------------------------
-    constructor(board)
+    constructor()
     {
         super();
 
         //
         // iVars
         // State
+        this.paused    = true;
         this.prevState = null;
         this.currState = null;
         this._ChangeState(BOARD_STATE_GENERATING_PIECE);
 
         // Field.
         this.field     = Array_Create2D(BOARD_FIELD_ROWS, BOARD_FIELD_COLUMNS);
-        this.blockSize = Create_Point(BLOCK_SIZE, BLOCK_SIZE);
+        this.blockSize = Vector_Create(BOARD_BLOCK_SIZE, BOARD_BLOCK_SIZE);
 
         // Infos.
         this.matchInfo            = new MatchInfo(this);
@@ -86,14 +85,38 @@ class Board
         this.movingFast          = false;
 
         // Tweens.
-        this.destroyTweenGroup = new TWEEN.Group();
-        this.fallTweenGroup    = new TWEEN.Group();
+        this.destroyTweenGroup = Tween_CreateGroup();
+        this.fallTweenGroup    = Tween_CreateGroup();
+
+        // Score.
+        this.score = 0;
+
+        // Callbacks.
+        this.onScoreChangeCallback = null;
+        this.onMatchCallback       = null;
     } // ctor
+
+
+    //--------------------------------------------------------------------------
+    Start()
+    {
+        this.paused = false;
+    } // Start
+
+    //--------------------------------------------------------------------------
+    Pause()
+    {
+        this.paused = true;
+    } // Pause
 
 
     //--------------------------------------------------------------------------
     Update(dt)
     {
+        if(this.paused) {
+            return;
+        }
+
         // State : Playing / Game Over
         if(this.currState == BOARD_STATE_PLAYING) {
             this._UpdateState_Playing(dt);
@@ -136,8 +159,8 @@ class Board
         //
         // State : Destroying Pieces
         else if(this.currState == BOARD_STATE_DESTROYING_PIECES) {
-            const done = (this.destroyTweenGroup.update() == false);
-            if(done) {
+            this.destroyTweenGroup.update();
+            if(this.destroyTweenGroup.isCompleted()) {
                 this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
             }
         }
@@ -161,8 +184,8 @@ class Board
         //
         // State : Falling Pieces
         else if(this.currState == BOARD_STATE_FALLING_PIECES) {
-            const done = (this.fallTweenGroup.update() == false);
-            if(done) {
+            this.fallTweenGroup.update();
+            if(this.fallTweenGroup.isCompleted()) {
                 this._ChangeState(BOARD_STATE_FALLING_PIECES_FINISHED);
             }
         }
@@ -195,7 +218,7 @@ class Board
         }
 
         const curr_coord = this.currPiece.coord;
-        let   new_coord  = Copy_Point(curr_coord);
+        let   new_coord  = Vector_Copy(curr_coord);
 
         //
         // Try to move horizontally.
@@ -217,11 +240,15 @@ class Board
         this.currTimeToMove -= dt;
         if(this.currTimeToMove <= 0) {
             this.currTimeToMove += (this.movingFast)
-                ? BLOCK_TIME_TO_MOVE_FAST
+                ? BOARD_BLOCK_TIME_TO_MOVE_FAST
                 : this.maxTimeToMove;
 
-            new_position_y += (BLOCK_SIZE / BLOCK_MOVE_SUBSTEPS);
-            new_coord.y = Math_Int(new_position_y / this.blockSize.y);
+            new_position_y += (this.blockSize.y / BOARD_BLOCK_MOVE_SUBSTEPS);
+            new_coord.y     = Math_Int(new_position_y / this.blockSize.y);
+
+            if(this.movingFast) {
+                this._AddScore(BOARD_SCORE_VALUE_MOVING_FAST)
+            }
         }
 
         if(new_coord.y >= BOARD_FIELD_ROWS ||
@@ -303,6 +330,11 @@ class Board
     {
         this.matchInfo.FindMatches(this.blocksToTryFindMatch);
         this._ChangeState(BOARD_STATE_FINDING_MATCHES_FINISHED);
+
+        if(this.matchInfo.hasMatches) {
+            this.onMatchCallback();
+            this._AddScore(1234);
+        }
     } // _FindMatches
 
     //--------------------------------------------------------------------------
@@ -315,6 +347,7 @@ class Board
             return;
         }
 
+        this.destroyTweenGroup = Tween_CreateGroup();
         for(let i = 0; i < this.matchInfo.allMatchedBlocks.length; ++i) {
             let block = this.matchInfo.allMatchedBlocks[i];
             this._CreateDestroyBlockAnimation(block);
@@ -357,6 +390,17 @@ class Board
     } // GetBlockAt
 
     //--------------------------------------------------------------------------
+    SetBlock(block, coord)
+    {
+        this._SetBlockAt(block, coord.x, coord.y);
+    }
+    //--------------------------------------------------------------------------
+    RemoveBlock(block)
+    {
+        this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
+    }
+
+    //--------------------------------------------------------------------------
     _RemoveBlockAt(indexX, indexY)
     {
         let block = this.field[indexY][indexX];
@@ -380,7 +424,7 @@ class Board
         block.x = (this.blockSize.x * indexX);
         block.y = (this.blockSize.y * indexY);
 
-        block.coordInBoard = Create_Point(indexX, indexY);
+        block.coordInBoard = Vector_Create(indexX, indexY);
         this.field[indexY][indexX] = block;
 
         // this.ascii();
@@ -407,50 +451,29 @@ class Board
         this.prevState = this.currState;
         this.currState = newState;
 
-        console.log("[STATE] ", this.prevState, " -> ", this.currState);
+        // console.log("[STATE] ", this.prevState, " -> ", this.currState);
     } // _ChangeState
 
 
     //--------------------------------------------------------------------------
     _CreateDestroyBlockAnimation(block)
     {
-        let curr = {value: 0};
-        let end  = {value: 1};
-
         block.StartDestroyAnimation();
-        let tween = new TWEEN.Tween(curr, this.destroyTweenGroup)
-            .to(end, BOARD_DESTROY_PIECES_TWEEN_TIME_MS)
-            .onUpdate(()=>{
-                block.SetDestroyAnimationValue(curr.value);
-            })
-            .onComplete(()=>{
-                // @XXX(stdmatt): Destroy piece....
-                this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
-            })
-            .easing(BOARD_DESTROY_EASING)
-            .start();
     } // _CreateDestroyBlockAnimation
 
     //--------------------------------------------------------------------------
     _CreateFallBlockAnimation(block, targetCoord)
     {
-        let position = Copy_Point(block.position);
-        let target   = Create_Point(position.x, targetCoord.y * this.blockSize.y);
-
-        let tween = new TWEEN.Tween(position, this.fallTweenGroup)
-            .to(target, BOARD_FALL_PIECES_TWEEN_TIME_MS)
-            .onUpdate(()=>{
-                block.x = position.x;
-                block.y = position.y;
-            })
-            .onComplete(()=>{
-               this._RemoveBlockAt(block.coordInBoard.x, block.coordInBoard.y);
-               this._SetBlockAt(block, targetCoord.x, targetCoord.y);
-            })
-            .easing(BOARD_FALL_EASING)
-            .start();
-
+        block.StartFallAnimation(targetCoord);
     } // _CreateFallBlockAnimation
+
+
+    //--------------------------------------------------------------------------
+    _AddScore(value)
+    {
+        this.score += value;
+        this.onScoreChangeCallback();
+    }
 
 
     //--------------------------------------------------------------------------

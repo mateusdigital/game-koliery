@@ -27,50 +27,51 @@ const GAME_DESIGN_HEIGHT = 700;
 // Globals                                                                    //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-let gApp         = null;
-let gSpriteSheet = null;
 let gPalette     = null;
-let gBoard       = null;
-let gBoardBorder = null;
-let gGameHud     = null;
 let gStarfield   = null;
-// Pixi aliases
-let gPixiLoader    = null;
-let gPixiLoaderRes = null;
+// let gBoard       = null;
+// let gBoardBorder = null;
+// let gGameHud     = null;
 
+
+// let editorMode    = false;
+// let MousePosition = null;
+// let editorBlock   = null;
+
+let game = null;
 
 //------------------------------------------------------------------------------
 function PreInit()
 {
-    // Create the Pixi application.
-    gApp = new PIXI.Application({
-        width  : GAME_DESIGN_WIDTH,
-        height : GAME_DESIGN_HEIGHT
-    });
-
-    document.body.appendChild(gApp.view);
-
-    // Set the PIXI aliases.
-    gPixiLoader    = PIXI.Loader.shared;
-    gPixiLoaderRes = PIXI.Loader.shared.resources;
+    Application_Create(GAME_DESIGN_WIDTH, GAME_DESIGN_HEIGHT);
 }
 
-font_names = null;
-gFontIndex = 0;
+
 //------------------------------------------------------------------------------
 async function Preload()
 {
-
-    await LoadFont(
+    await Font_Load(
         "Commodore 64 Rounded",
         "./res/fonts/Commodore64Rounded.woff"
     );
+    await Font_Load(
+        "PixelForce",
+        "./res/fonts/PixelForce.ttf"
+    );
 
-    gPixiLoader.add([
+    Texture_SetBasePath("res/textures/");
+    PIXI_LOADER.add([
         "res/textures/mask_0.png",
         "res/textures/mask_1.png",
         "res/textures/mask_2.png",
         "res/textures/mask_3.png",
+
+        "src/FX/Shaders/Debug.frag",
+        "src/FX/Shaders/TextUncover.frag",
+        "src/FX/Shaders/TextGradient.frag",
+        "src/FX/Shaders/BoardBorder.frag",
+        "src/FX/Shaders/BlockTint.frag",
+        "src/FX/Shaders/BlockSquash.frag",
     ]).load(Setup);
 }
 
@@ -78,53 +79,104 @@ async function Preload()
 //------------------------------------------------------------------------------
 function Setup()
 {
+    Random_Seed(0);
+
     // Install the Input Handlers.
     Install_MouseHandlers   ();
     Install_KeyboardHandlers();
+    g_App.stage.interactive = true;
+    g_App.stage.buttonMode  = true;
 
-    // Install Game Loop callbacks.
-    gApp.ticker.add(delta => GameLoop(gApp.ticker.deltaMS / 1000));
 
-    const screen_size = Get_Screen_Size();
-    const SCREEN_GAP = 10;
-
-    //
+    // //
     gPalette = new Palette();
-
-    // Game Hud
-    gGameHud = new GameHud();
-    gGameHud.y += SCREEN_GAP;
-
-    // Board
-    const GAME_HUD_BOTTOM_Y = (gGameHud.y + gGameHud.height + SCREEN_GAP);
-    gBoard       = new Board();
-    gBoardBorder = new BoardBorder(gBoard);
-    // gBoardBorder.scale.set((screen_size.y - GAME_HUD_BOTTOM_Y) / gBoardBorder.height);
-    gBoardBorder.x = (screen_size.x / 2) - (gBoardBorder.width / 2);
-    gBoardBorder.y = (GAME_HUD_BOTTOM_Y);
+    const screen_size = Get_Screen_Size();
 
     // Star field
     gStarfield = new Starfield(new PIXI.Rectangle(
-        0,
-        gGameHud.y + gGameHud.height + SCREEN_GAP,
-        screen_size.x,
-        screen_size.y - gGameHud.y + gGameHud.height - SCREEN_GAP
+        0, 0, screen_size.x, screen_size.y
     ));
 
-    gApp.stage.addChild(gGameHud  );
-    gApp.stage.addChild(gStarfield);
-    gApp.stage.addChild(gBoardBorder);
+    g_App.stage.addChild(gStarfield);
+    game = new Base_Game();
+    // game.PushScene(new SceneHighScore());
+    // game.PushScene(new SceneSplash());
+
+    // game.PushScene(new SceneMenu());
+    game.PushScene(new SceneGame(0));
+    Application_Start(GameLoop);
 }
 
 
 //------------------------------------------------------------------------------
 function GameLoop(delta)
 {
-    gBoard.Update(delta);
     gStarfield.Update(delta);
-    Update_Input();
-    // gLevel.update(delta);
+
+    // if(!editorMode) {
+    //     gBoard    .Update(delta);
+
+    // } else {
+    //     Update_Editor(delta);
+    // }
+
+
+    // if(IsKeyPress(KEY_E)) {
+    //     if(editorMode) {
+    //         ExitEditor();
+    //     } else {
+    //         EnterEditor();
+    //     }
+    // }
+    // // gLevel.update(delta);
+
+    game.Update(delta);
 }
+
+function EnterEditor()
+{
+    editorMode = true;
+}
+
+function ExitEditor()
+{
+    editorMode = false;
+}
+
+function Update_Editor(dt)
+{
+    let new_block = null;
+    if(IsKeyPress(KEY_1)) {
+        new_block = Create_Random_Block(gBoard, 0);
+    } else if(IsKeyPress(KEY_2)) {
+        new_block = Create_Random_Block(gBoard, 1);
+    } else if(IsKeyPress(KEY_3)) {
+        new_block = Create_Random_Block(gBoard, 2);
+    } else if(IsKeyPress(KEY_4)) {
+        new_block = Create_Random_Block(gBoard, 3);
+    } else if(IsKeyPress(KEY_5)) {
+        new_block = Create_Random_Block(gBoard, 4);
+    } else if(IsKeyPress(KEY_6)) {
+        new_block = Create_Random_Block(gBoard, 5);
+    } else if(IsKeyPress(KEY_6)) {
+        new_block = Create_Random_Block(gBoard, 6);
+    }
+
+    if(new_block != null) {
+        if(editorBlock != null) {
+            editorBlock.parent.removeChild(editorBlock);
+        }
+        editorBlock = new_block;
+        gBoard.addChild(editorBlock);
+    }
+
+    if(editorBlock != null) {
+        console.log("Editor");
+        editorBlock.x = Math_Int(MousePosition.x / gBoard.blockSize.x) *gBoard.blockSize.x ;
+        editorBlock.y = Math_Int(MousePosition.y / gBoard.blockSize.y) *gBoard.blockSize.y ;
+    }
+}
+
 
 //----------------------------------------------------------------------------//
 // Input Handlers                                                             //
@@ -132,16 +184,24 @@ function GameLoop(delta)
 //------------------------------------------------------------------------------
 function MouseMove(e)
 {
-    const pos = e.data.getLocalPosition(gApp.stage);
-    // gGameHud.x = pos.x;
-    // gGameHud.y = pos.y;
-    gFontIndex = pos.y;
-
+    // console.log(e.getLocalPosition(g_App.stage));
+    // MousePosition = e.data.getLocalPosition(gBoard);
 }
 
 //------------------------------------------------------------------------------
 function MouseClick(e)
 {
+    // if(editorMode && editorBlock != null) {
+    //     editorBlock.x = Math_Int(MousePosition.x / gBoard.blockSize.x) *gBoard.blockSize.x ;
+    //     editorBlock.y = Math_Int(MousePosition.y / gBoard.blockSize.y) *gBoard.blockSize.y ;
+    //     gBoard._SetBlockAt(
+    //         editorBlock,
+    //         Math_Int(MousePosition.x / gBoard.blockSize.x),
+    //         Math_Int(MousePosition.y / gBoard.blockSize.y)
+    //     );
+
+    //     editorBlock = null;
+    // }
 }
 
 //------------------------------------------------------------------------------

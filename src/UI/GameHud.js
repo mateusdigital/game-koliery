@@ -15,6 +15,21 @@
 //                                                                            //
 //----------------------------------------------------------------------------//
 
+
+//----------------------------------------------------------------------------//
+// GameHud                                                                    //
+//----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
+const GAME_HUD_TEXT_PREFIX_SCORE = "Score:";
+const GAME_HUD_TEXT_PREFIX_HI    = "Hi   :";
+const GAME_HUD_TEXT_PREFIX_LEVEL = "Level ";
+const GAME_HUD_TEXT_GAME_NAME    = "--------";
+const GAME_HUD_TEXT_DIGITS_SCORE = HISCORE_MAX_DIGITS;
+const GAME_HUD_TEXT_DIGITS_LEVEL = 2;
+const GAME_HUD_TEXT_GAP          = 15;
+const GAME_HUD_FONT_SIZE         = 31;
+
+//------------------------------------------------------------------------------
 class GameHud
     extends PIXI.Container
 {
@@ -26,10 +41,18 @@ class GameHud
         //
         // iVars
         // Properties.
-        this.scoreText   = this._CreateText("Score:12345");
-        this.hiScoreText = this._CreateText("Hi   :67890");
-        this.marqueeText = this._CreateText("AMAZIGN");
-        this.levelText   = this._CreateText("Level 99");
+        let s = "";
+        s = Build_Digits_String(GAME_HUD_TEXT_PREFIX_SCORE, GAME_HUD_TEXT_DIGITS_SCORE, 0);
+        this.scoreText = Create_Normal_Text(s, GAME_HUD_FONT_SIZE);
+
+        s = Build_Digits_String(GAME_HUD_TEXT_PREFIX_HI, GAME_HUD_TEXT_DIGITS_SCORE, 0);
+        this.hiScoreText = Create_Normal_Text(s, GAME_HUD_FONT_SIZE);
+
+        s = GAME_HUD_TEXT_GAME_NAME;
+        this.marqueeText = Create_Normal_Text(s, GAME_HUD_FONT_SIZE);
+
+        s = Build_Digits_String(GAME_HUD_TEXT_PREFIX_LEVEL, GAME_HUD_TEXT_DIGITS_LEVEL, 1)
+        this.levelText = Create_Normal_Text(s, GAME_HUD_FONT_SIZE);
 
         //
         // Initialize.
@@ -38,21 +61,21 @@ class GameHud
         this.marqueeText.anchor.set(1, 0);
         this.levelText  .anchor.set(1, 0);
 
-        const TEXT_GAP    = 20;
         const screen_size = Get_Screen_Size();
 
-        this.scoreText  .x = TEXT_GAP;
+        this.scoreText  .x = GAME_HUD_TEXT_GAP;
         this.hiScoreText.x = this.scoreText.x;
         this.hiScoreText.y = this.scoreText.y + this.scoreText.height - 5;
 
-        this.marqueeText.x = screen_size.x - TEXT_GAP;
+        this.marqueeText.x = screen_size.x - GAME_HUD_TEXT_GAP;
         this.levelText  .x = this.marqueeText.x;
         this.levelText  .y = this.hiScoreText.y
 
-        this._ApplyMask(this.scoreText  , 0);
-        this._ApplyMask(this.hiScoreText, 1);
-        this._ApplyMask(this.marqueeText, 2);
-        this._ApplyMask(this.levelText  , 3);
+        // @XXX
+        Apply_TextGradientEffect(this.scoreText   , gPalette.GetScoreColor(0));
+        Apply_TextGradientEffect(this.hiScoreText , gPalette.GetScoreColor(1));
+        Apply_TextGradientEffect(this.marqueeText , gPalette.GetScoreColor(2));
+        Apply_TextGradientEffect(this.levelText   , gPalette.GetScoreColor(3));
 
         this.addChild(this.scoreText  );
         this.addChild(this.hiScoreText);
@@ -60,43 +83,35 @@ class GameHud
         this.addChild(this.levelText  );
     } // ctor
 
-
     //--------------------------------------------------------------------------
-    _CreateText(str)
+    SetScore(score, hiScore)
     {
-        const style = new PIXI.TextStyle({
-            fontFamily    : "Commodore 64 Rounded",
-            fontSize      : 35,
-            fontWeight    : "bold",
-            fill          : 0xffffff,
-            letterSpacing : -5,
-        });
-
-        let text = new PIXI.Text(str.toUpperCase(), style);
-
-        return text;
-    } // _CreateText
-
-    //--------------------------------------------------------------------------
-    _ApplyMask(text, color)
-    {
-        let mask = Create_Sprite("mask_" + color);
-
-        const MAGIC = 0//0.045; // This makes the mask height scale looks better...
-        const MASK_COLORS_COUNT = 6;
-        const MASK_COLOR_HEIGHT = (mask.height / MASK_COLORS_COUNT);
-        const MASK_WIDTH_SCALE  = (text.width  / mask.width);
-        const MASK_HEIGHT_SCALE = (text.height  / (mask.height)) //(text.height / MASK_COLOR_HEIGHT) + MAGIC;
-        const MASK_COLOR_Y      = (color * MASK_HEIGHT_SCALE * -MASK_COLOR_HEIGHT)
-
-        mask.scale   .set(MASK_WIDTH_SCALE, MASK_HEIGHT_SCALE);
-        // mask.position.set(text.x, text.y + MASK_COLOR_Y);
-        mask.position.set(text.x, text.y);
-        mask.anchor  .set(text.anchor.x, 0);
-
-
-        console.log(text.height, MASK_HEIGHT_SCALE);
-        mask.mask = text;
-        this.addChild(mask);
+        this.scoreText  .text = Build_Digits_String(GAME_HUD_TEXT_PREFIX_SCORE, GAME_HUD_TEXT_DIGITS_SCORE, score  );
+        this.hiScoreText.text = Build_Digits_String(GAME_HUD_TEXT_PREFIX_HI,    GAME_HUD_TEXT_DIGITS_SCORE, hiScore);
     }
+
+    //--------------------------------------------------------------------------
+    SetMarqueeWithMatchInfo(matchInfo)
+    {
+        let count = 0;
+        for(let i = 0; i < matchInfo.infos.length; ++i) {
+            const info = matchInfo.infos[i];
+            if(info.has_match) {
+                ++count;
+            }
+        }
+
+        if(count == 0) {
+            this._SetMarqueeText(GAME_HUD_TEXT_GAME_NAME);
+        } else {
+            this._SetMarqueeText(String_Cat("Match ", count));
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    _SetMarqueeText(str)
+    {
+        this.marqueeText.text = str.toUpperCase();
+    } // _SetMarqueeText
+
 }; // class GameHud

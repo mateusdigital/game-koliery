@@ -1,20 +1,49 @@
 <html>
 <head>
     <script type="text/javascript" src="https://pixijs.download/release/pixi.min.js"></script>
-    <script type="text/javascript" src="./libs/tween.umd.js"></script>
-    <script type="text/javascript" src="./libs/chroma.js"></script>
+
+    <script type="text/javascript" src="./libs/pixi_helpers/Application.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/Array.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/Base_Game.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/Base_Scene.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/Base_Shake.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/Base_Timer.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/Base_TTFText.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/Input.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/Math.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/RES.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/Random.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/String.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/Utils.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/Tween.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/Vector.js"></script>
+
+    <script type="text/javascript" src="./libs/pixi_helpers/libs/tween.umd.js"></script>
+    <script type="text/javascript" src="./libs/pixi_helpers/libs/chroma.js"></script>
 </head>
 <body>
+
     <!-- <script type="text/javascript" src="./libs/base/src/BASE.js"></script> -->
     <!-- Other -->
-    <script type="text/javascript" src="./src/BaseTimer.js"></script>
     <script type="text/javascript" src="./src/Palette.js"></script>
-
-    <script type="text/javascript" src="./src/Constants.js"></script>
     <script type="text/javascript" src="./src/Helpers.js"></script>
-    <script type="text/javascript" src="./src/Input.js"></script>
+
+    <!-- FX -->
+    <script type="text/javascript" src="./src/FX/DebugFilter.js"></script>
+    <script type="text/javascript" src="./src/FX/TextUncoverEffect.js"></script>
+    <script type="text/javascript" src="./src/FX/TextGradientEffect.js"></script>
+    <script type="text/javascript" src="./src/FX/BoardBoardEffect.js"></script>
+    <script type="text/javascript" src="./src/FX/BlockTintEffect.js"></script>
+    <script type="text/javascript" src="./src/FX/BlockSquashEffect.js"></script>
+
+    <!-- Scenes -->
+    <script type="text/javascript" src="./src/Scene/SceneHighScore.js"></script>
+    <script type="text/javascript" src="./src/Scene/SceneMenu.js"></script>
+    <script type="text/javascript" src="./src/Scene/SceneSplash.js"></script>
+    <script type="text/javascript" src="./src/Scene/SceneGame.js"></script>
 
     <!-- UI -->
+    <script type="text/javascript" src="./src/UI/Text.js"></script>
     <script type="text/javascript" src="./src/UI/GameHud.js"></script>
     <script type="text/javascript" src="./src/UI/Starfield.js"></script>
     <script type="text/javascript" src="./src/UI/BoardBorder.js"></script>
@@ -23,8 +52,9 @@
     <script type="text/javascript" src="./src/GamePlay/MatchInfo.js"></script>
     <script type="text/javascript" src="./src/GamePlay/FallInfo.js"></script>
 
-    <script type="text/javascript" src="./src/GamePlay/Board.js"></script>
+    <script type="text/javascript" src="./src/GamePlay/Block.js"></script>
     <script type="text/javascript" src="./src/GamePlay/Piece.js"></script>
+    <script type="text/javascript" src="./src/GamePlay/Board.js"></script>
 
     <!-- Game -->
     <script type="text/javascript" src="./src/main.js"></script>
