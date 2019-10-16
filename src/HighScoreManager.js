@@ -53,7 +53,9 @@ class HighscoreManager
     //--------------------------------------------------------------------------
     constructor()
     {
-        this.scores = null;
+        this.scores       = null;
+        this.highestScore = 0;
+        this.currScore    = 0;
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -62,8 +64,25 @@ class HighscoreManager
         const url  = String_Cat(HIGHSCORE_MANAGER_ENDPOINT, HIGHSCORE_MANAGER_FILENAME);
         const data = await _Fetch_Async(url);
 
-        this.scores = data;
+        this.scores       = data;
+        this.highestScore = this.scores[0].score;
     } // FetchScores
+
+    //--------------------------------------------------------------------------
+    UpdateCurrentScoreValue(score)
+    {
+        this.currScore = score;
+        if(this.currScore > this.highestScore) {
+            this.highestScore = this.currScore;
+        }
+    } // UpdateCurrentScoreValue
+
+    //--------------------------------------------------------------------------
+    GetHighScoreValue()
+    {
+        return this.highestScore;
+    } // GetHighScoreValue
+
 
     //--------------------------------------------------------------------------
     GetScores()
