@@ -51,6 +51,7 @@ class SceneGame
         this._CreateStateTexts();
 
         this._ChangeState(SCENE_GAME_STATE_INITIALING);
+        this._OnScoreChanged();
     } // ctor
 
     //--------------------------------------------------------------------------
