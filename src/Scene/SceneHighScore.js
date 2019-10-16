@@ -22,18 +22,7 @@ class SceneHighScore
         //
         // iVars.
         // Properties.
-        this.scoresInfo = [
-            {name:"mm1", score:"99999"},
-            {name:"mm2", score:"99999"},
-            {name:"mm3", score:"99999"},
-            {name:"mm4", score:"99999"},
-            {name:"mm5", score:"99999"},
-            {name:"mm6", score:"99999"},
-            {name:"mm7", score:"99999"},
-            {name:"mm8", score:"99999"},
-            {name:"mm9", score:"99999"},
-            {name:"m10", score:"99999"},
-        ];
+        this.scoresInfo         = HIGHSCORE_MANAGER.GetScores();
         this.sceneToGoBackClass = sceneToGoBackClass;
         this.options            = options;
 
@@ -238,7 +227,7 @@ class SceneHighScore
     {
         const pos_str   = Build_Digits_String("", 2, index);
         const name_str  = info.name;
-        const score_str = Build_Digits_String("", HISCORE_MAX_DIGITS, info.score);
+        const score_str = Build_Digits_String("", HIGHSCORE_MAX_DIGITS, info.score);
 
         return String_Cat(pos_str, ".", " ", name_str, " ", score_str);
     } // _BuildScoreString
