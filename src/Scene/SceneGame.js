@@ -96,12 +96,26 @@ class SceneGame
         else if(this.currState == SCENE_GAME_STATE_PAUSED) {
             this.board.visible = false;
             this.stateTweenGroup.update();
+
+            // Change state.
+            if(IsKeyPress(KEY_P)) {
+                this.pauseText.visible = false;
+                this._ChangeState(SCENE_GAME_STATE_PLAYING);
+            }
         }
         // Exit.
         else if(this.currState == SCENE_GAME_STATE_EXITING) {
             this.board      .visible = false;
             this.boardBorder.visible = false;
             this.exitText   .visible = true;
+
+            // Change state.
+            if(IsKeyPress(KEY_ESC)) {
+                Go_To_Scene(SceneMenu);
+            } else if(IsKeyPress(KEY_ENTER)) {
+                this.exitText.visible = false;
+                this._ChangeState(SCENE_GAME_STATE_PLAYING);
+            }
         }
     } // Update
 
