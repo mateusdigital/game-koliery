@@ -11,7 +11,7 @@ class SceneHighScore
     extends Base_Scene
 {
     //--------------------------------------------------------------------------
-    constructor(sceneToGoBackClass)
+    constructor(sceneToGoBackClass, goBackAutomatically)
     {
         super();
 
@@ -30,10 +30,11 @@ class SceneHighScore
             {name:"mm9", score:"99999"},
             {name:"m10", score:"99999"},
         ];
-        this.titleText           = null;
-        this.titleLine           = null;
-        this.scoreTexts          = [];
-        this.scoreTweenGroup     = Tween_CreateGroup();
+        this.titleText          = null;
+        this.titleLine          = null;
+        this.scoreTexts         = [];
+        this.scoreTweenGroup    = Tween_CreateGroup();
+        this.sceneToGoBackClass = sceneToGoBackClass;
 
         //
         // Initialize.
@@ -63,7 +64,12 @@ class SceneHighScore
 
         // Tween Completion.
         this.scoreTweenGroup.onComplete(()=>{
-            this._Game.SetScene(new sceneToGoBackClass());
+            /// @XXX
+            if(goBackAutomatically) {
+                setTimeout(()=>{
+                    Go_To_Scene(this.sceneToGoBackClass);
+                }, 500)
+            }
         });
     } // ctor
 
@@ -71,6 +77,10 @@ class SceneHighScore
     //--------------------------------------------------------------------------
     Update(dt)
     {
+        if(IsKeyPress(KEY_SPACE) || IsKeyPress(KEY_ENTER)) {
+            Go_To_Scene(this.sceneToGoBackClass);
+        }
+
         this.scoreTweenGroup.update();
     } // Update
 
