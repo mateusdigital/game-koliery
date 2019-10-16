@@ -44,9 +44,9 @@ class SceneHighScore
         this.scoreTexts      = [];
         this.scoreTweenGroup = Tween_CreateGroup();
         // Edit.
-        this.editTitle    = null;
-        this.editField    = null;
-        this.editFieldChars = [];
+        this.editTitle          = null;
+        this.editField          = null;
+        this.editFieldChars     = [];
         this.editFadeTweenGroup = null;
         this.editFadeTween      = null;
         this.editLocked         = false;
