@@ -18,7 +18,7 @@ class SceneSplash
         //
         // iVars.
         // Properties.
-        this.sceneTweenGroup = new TWEEN.Group();
+        this.sceneTweenGroup = Tween_CreateGroup();
         this.effectTween     = this._CreateEffectTween();
 
         // Texts.
@@ -79,20 +79,18 @@ class SceneSplash
     //--------------------------------------------------------------------------
     _CreateEffectTween()
     {
-        let progress = {t: 0};
-        const tween = new TWEEN.Tween(progress, this.sceneTweenGroup);
+        const tween = Tween_CreateBasic(
+            SPLASH_SCENE_TEXT_EFFECT_DURATION_MS,
+            this.sceneTweenGroup
+        );
+
         return tween;
     } // _CreateEffectTween
 
     //--------------------------------------------------------------------------
     _SetupEffectTween()
     {
-        let progress = {t: 0};
-        let final    = {t: 1};
-
         this.effectTween
-            .from(progress)
-            .to(final, SPLASH_SCENE_TEXT_EFFECT_DURATION_MS)
             .delay(SPLASH_SCENE_TEXT_EFFECT_DELAY_DURATION_MS)
             .yoyo(true)
             .repeat(1)

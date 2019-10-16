@@ -1,31 +1,30 @@
 //----------------------------------------------------------------------------//
-// TextUncoverEffect                                                          //
+// BlockSquashEffect                                                          //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-function Apply_TextUncoverEffect(textRef, tweenRef)
+function Apply_BlockSquashEffect(objRef, tweenRef)
 {
-    if(!textRef.filters) {
-        textRef.filters = [];
+    if(!objRef.filters) {
+        objRef.filters = [];
     }
-    textRef.filters.push(new TextUncoverEffect(textRef, tweenRef));
+    objRef.filters.push(new BlockSquashEffect(objRef, tweenRef));
 }
 
 //------------------------------------------------------------------------------
-class TextUncoverEffect
+class BlockSquashEffect
     extends PIXI.Filter
 {
     //--------------------------------------------------------------------------
-    constructor(textRef, tweenRef)
+    constructor(objRef, tweenRef)
     {
-        super(
-            null,
-            PIXI_LOADER_RES["src/FX/Shaders/TextUncover.frag"].data
-        );
+        const frag_src = PIXI_LOADER_RES["src/FX/Shaders/BlockSquash.frag"].data;
+
+        super(null, frag_src);
 
         //
         // iVars
         // Refs.
-        this.textRef  = textRef;
+        this.objRef   = objRef;
         this.tweenRef = tweenRef;
         // Properties.
         this.progress = 0;
@@ -38,9 +37,9 @@ class TextUncoverEffect
     apply(filterManager, input, output, clear)
     {
         this.uniforms.progress      = this.tweenRef.getValue().value;
-        this.uniforms.dimensions[0] = this.textRef.width;
-        this.uniforms.dimensions[1] = this.textRef.height;
+        this.uniforms.dimensions[0] = this.objRef.width;
+        this.uniforms.dimensions[1] = this.objRef.height;
+
         filterManager.applyFilter(this, input, output, clear);
     } // apply
-
-} // class TextUncoverEffect
+} // class BlockSquashEffect
