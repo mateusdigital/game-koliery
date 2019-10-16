@@ -24,10 +24,10 @@ const GAME_HUD_TEXT_PREFIX_SCORE = "Score:";
 const GAME_HUD_TEXT_PREFIX_HI    = "Hi   :";
 const GAME_HUD_TEXT_PREFIX_LEVEL = "Level ";
 const GAME_HUD_TEXT_GAME_NAME    = "--------";
-const GAME_HUD_TEXT_DIGITS_SCORE = 6;
+const GAME_HUD_TEXT_DIGITS_SCORE = HISCORE_MAX_DIGITS;
 const GAME_HUD_TEXT_DIGITS_LEVEL = 2;
-const GAME_HUD_TEXT_GAP          = 20;
-const GAME_HUD_FONT_SIZE         = 35;
+const GAME_HUD_TEXT_GAP          = 15;
+const GAME_HUD_FONT_SIZE         = 31;
 
 //------------------------------------------------------------------------------
 class GameHud
@@ -70,6 +70,12 @@ class GameHud
         this.marqueeText.x = screen_size.x - GAME_HUD_TEXT_GAP;
         this.levelText  .x = this.marqueeText.x;
         this.levelText  .y = this.hiScoreText.y
+
+        // @XXX
+        Apply_TextGradientEffect(this.scoreText   , gPalette.GetScoreColor(0));
+        Apply_TextGradientEffect(this.hiScoreText , gPalette.GetScoreColor(1));
+        Apply_TextGradientEffect(this.marqueeText , gPalette.GetScoreColor(2));
+        Apply_TextGradientEffect(this.levelText   , gPalette.GetScoreColor(3));
 
         this.addChild(this.scoreText  );
         this.addChild(this.hiScoreText);

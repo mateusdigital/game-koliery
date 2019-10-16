@@ -1,6 +1,20 @@
+//----------------------------------------------------------------------------//
+// TextGradientEffect                                                         //
+//----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
+function Apply_TextGradientEffect(textRef, color)
+{
+    if(!textRef.filters) {
+        textRef.filters = [];
+    }
+    textRef.filters.push(new TextGradientEffect(textRef, color));
+}
+
+//------------------------------------------------------------------------------
 class TextGradientEffect
     extends PIXI.Filter
 {
+    //--------------------------------------------------------------------------
     constructor(textRef, color)
     {
         super(
@@ -21,13 +35,16 @@ class TextGradientEffect
         //
         // Initialize.
         this.SetColor(color);
-    }
+    } // ctor
 
-    SetColor(color) {
+    //--------------------------------------------------------------------------
+    SetColor(color)
+    {
         const gl = color.gl();
         this.color = [gl[0], gl[1], gl[2], 1.0];
-    }
+    } // SetColor
 
+    //--------------------------------------------------------------------------
     apply(filterManager, input, output, clear)
     {
         this.uniforms.dimensions[0] = this.textRef.width;
@@ -35,5 +52,5 @@ class TextGradientEffect
         this.uniforms.targetColor   = this.color;
 
         filterManager.applyFilter(this, input, output, clear);
-    }
-}
+    } // apply
+} // class TextGradientEffect

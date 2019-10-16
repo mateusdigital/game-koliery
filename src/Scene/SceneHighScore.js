@@ -11,7 +11,7 @@ class SceneHighScore
     extends Base_Scene
 {
     //--------------------------------------------------------------------------
-    constructor(onFinishCallback)
+    constructor(sceneToGoBackClass)
     {
         super();
 
@@ -33,8 +33,7 @@ class SceneHighScore
         this.titleText           = null;
         this.titleLine           = null;
         this.scoreTexts          = [];
-        this.scoreTweenGroup     = new TWEEN.Group();
-        this.sceneFinishCallback = onFinishCallback;
+        this.scoreTweenGroup     = Tween_CreateGroup();
 
         //
         // Initialize.
@@ -42,18 +41,16 @@ class SceneHighScore
 
         // Title Text.
         this.titleText = Create_Normal_Text("HIGH SCORES", 50);
-        this.titleText.filters = [
-            new TextGradientEffect(this.titleText, gPalette.GetScoreColor(0))
-        ];
+        Apply_TextGradientEffect(this.titleText, gPalette.GetScoreColor(0));
+
         this.titleText.x = (screen_size.x * 0.5);
         this.titleText.y = (this.titleText.height * 0.5) + 50;
         this.addChild(this.titleText);
 
         // Title Line.
         this.titleLine = new PIXI.Sprite(PIXI.Texture.WHITE);
-        this.titleLine.filters = [
-            new TextGradientEffect(this.titleLine, chroma("#5a5a5a"))
-        ];
+        Apply_TextGradientEffect(this.titleLine, chroma("#5a5a5a"));
+
         this.titleLine.width  = this.titleText.width;
         this.titleLine.height = 15;
         this.titleLine.x = this.titleText.x - (this.titleText.width  * 0.5);
@@ -66,7 +63,7 @@ class SceneHighScore
 
         // Tween Completion.
         this.scoreTweenGroup.onComplete(()=>{
-            onFinishCallback();
+            this._Game.SetScene(new sceneToGoBackClass());
         });
     } // ctor
 
@@ -93,10 +90,8 @@ class SceneHighScore
             tween.start();
 
             const color = chroma(gPalette.GetScoreColor(i));
-            text.filters = [
-                new TextUncoverEffect(text, tween),
-                new TextGradientEffect(text, color)
-            ];
+            Apply_TextUncoverEffect (text, tween);
+            Apply_TextGradientEffect(text, color);
 
             text.x = (screen_size.x * 0.5);
             text.y = initial_y + (text.height * i) + (text.height * 0.5);
@@ -111,7 +106,7 @@ class SceneHighScore
     {
         const pos_str   = Build_Digits_String("", 2, index);
         const name_str  = info.name;
-        const score_str = Build_Digits_String("", 5, info.score);
+        const score_str = Build_Digits_String("", HISCORE_MAX_DIGITS, info.score);
 
         return String_Cat(pos_str, ".", " ", name_str, " ", score_str);
     } // _BuildScoreString
@@ -119,18 +114,11 @@ class SceneHighScore
     //--------------------------------------------------------------------------
     _CreateEffectTween(index)
     {
-        let progress = {t: 0};
-        let final    = {t: 1};
-
-        const tween = new TWEEN.Tween(progress, this.scoreTweenGroup)
-            .to(final, HIGHSCORE_SCENE_TEXT_EFFECT_DURATION_MS)
-            .delay(HIGHSCORE_SCENE_TEXT_EFFECT_DELAY_DURATION_MS * index)
-            .onUpdate(()=>{
-
-            })
-            .onComplete(()=>{
-            })
-            .start();
+        const tween = Tween_CreateBasic(
+                HIGHSCORE_SCENE_TEXT_EFFECT_DURATION_MS,
+                this.scoreTweenGroup
+            )
+            .delay(HIGHSCORE_SCENE_TEXT_EFFECT_DELAY_DURATION_MS * index);
 
         return tween;
     } // _CreateEffectTween

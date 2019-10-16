@@ -1,34 +1,32 @@
 //----------------------------------------------------------------------------//
-// TextUncoverEffect                                                          //
+// BoardBorderEffect                                                          //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-function Apply_TextUncoverEffect(textRef, tweenRef)
+function Apply_BoardBorderEffect(boardBorderRef, tweenRef)
 {
-    if(!textRef.filters) {
-        textRef.filters = [];
+    if(!boardBorderRef.filters) {
+        boardBorderRef.filters = [];
     }
-    textRef.filters.push(new TextUncoverEffect(textRef, tweenRef));
+    boardBorderRef.filters.push(new BoardBorderEffect(boardBorderRef, tweenRef));
 }
 
 //------------------------------------------------------------------------------
-class TextUncoverEffect
+class BoardBorderEffect
     extends PIXI.Filter
 {
     //--------------------------------------------------------------------------
-    constructor(textRef, tweenRef)
+    constructor(boardBorderRef, tweenRef)
     {
         super(
             null,
-            PIXI_LOADER_RES["src/FX/Shaders/TextUncover.frag"].data
+            PIXI_LOADER_RES["src/FX/Shaders/BoardBorder.frag"].data
         );
 
         //
         // iVars
         // Refs.
-        this.textRef  = textRef;
-        this.tweenRef = tweenRef;
-        // Properties.
-        this.progress = 0;
+        this.boardBorderRef  = boardBorderRef;
+        this.tweenRef        = tweenRef;
         // Uniforms
         this.uniforms.progress   = 0;
         this.uniforms.dimensions = [0, 0];
@@ -38,9 +36,9 @@ class TextUncoverEffect
     apply(filterManager, input, output, clear)
     {
         this.uniforms.progress      = this.tweenRef.getValue().value;
-        this.uniforms.dimensions[0] = this.textRef.width;
-        this.uniforms.dimensions[1] = this.textRef.height;
+        this.uniforms.dimensions[0] = this.boardBorderRef.width;
+        this.uniforms.dimensions[1] = this.boardBorderRef.height;
         filterManager.applyFilter(this, input, output, clear);
     } // apply
 
-} // class TextUncoverEffect
+} // class BoardBorderEffect
