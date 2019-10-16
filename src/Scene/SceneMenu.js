@@ -37,7 +37,7 @@ class SceneMenu
         // Marquee Text.
         this.marqueeStrings = [
             "DEVELOPED BY",
-            "STDMATT",\
+            "STDMATT",
             // "",
             "THANKS TO",
             "ALEX",
