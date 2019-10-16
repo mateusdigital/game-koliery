@@ -74,7 +74,7 @@ class SceneMenu
         } else if(IsKeyPress(KEY_3)) {
             Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_HARD);
         } else if(IsKeyPress(KEY_H)){
-            Go_To_Scene(SceneHighScore, SceneMenu, false);
+            Go_To_Scene(SceneHighScore, SceneMenu, HISCORE_SCENE_OPTIONS_NONE);
         }
 
         // Tweens.
@@ -217,7 +217,11 @@ class SceneMenu
                 // @notice(stdmatt): After we loop thru all the marquee texts
                 // go to another scene.
                 if(this.marqueeTextIndex == 0) {
-                    Go_To_Scene(SceneHighScore, SceneMenu, true);
+                    Go_To_Scene(
+                        SceneHighScore,
+                        SceneMenu,
+                        HISCORE_SCENE_OPTIONS_GO_BACK_AUTOMATICALLY
+                    );
                 }
             })
             .start();
