@@ -10,6 +10,8 @@ const HISCORE_SCENE_OPTIONS_NONE                  = 0;
 const HISCORE_SCENE_OPTIONS_GO_BACK_AUTOMATICALLY = 1;
 const HISCORE_SCENE_OPTIONS_EDITABLE              = 2;
 
+const HISCORE_SCENE_BOARD_BLINK_TWEEN_DURATION_MS = 500;
+
 //------------------------------------------------------------------------------
 class SceneHighScore
     extends Base_Scene
@@ -40,8 +42,16 @@ class SceneHighScore
         this.editFadeTween      = null;
         this.editLocked         = false;
 
+        this.blinkTweenGroup = null;
+        this.blinkTween      = null;
+
         //
         // Initialize.
+        // If player is out of ranks make the scene non editable...
+        if(HIGHSCORE_MANAGER.GetCurrentScorePosition() == HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
+            this.options = HISCORE_SCENE_OPTIONS_NONE;
+        }
+
         this._CreateTitleUI();
         this._CreateScoreUI();
         this._CreateEditUI ();
@@ -110,9 +120,14 @@ class SceneHighScore
                 Go_To_Scene(this.sceneToGoBackClass);
             }
         }
+
         // Adding new high score.
         else if(this.options == HISCORE_SCENE_OPTIONS_EDITABLE) {
             this.editFadeTweenGroup.update();
+        }
+
+        if(this.blinkTweenGroup) {
+            this.blinkTweenGroup.update();
         }
     } // Update
 
@@ -158,9 +173,10 @@ class SceneHighScore
             .start();
 
             // Text.
-            const info = this.scoresInfo[i];
+            const info  = this.scoresInfo[i];
             const str   = this._BuildScoreString(i + 1, info);
             const color = chroma(gPalette.GetScoreColor(i));
+
             const text = Create_Normal_Text(str, 40);
             Apply_TextUncoverEffect (text, tween);
             Apply_TextGradientEffect(text, color);
@@ -181,6 +197,31 @@ class SceneHighScore
                 }, 500)
             });
         }
+
+        if(this.options == HISCORE_SCENE_OPTIONS_EDITABLE) {
+            const index = HIGHSCORE_MANAGER.GetCurrentScorePosition();
+            if(index == HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
+                return;
+            }
+
+            const info = this.scoresInfo[index];
+            info.name  = "---";
+            this.scoreTexts[index].text = this._BuildScoreString(index + 1, info);
+
+            this.scoreTweenGroup.onComplete(()=>{
+                this.blinkTweenGroup = Tween_CreateGroup();
+                this.blinkTween      = Tween_CreateBasic(
+                    HISCORE_SCENE_BOARD_BLINK_TWEEN_DURATION_MS,
+                    this.blinkTweenGroup
+                )
+                .repeat(Infinity)
+                .onRepeat(()=>{
+                    this.scoreTexts[index].visible = !this.scoreTexts[index].visible;
+                })
+                .start();
+            });
+        }
+
     } // _CreateScoreUI
 
     //--------------------------------------------------------------------------
@@ -219,7 +260,17 @@ class SceneHighScore
             this.editTitle.visible = false;
 
             this.options = HISCORE_SCENE_OPTIONS_NONE;
-        })
+
+            const index = HIGHSCORE_MANAGER.GetCurrentScorePosition();
+            const info  = this.scoresInfo[index];
+            info.name   = "";
+            for(let i = 0; i < this.editFieldChars.length; ++i) {
+                info.name += this.editFieldChars[i];
+            }
+
+            this.scoreTexts[index].text = this._BuildScoreString(index + 1, info);
+            HIGHSCORE_MANAGER.UploadScore(info.name);
+        });
     } // _CreateEditUI
 
     //--------------------------------------------------------------------------
