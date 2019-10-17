@@ -2,9 +2,9 @@
 // HighscoreManager                                                           //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const HIGHSCORE_MANAGER_ENDPOINT        = "";
-const HIGHSCORE_MANAGER_ENDPOINT_FETCH  = "";
-const HIGHSCORE_MANAGER_ENDPOINT_INSERT = "";
+const HIGHSCORE_MANAGER_ENDPOINT        = "https://stdmatt.com/";
+const HIGHSCORE_MANAGER_ENDPOINT_FETCH  = "test.php";
+const HIGHSCORE_MANAGER_ENDPOINT_INSERT = "insert.php";
 
 const HIGHSCORE_MAX_DIGITS   = 5;
 const HIGHSCORE_MAX_ENTRIES = 10;
@@ -43,7 +43,7 @@ async function _Fetch_Async(url)
         const response = await fetch(url);
         data = await response.json();
     } catch (e){
-        // debugger;
+        debugger;
         console.log("Failed to get scores... Mocking it...");
         data = _Create_MockScores();
     }
@@ -57,7 +57,7 @@ async function _Insert_Async(url)
     try {
         const response = await fetch(url);
     } catch (e){
-        // debugger;
+        debugger;
     }
 }
 
@@ -94,7 +94,7 @@ class HighscoreManager
             HIGHSCORE_MANAGER_ENDPOINT,
             HIGHSCORE_MANAGER_ENDPOINT_INSERT,
             "?name=", name,
-            "&score=", score
+            "&score=", this.currScore
         );
 
         await _Insert_Async(url);
