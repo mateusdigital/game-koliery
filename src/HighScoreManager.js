@@ -43,7 +43,7 @@ async function _Fetch_Async(url)
         const response = await fetch(url);
         data = await response.json();
     } catch (e){
-        debugger;
+        // debugger;
         console.log("Failed to get scores... Mocking it...");
         data = _Create_MockScores();
     }
@@ -61,6 +61,7 @@ async function _Insert_Async(url)
     }
 }
 
+
 //------------------------------------------------------------------------------
 class HighscoreManager
 {
@@ -75,12 +76,30 @@ class HighscoreManager
     //--------------------------------------------------------------------------
     async FetchScores()
     {
-        const url  = String_Cat(HIGHSCORE_MANAGER_ENDPOINT, HIGHSCORE_MANAGER_FILENAME);
+        const url  = String_Cat(HIGHSCORE_MANAGER_ENDPOINT, HIGHSCORE_MANAGER_ENDPOINT_FETCH);
         const data = await _Fetch_Async(url);
 
         this.scores       = data;
         this.highestScore = this.scores[0].score;
     } // FetchScores
+
+    //--------------------------------------------------------------------------
+    async UploadScore(name)
+    {
+        if(this.GetCurrentScorePosition() == HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
+            return;
+        }
+
+        const url = String_Cat(
+            HIGHSCORE_MANAGER_ENDPOINT,
+            HIGHSCORE_MANAGER_ENDPOINT_INSERT,
+            "?name=", name,
+            "&score=", score
+        );
+
+        await _Insert_Async(url);
+        this.FetchScores();
+    } // UploadScore
 
     //--------------------------------------------------------------------------
     UpdateCurrentScoreValue(score)
@@ -109,7 +128,6 @@ class HighscoreManager
     {
         return this.highestScore;
     } // GetHighScoreValue
-
 
     //--------------------------------------------------------------------------
     GetScores()
