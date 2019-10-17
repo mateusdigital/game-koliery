@@ -12,6 +12,7 @@ const HIGHSCORE_MAX_ENTRIES = 10;
 const HIGHSCORE_MOCK_SCORE_MIN =  100;
 const HIGHSCORE_MOCK_SCORE_MAX = 5000;
 
+const HIGHSCORE_SCORE_POSITION_OUT_OF_RANK = -1;
 
 //------------------------------------------------------------------------------
 function _Create_MockScores()
@@ -89,6 +90,19 @@ class HighscoreManager
             this.highestScore = this.currScore;
         }
     } // UpdateCurrentScoreValue
+
+    //--------------------------------------------------------------------------
+    GetCurrentScorePosition()
+    {
+        for(let i = 0; i < this.scores.length; ++i) {
+            const item = this.scores[i];
+            if(this.currScore >= item.score) {
+                return i;
+            }
+        }
+
+        return HIGHSCORE_SCORE_POSITION_OUT_OF_RANK;
+    }
 
     //--------------------------------------------------------------------------
     GetHighScoreValue()
