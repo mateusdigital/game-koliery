@@ -119,7 +119,6 @@ class HighscoreManager
                 return i;
             }
         }
-
         return HIGHSCORE_SCORE_POSITION_OUT_OF_RANK;
     }
 
