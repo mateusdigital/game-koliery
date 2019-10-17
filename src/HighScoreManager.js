@@ -2,8 +2,9 @@
 // HighscoreManager                                                           //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const HIGHSCORE_MANAGER_ENDPOINT = "http://0.0.0.0:8000/";
-const HIGHSCORE_MANAGER_FILENAME = "highscores.json";
+const HIGHSCORE_MANAGER_ENDPOINT        = "";
+const HIGHSCORE_MANAGER_ENDPOINT_FETCH  = "";
+const HIGHSCORE_MANAGER_ENDPOINT_INSERT = "";
 
 const HIGHSCORE_MAX_DIGITS   = 5;
 const HIGHSCORE_MAX_ENTRIES = 10;
