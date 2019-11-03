@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
 const TEXT_NORMAL_FONT_NAME = "Commodore 64 Rounded";
-const TEXT_TITLE_FONT_NAME  = "Commodore 64 Rounded";//"PixelForce";
+const TEXT_TITLE_FONT_NAME  = "PixelForce";
 const TEXT_LETTER_SPACING_RATIO = 0 //-(1.0 / 50.0);
 
 //------------------------------------------------------------------------------
