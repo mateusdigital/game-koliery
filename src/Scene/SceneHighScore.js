@@ -10,7 +10,8 @@ const HISCORE_SCENE_OPTIONS_NONE                  = 0;
 const HISCORE_SCENE_OPTIONS_GO_BACK_AUTOMATICALLY = 1;
 const HISCORE_SCENE_OPTIONS_EDITABLE              = 2;
 
-const HISCORE_SCENE_BOARD_BLINK_TWEEN_DURATION_MS = 500;
+const HISCORE_SCENE_BOARD_BLINK_TWEEN_DURATION_MS      = 500;
+const HISCORE_SCENE_DELAY_TO_GO_BACK_TO_OTHER_SCENE_MS = 500;
 
 //------------------------------------------------------------------------------
 class SceneHighScore
@@ -103,7 +104,7 @@ class SceneHighScore
             Apply_TextUncoverEffect (this.editTitle, this.editFadeTween);
             Apply_TextUncoverEffect (this.editField, this.editFadeTween);
             this.editFadeTween.start();
-            this.editFadeTween._reversed = true; // @XXX
+            this.editFadeTween._reversed = true; // @XXX Accessing private var...
         }
 
         this._UpdateEditFieldText();
@@ -179,7 +180,7 @@ class SceneHighScore
 
             const text   = Create_Normal_Text(str, SCENE_HIGHSCORE_SCORE_ITEM_FONT_SIZE);
             const height = SCENE_HIGHSCORE_SCORE_ITEM_FONT_SIZE;
-            // @XXX(stdmatt): By some reason glypher is generating the fonts with
+            // @BUG(stdmatt): By some reason glypher is generating the fonts with
             // different height - 40 and 41. So the calculations are messed up with
             // this.
             // To overcome the bug we are setting the height as the font size
@@ -198,10 +199,13 @@ class SceneHighScore
         // Animation Finished.
         if(this.options == HISCORE_SCENE_OPTIONS_GO_BACK_AUTOMATICALLY) {
             this.scoreTweenGroup.onComplete(()=>{
-                 /// @XXX
+                 // @XXX This should be encapsulated in a library functionality.
+                 // This way the application will have control how to handle
+                 // the timing itself. Right now I have no idea what's behind
+                 // the setTimeout function.
                 setTimeout(()=>{
                     Go_To_Scene(this.sceneToGoBackClass);
-                }, 500)
+                }, HISCORE_SCENE_DELAY_TO_GO_BACK_TO_OTHER_SCENE_MS)
             });
         }
 

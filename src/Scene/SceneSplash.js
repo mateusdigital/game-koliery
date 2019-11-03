@@ -2,8 +2,9 @@
 // SceneSplash                                                                //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const SPLASH_SCENE_TEXT_EFFECT_DURATION_MS       = 1300;
-const SPLASH_SCENE_TEXT_EFFECT_DELAY_DURATION_MS = 500;
+const SPLASH_SCENE_TEXT_EFFECT_DURATION_MS         = 1300;
+const SPLASH_SCENE_TEXT_EFFECT_DELAY_DURATION_MS   = 500;
+const SPLASH_SCENE_DELAY_TO_GO_TO_ANOTHER_SCENE_MS = 500;
 
 //------------------------------------------------------------------------------
 class SceneSplash
@@ -93,10 +94,13 @@ class SceneSplash
             .yoyo(true)
             .repeat(1)
             .onComplete(()=>{
-                // @XXX
+                // @XXX This should be encapsulated in a library functionality.
+                 // This way the application will have control how to handle
+                 // the timing itself. Right now I have no idea what's behind
+                 // the setTimeout function.
                 setTimeout(()=>{
                     Go_To_Scene(SceneMenu);
-                }, 400)
+                }, SPLASH_SCENE_DELAY_TO_GO_TO_ANOTHER_SCENE_MS)
             });
     } // _SetupEffectTween
 

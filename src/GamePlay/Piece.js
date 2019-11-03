@@ -58,11 +58,6 @@ class Piece
     //--------------------------------------------------------------------------
     Rotate()
     {
-        // Not enough time between rotations.
-        // if(!this.rotateTimer.isDone) {
-        //     return;
-        // }
-
         // @XXX(stdmatt): How js handles the assignments???
         let new_arr = []
         for(let i = 0; i < PIECE_BLOCKS_COUNT; ++i) {

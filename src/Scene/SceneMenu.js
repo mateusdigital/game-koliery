@@ -5,9 +5,13 @@ const SCENE_MENU_TITLE_STR           = "KOLIERY";
 const SCENE_MENU_TITLE_SIN_AMPLITUDE = 20;
 const SCENE_MENU_TITLE_SIN_FREQUENCY = 1;
 
+const SCENE_MENU_LEVEL_TEXT_TWEEN_DURATION_MS = 300;
+const SCENE_MENU_LEVEL_TEXT_TWEEN_DELAY_MS    = 300;
+
 const SCENE_MENU_MARQUEE_TWEEN_DURATION_MS     = 500;
 const SCENE_MENU_MARQUEE_TWEEN_DELAY_MS        = 500;
 const SCENE_MENU_MARQUEE_TWEEN_REPEAT_DELAY_MS = 2000;
+
 
 //------------------------------------------------------------------------------
 class SceneMenu
@@ -133,10 +137,12 @@ class SceneMenu
 
         for(let i = 0; i < strs.length; ++i) {
             // Tween.
-            // @XXX
-            const tween = Tween_CreateBasic(200, this.levelTweenGroup)
-                .delay(300 * (i + 1))
-                .start();
+            const tween = Tween_CreateBasic(
+                SCENE_MENU_LEVEL_TEXT_TWEEN_DURATION_MS,
+                this.levelTweenGroup
+            )
+            .delay(SCENE_MENU_LEVEL_TEXT_TWEEN_DELAY_MS * (i + 1))
+            .start();
 
             // Text.
             const str   = strs[i];
@@ -204,7 +210,6 @@ class SceneMenu
                 const strings_len = this.marqueeStrings.length;
                 const index       = this.marqueeTextIndex;
 
-                // @XXX
                 const color = chroma.hsl((360 / strings_len) * index, 0.5, 0.5);
                 this.marqueeText.filters[1].SetColor(color);
 

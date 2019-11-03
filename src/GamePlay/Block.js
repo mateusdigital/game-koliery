@@ -1,7 +1,3 @@
-
-/// @XXX(stdmatt): Read the documentation of graphics. that there's some stuff
-//  that we need to do to remove the graphics without a leak...
-
 //----------------------------------------------------------------------------//
 // Block                                                                      //
 //----------------------------------------------------------------------------//
