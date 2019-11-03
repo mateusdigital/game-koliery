@@ -47,7 +47,7 @@ def call_glypher(size, font_filename):
         FONTS_DIR_PATH,
 
         "--glyphs-string",
-        "ascii",
+        "upper,digits,special",
 
         "--fill-color",
         "FFFFFFFF",
@@ -80,7 +80,7 @@ def main():
         font = font_def["font"];
 
         font_filename = os.path.join(FONTS_DIR_PATH, font) + ".ttf";
-        # call_glypher(size, font_filename);
+        call_glypher(size, font_filename);
 
         output_contents += "const {name} = {size}\n".format(name=name, size=size);
 
