@@ -37,7 +37,7 @@ class SceneMenu
             "STDMATT",
             // "",
             "THANKS TO",
-            "ALEX",
+            "MY BEAUTIFUL WIFE ALEX",
             // "",
             "GREETINGS TO THE FRIENDS",
             "OF PROGRAMMERS HIDEOUT",
