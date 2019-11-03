@@ -22,11 +22,13 @@ const GAME_HUD_FONT_SIZE = 31
 
 FONTS_TO_LOAD = [
     "./res/fonts/Commodore_64_Rounded_50.fnt",
+    "./res/fonts/PixelForce_90.fnt",
     "./res/fonts/Commodore_64_Rounded_90.fnt",
     "./res/fonts/Commodore_64_Rounded_42.fnt",
     "./res/fonts/Commodore_64_Rounded_40.fnt",
     "./res/fonts/Commodore_64_Rounded_24.fnt",
     "./res/fonts/Commodore_64_Rounded_25.fnt",
     "./res/fonts/Commodore_64_Rounded_31.fnt",
+    "./res/fonts/PixelForce_25.fnt",
     "./res/fonts/Commodore_64_Rounded_22.fnt",
 ];
