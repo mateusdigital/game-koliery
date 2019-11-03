@@ -10,7 +10,8 @@ const HISCORE_SCENE_OPTIONS_NONE                  = 0;
 const HISCORE_SCENE_OPTIONS_GO_BACK_AUTOMATICALLY = 1;
 const HISCORE_SCENE_OPTIONS_EDITABLE              = 2;
 
-const HISCORE_SCENE_BOARD_BLINK_TWEEN_DURATION_MS = 500;
+const HISCORE_SCENE_BOARD_BLINK_TWEEN_DURATION_MS      = 500;
+const HISCORE_SCENE_DELAY_TO_GO_BACK_TO_OTHER_SCENE_MS = 500;
 
 //------------------------------------------------------------------------------
 class SceneHighScore
@@ -103,7 +104,7 @@ class SceneHighScore
             Apply_TextUncoverEffect (this.editTitle, this.editFadeTween);
             Apply_TextUncoverEffect (this.editField, this.editFadeTween);
             this.editFadeTween.start();
-            this.editFadeTween._reversed = true; // @XXX
+            this.editFadeTween._reversed = true; // @XXX Accessing private var...
         }
 
         this._UpdateEditFieldText();
@@ -137,7 +138,7 @@ class SceneHighScore
         const screen_size = Get_Screen_Size();
 
         // Title Text.
-        this.titleText = Create_Normal_Text("HIGH SCORES", 50);
+        this.titleText = Create_Normal_Text("HIGH SCORES", SCENE_HIGHSCORE_TITLE_FONT_SIZE);
         Apply_TextGradientEffect(this.titleText, gPalette.GetScoreColor(0));
 
         this.titleText.x = (screen_size.x         * 0.5);
@@ -177,12 +178,19 @@ class SceneHighScore
             const str   = this._BuildScoreString(i + 1, info);
             const color = chroma(gPalette.GetScoreColor(i));
 
-            const text = Create_Normal_Text(str, 40);
+            const text   = Create_Normal_Text(str, SCENE_HIGHSCORE_SCORE_ITEM_FONT_SIZE);
+            const height = SCENE_HIGHSCORE_SCORE_ITEM_FONT_SIZE;
+            // @BUG(stdmatt): By some reason glypher is generating the fonts with
+            // different height - 40 and 41. So the calculations are messed up with
+            // this.
+            // To overcome the bug we are setting the height as the font size
+            // as it should be anyways, but we REALLY need to take a look
+            // why this is happening.
             Apply_TextUncoverEffect (text, tween);
             Apply_TextGradientEffect(text, color);
 
             text.x = (screen_size.x * 0.5);
-            text.y = initial_y + (text.height * i) + (text.height * 0.5);
+            text.y = initial_y + (height * i) + (height * 0.5);
 
             this.addChild(text);
             this.scoreTexts.push(text);
@@ -191,10 +199,13 @@ class SceneHighScore
         // Animation Finished.
         if(this.options == HISCORE_SCENE_OPTIONS_GO_BACK_AUTOMATICALLY) {
             this.scoreTweenGroup.onComplete(()=>{
-                 /// @XXX
+                 // @XXX This should be encapsulated in a library functionality.
+                 // This way the application will have control how to handle
+                 // the timing itself. Right now I have no idea what's behind
+                 // the setTimeout function.
                 setTimeout(()=>{
                     Go_To_Scene(this.sceneToGoBackClass);
-                }, 500)
+                }, HISCORE_SCENE_DELAY_TO_GO_BACK_TO_OTHER_SCENE_MS)
             });
         }
 
@@ -235,7 +246,7 @@ class SceneHighScore
         const last_score_text = Array_GetLast(this.scoreTexts);
 
         // Edit Title.
-        this.editTitle = Create_Normal_Text("Enter your initials", 22);
+        this.editTitle = Create_Normal_Text("Enter your initials", SCENE_HIGHSCORE_EDIT_TITLE_FONT_SIZE);
         Apply_TextGradientEffect(this.editTitle, chroma("gray"));
 
         this.editTitle.x = screen_size.x * 0.5;
@@ -244,7 +255,7 @@ class SceneHighScore
         this.addChild(this.editTitle);
 
         // Edit Field.
-        this.editField = Create_Normal_Text("_ _ _", 40);
+        this.editField = Create_Normal_Text("_ _ _", SCENE_HIGHSCORE_EDIT_FIELD_FONT_SIZE);
         Apply_TextGradientEffect(this.editField, chroma("gray"));
 
         this.editField.x = screen_size.x * 0.5;
@@ -280,7 +291,7 @@ class SceneHighScore
         const name_str  = info.name;
         const score_str = Build_Digits_String("", HIGHSCORE_MAX_DIGITS, info.score);
 
-        return String_Cat(pos_str, ".", " ", name_str, " ", score_str);
+        return String_Cat(pos_str, " ", name_str, " ", score_str);
     } // _BuildScoreString
 
     //--------------------------------------------------------------------------

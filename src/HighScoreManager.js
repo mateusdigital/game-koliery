@@ -43,7 +43,7 @@ async function _Fetch_Async(url)
         const response = await fetch(url);
         data = await response.json();
     } catch (e){
-        debugger;
+        // debugger;
         console.log("Failed to get scores... Mocking it...");
         data = _Create_MockScores();
     }
@@ -57,7 +57,7 @@ async function _Insert_Async(url)
     try {
         const response = await fetch(url);
     } catch (e){
-        debugger;
+        // debugger;
     }
 }
 
