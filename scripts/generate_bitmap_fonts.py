@@ -11,10 +11,13 @@ import os.path;
 ## Constants                                                                  ##
 ##----------------------------------------------------------------------------##
 FONTS_DIR_PATH     = "./res/fonts";
-FONTS_DEF_FILENAME = "FontSizes.json";
-FONTS_JS_FILENAME  = "Fonts.js"
+OUTPUT_DIR_PATH    = os.path.join(FONTS_DIR_PATH, "generated");
+FONTS_DEF_FILENAME = os.path.join(FONTS_DIR_PATH, "FontSizes.json");
+FONTS_JS_FILENAME  = os.path.join(OUTPUT_DIR_PATH, "Fonts.js");
 
+## @XXX(stdmatt): Glypher is not released yet...
 GLYPHER_BIN = "/Users/stdmatt/Documents/Projects/stdmatt/tools/glypher/build.xcode/Debug/glypher";
+
 
 ##----------------------------------------------------------------------------##
 ## Functions                                                                  ##
@@ -32,7 +35,7 @@ def create_output_contents_header():
     return s;
 
 
-def call_glypher(size, font_filename):
+def call_glypher(size, font_filename, output_path):
     cmd_args = [
         "-V",
         # "--no-gui",
@@ -44,7 +47,7 @@ def call_glypher(size, font_filename):
         str(size),
 
         "--output-file",
-        FONTS_DIR_PATH,
+        output_path,
 
         "--glyphs-string",
         "upper,digits,special",
@@ -66,7 +69,7 @@ def main():
     os.chdir(proj_root_dir);
 
     ## Read the json with the font sizes.
-    f = open(os.path.join(FONTS_DIR_PATH, FONTS_DEF_FILENAME));
+    f = open(FONTS_DEF_FILENAME);
     fonts_def_contents = "\n".join(f.readlines());
     fonts_def          = json.loads(fonts_def_contents);
     f.close();
@@ -80,7 +83,9 @@ def main():
         font = font_def["font"];
 
         font_filename = os.path.join(FONTS_DIR_PATH, font) + ".ttf";
-        call_glypher(size, font_filename);
+        output_path   = OUTPUT_DIR_PATH;
+        os.system("mkdir -p {path}".format(path=output_path));
+        call_glypher(size, font_filename, output_path);
 
         output_contents += "const {name} = {size}\n".format(name=name, size=size);
 
@@ -89,16 +94,16 @@ def main():
     ## This will allow us to load all the fonts on the main of game.
     output_contents += "\n\n";
     output_contents += "FONTS_TO_LOAD = [\n";
-    for filename in os.listdir(FONTS_DIR_PATH):
+    for filename in os.listdir(OUTPUT_DIR_PATH):
         if(filename.endswith(".fnt")):
             output_contents += "    \"{filename}\",\n".format(
-                filename=os.path.join(FONTS_DIR_PATH, filename)
+                filename=os.path.join(OUTPUT_DIR_PATH, filename)
             );
     output_contents += "];";
 
 
     ## Write the JS file.
-    f = open(os.path.join(FONTS_DIR_PATH, FONTS_JS_FILENAME), "w");
+    f = open(FONTS_JS_FILENAME, "w");
     f.write(output_contents);
     f.close();
 
