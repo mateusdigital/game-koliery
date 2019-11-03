@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------//
 // SceneMenu                                                                  //
 //----------------------------------------------------------------------------//
-const SCENE_MENU_TITLE_STR           = "koliery";
+const SCENE_MENU_TITLE_STR           = "KOLIERY";
 const SCENE_MENU_TITLE_SIN_AMPLITUDE = 20;
 const SCENE_MENU_TITLE_SIN_FREQUENCY = 1;
 
