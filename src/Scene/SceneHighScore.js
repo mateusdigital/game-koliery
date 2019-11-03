@@ -177,12 +177,19 @@ class SceneHighScore
             const str   = this._BuildScoreString(i + 1, info);
             const color = chroma(gPalette.GetScoreColor(i));
 
-            const text = Create_Normal_Text(str, SCENE_HIGHSCORE_SCORE_ITEM_FONT_SIZE);
+            const text   = Create_Normal_Text(str, SCENE_HIGHSCORE_SCORE_ITEM_FONT_SIZE);
+            const height = SCENE_HIGHSCORE_SCORE_ITEM_FONT_SIZE;
+            // @XXX(stdmatt): By some reason glypher is generating the fonts with
+            // different height - 40 and 41. So the calculations are messed up with
+            // this.
+            // To overcome the bug we are setting the height as the font size
+            // as it should be anyways, but we REALLY need to take a look
+            // why this is happening.
             Apply_TextUncoverEffect (text, tween);
             Apply_TextGradientEffect(text, color);
 
             text.x = (screen_size.x * 0.5);
-            text.y = initial_y + (text.height * i) + (text.height * 0.5);
+            text.y = initial_y + (height * i) + (height * 0.5);
 
             this.addChild(text);
             this.scoreTexts.push(text);
@@ -280,7 +287,7 @@ class SceneHighScore
         const name_str  = info.name;
         const score_str = Build_Digits_String("", HIGHSCORE_MAX_DIGITS, info.score);
 
-        return String_Cat(pos_str, ".", " ", name_str, " ", score_str);
+        return String_Cat(pos_str, " ", name_str, " ", score_str);
     } // _BuildScoreString
 
     //--------------------------------------------------------------------------
