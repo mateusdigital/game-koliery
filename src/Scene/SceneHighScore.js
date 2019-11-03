@@ -137,7 +137,7 @@ class SceneHighScore
         const screen_size = Get_Screen_Size();
 
         // Title Text.
-        this.titleText = Create_Normal_Text("HIGH SCORES", 50);
+        this.titleText = Create_Normal_Text("HIGH SCORES", SCENE_HIGHSCORE_TITLE_FONT_SIZE);
         Apply_TextGradientEffect(this.titleText, gPalette.GetScoreColor(0));
 
         this.titleText.x = (screen_size.x         * 0.5);
@@ -177,7 +177,7 @@ class SceneHighScore
             const str   = this._BuildScoreString(i + 1, info);
             const color = chroma(gPalette.GetScoreColor(i));
 
-            const text = Create_Normal_Text(str, 40);
+            const text = Create_Normal_Text(str, SCENE_HIGHSCORE_SCORE_ITEM_FONT_SIZE);
             Apply_TextUncoverEffect (text, tween);
             Apply_TextGradientEffect(text, color);
 
@@ -235,7 +235,7 @@ class SceneHighScore
         const last_score_text = Array_GetLast(this.scoreTexts);
 
         // Edit Title.
-        this.editTitle = Create_Normal_Text("Enter your initials", 22);
+        this.editTitle = Create_Normal_Text("Enter your initials", SCENE_HIGHSCORE_EDIT_TITLE_FONT_SIZE);
         Apply_TextGradientEffect(this.editTitle, chroma("gray"));
 
         this.editTitle.x = screen_size.x * 0.5;
@@ -244,7 +244,7 @@ class SceneHighScore
         this.addChild(this.editTitle);
 
         // Edit Field.
-        this.editField = Create_Normal_Text("_ _ _", 40);
+        this.editField = Create_Normal_Text("_ _ _", SCENE_HIGHSCORE_EDIT_FIELD_FONT_SIZE);
         Apply_TextGradientEffect(this.editField, chroma("gray"));
 
         this.editField.x = screen_size.x * 0.5;

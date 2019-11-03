@@ -2,11 +2,8 @@
 // SceneMenu                                                                  //
 //----------------------------------------------------------------------------//
 const SCENE_MENU_TITLE_STR           = "koliery";
-const SCENE_MENU_TITLE_FONT_SIZE     = 90;
 const SCENE_MENU_TITLE_SIN_AMPLITUDE = 20;
 const SCENE_MENU_TITLE_SIN_FREQUENCY = 1;
-const SCENE_MENU_LEVEL_FONT_SIZE     = 40;
-const SCENE_MENU_MARQUEE_FONT_SIZE   = 25;
 
 const SCENE_MENU_MARQUEE_TWEEN_DURATION_MS     = 500;
 const SCENE_MENU_MARQUEE_TWEEN_DELAY_MS        = 500;

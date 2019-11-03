@@ -2,7 +2,6 @@
 // SceneSplash                                                                //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const SPLASH_SCENE_FONT_SIZE                     = 40;
 const SPLASH_SCENE_TEXT_EFFECT_DURATION_MS       = 1300;
 const SPLASH_SCENE_TEXT_EFFECT_DELAY_DURATION_MS = 500;
 

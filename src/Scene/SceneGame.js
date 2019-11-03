@@ -181,7 +181,7 @@ class SceneGame
         const color       = chroma("black");
 
         // Pause Text.
-        this.pauseText = Create_Normal_Text("PAUSED", 42);
+        this.pauseText = Create_Normal_Text("PAUSED", SCENE_GAME_PAUSED_FONT_SIZE);
         this.pauseText.x = screen_size.x * 0.5;
         this.pauseText.y = screen_size.y * 0.4;
         this.pauseText.visible = false;
@@ -193,16 +193,16 @@ class SceneGame
         {
             this.exitText = new PIXI.Container();
 
-            let l0 = Create_Normal_Text("ARE YOU SURE?", 40);
+            let l0 = Create_Normal_Text("ARE YOU SURE?", SCENE_GAME_EXIT_PROMPT_TITLE_FONT_SIZE);
             Apply_TextGradientEffect(l0, color);
             this.exitText.addChild(l0);
 
-            let l1 = Create_Normal_Text("PRESS ESC AGAIN TO EXIT", 24);
+            let l1 = Create_Normal_Text("PRESS ESC AGAIN TO EXIT", SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE);
             l1.y = (l0.y + l0.height + l1.height);
             Apply_TextGradientEffect(l1, color);
             this.exitText.addChild(l1);
 
-            let l2 = Create_Normal_Text("OR ENTER TO CONTINUE", 24);
+            let l2 = Create_Normal_Text("OR ENTER TO CONTINUE", SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE);
             l2.y = (l1.y + l1.height);
             Apply_TextGradientEffect(l2, color);
             this.exitText.addChild(l2);

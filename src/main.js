@@ -29,16 +29,6 @@ const GAME_DESIGN_HEIGHT = 700;
 //------------------------------------------------------------------------------
 let gPalette     = null;
 let gStarfield   = null;
-// let gBoard       = null;
-// let gBoardBorder = null;
-// let gGameHud     = null;
-
-
-// let editorMode    = false;
-// let MousePosition = null;
-// let editorBlock   = null;
-
-let game = null;
 
 //------------------------------------------------------------------------------
 function PreInit()
@@ -50,29 +40,20 @@ function PreInit()
 //------------------------------------------------------------------------------
 async function Preload()
 {
-    await Font_Load(
-        "Commodore 64 Rounded",
-        "./res/fonts/Commodore64Rounded.woff"
-    );
-    await Font_Load(
-        "PixelForce",
-        "./res/fonts/PixelForce.ttf"
-    );
-
     Texture_SetBasePath("res/textures/");
-    PIXI_LOADER.add([
-        "res/textures/mask_0.png",
-        "res/textures/mask_1.png",
-        "res/textures/mask_2.png",
-        "res/textures/mask_3.png",
-
+    RES_LoadResources(
+        // Callback.
+        Setup,
+        // Fonts.
+        FONTS_TO_LOAD,
+        // Shaders
         "src/FX/Shaders/Debug.frag",
         "src/FX/Shaders/TextUncover.frag",
         "src/FX/Shaders/TextGradient.frag",
         "src/FX/Shaders/BoardBorder.frag",
         "src/FX/Shaders/BlockTint.frag",
         "src/FX/Shaders/BlockSquash.frag",
-    ]).load(Setup);
+    );
 }
 
 

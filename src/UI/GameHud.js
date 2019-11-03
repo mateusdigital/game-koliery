@@ -27,7 +27,7 @@ const GAME_HUD_TEXT_GAME_NAME    = "--------";
 const GAME_HUD_TEXT_DIGITS_SCORE = HIGHSCORE_MAX_DIGITS;
 const GAME_HUD_TEXT_DIGITS_LEVEL = 2;
 const GAME_HUD_TEXT_GAP          = 15;
-const GAME_HUD_FONT_SIZE         = 31;
+
 
 //------------------------------------------------------------------------------
 class GameHud
