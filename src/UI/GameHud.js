@@ -82,35 +82,30 @@ class GameHud
         this.addChild(this.levelText  );
     } // ctor
 
+
+    //--------------------------------------------------------------------------
+    SetLevel(level)
+    {
+        const str = Build_Digits_String(
+            GAME_HUD_TEXT_PREFIX_LEVEL,
+            GAME_HUD_TEXT_DIGITS_LEVEL,
+            level
+        );
+
+        this.levelText.text = str;
+    } // SetLevel
+
     //--------------------------------------------------------------------------
     SetScore(score, hiScore)
     {
         this.scoreText  .text = Build_Digits_String(GAME_HUD_TEXT_PREFIX_SCORE, GAME_HUD_TEXT_DIGITS_SCORE, score  );
         this.hiScoreText.text = Build_Digits_String(GAME_HUD_TEXT_PREFIX_HI,    GAME_HUD_TEXT_DIGITS_SCORE, hiScore);
-    }
+    } // SetScore
 
     //--------------------------------------------------------------------------
-    SetMarqueeWithMatchInfo(matchInfo)
-    {
-        let count = 0;
-        for(let i = 0; i < matchInfo.infos.length; ++i) {
-            const info = matchInfo.infos[i];
-            if(info.has_match) {
-                ++count;
-            }
-        }
-
-        if(count == 0) {
-            this._SetMarqueeText(GAME_HUD_TEXT_GAME_NAME);
-        } else {
-            this._SetMarqueeText(String_Cat("Match ", count));
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    _SetMarqueeText(str)
+    SetMarquee(str)
     {
         this.marqueeText.text = str.toUpperCase();
-    } // _SetMarqueeText
+    } // SetMarquee
 
 }; // class GameHud

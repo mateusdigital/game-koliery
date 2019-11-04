@@ -82,9 +82,10 @@ function Setup()
     HIGHSCORE_MANAGER.FetchScores();
 
     // Go_To_Scene(SceneSplash);
+    Go_To_Scene(SceneMenu);
     // Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
     // Go_To_Scene(SceneHighScore, null, HISCORE_SCENE_OPTIONS_EDITABLE);
-    Go_To_Scene(SceneSplash);
+
     Application_Start(GameLoop);
 }
 
@@ -95,75 +96,17 @@ function GameLoop(delta)
     gStarfield.Update(delta);
 }
 
-function EnterEditor()
-{
-    editorMode = true;
-}
-
-function ExitEditor()
-{
-    editorMode = false;
-}
-
-function Update_Editor(dt)
-{
-    let new_block = null;
-    if(IsKeyPress(KEY_1)) {
-        new_block = Create_Random_Block(gBoard, 0);
-    } else if(IsKeyPress(KEY_2)) {
-        new_block = Create_Random_Block(gBoard, 1);
-    } else if(IsKeyPress(KEY_3)) {
-        new_block = Create_Random_Block(gBoard, 2);
-    } else if(IsKeyPress(KEY_4)) {
-        new_block = Create_Random_Block(gBoard, 3);
-    } else if(IsKeyPress(KEY_5)) {
-        new_block = Create_Random_Block(gBoard, 4);
-    } else if(IsKeyPress(KEY_6)) {
-        new_block = Create_Random_Block(gBoard, 5);
-    } else if(IsKeyPress(KEY_6)) {
-        new_block = Create_Random_Block(gBoard, 6);
-    }
-
-    if(new_block != null) {
-        if(editorBlock != null) {
-            editorBlock.parent.removeChild(editorBlock);
-        }
-        editorBlock = new_block;
-        gBoard.addChild(editorBlock);
-    }
-
-    if(editorBlock != null) {
-        console.log("Editor");
-        editorBlock.x = Math_Int(MousePosition.x / gBoard.blockSize.x) *gBoard.blockSize.x ;
-        editorBlock.y = Math_Int(MousePosition.y / gBoard.blockSize.y) *gBoard.blockSize.y ;
-    }
-}
-
-
 //----------------------------------------------------------------------------//
 // Input Handlers                                                             //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
 function MouseMove(e)
 {
-    // console.log(e.getLocalPosition(g_App.stage));
-    // MousePosition = e.data.getLocalPosition(gBoard);
 }
 
 //------------------------------------------------------------------------------
 function MouseClick(e)
 {
-    // if(editorMode && editorBlock != null) {
-    //     editorBlock.x = Math_Int(MousePosition.x / gBoard.blockSize.x) *gBoard.blockSize.x ;
-    //     editorBlock.y = Math_Int(MousePosition.y / gBoard.blockSize.y) *gBoard.blockSize.y ;
-    //     gBoard._SetBlockAt(
-    //         editorBlock,
-    //         Math_Int(MousePosition.x / gBoard.blockSize.x),
-    //         Math_Int(MousePosition.y / gBoard.blockSize.y)
-    //     );
-
-    //     editorBlock = null;
-    // }
 }
 
 //------------------------------------------------------------------------------

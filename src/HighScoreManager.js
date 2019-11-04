@@ -12,7 +12,7 @@
 //  Copyright : stdmatt - 2019                                                //
 //                                                                            //
 //  Description :                                                             //
-//                                                                            //
+//    CHEESY AS HELL                                                          //
 //----------------------------------------------------------------------------//
 
 //----------------------------------------------------------------------------//
@@ -125,6 +125,8 @@ class HighscoreManager
         if(this.currScore > this.highestScore) {
             this.highestScore = this.currScore;
         }
+
+        return this.highestScore;
     } // UpdateCurrentScoreValue
 
     //--------------------------------------------------------------------------

@@ -26,7 +26,6 @@ const BOARD_BLOCK_SIZE     = 27;
 const BOARD_BLOCK_TIME_TO_MOVE_FAST = 0.025;
 const BOARD_BLOCK_MOVE_SUBSTEPS     = 2;
 
-const BOARD_SCORE_VALUE_MOVING_FAST = 1;
 // State: Playing / Game Over
 const BOARD_STATE_PLAYING                    = "BOARD_STATE_PLAYING";
 const BOARD_STATE_GAME_OVER                  = "BOARD_STATE_GAME_OVER";
@@ -55,17 +54,17 @@ class Board
     extends PIXI.Container
 {
     //--------------------------------------------------------------------------
-    constructor()
+    constructor(progressionHandler)
     {
         super();
 
         //
         // iVars
         // State
-        this.paused    = true;
-        this.prevState = null;
-        this.currState = null;
-        this._ChangeState(BOARD_STATE_GENERATING_PIECE);
+        this.paused             = true;
+        this.prevState          = null;
+        this.currState          = null;
+        this.progressionHandler = progressionHandler;
 
         // Field.
         this.field     = Array_Create2D(BOARD_FIELD_ROWS, BOARD_FIELD_COLUMNS);
@@ -80,19 +79,15 @@ class Board
         this.currPiece           = null;
         this.currPiecePlaceCoord = null;
         this.currTimeToMove      = 0;
-        this.maxTimeToMove       = 0.5;
         this.movingFast          = false;
 
         // Tweens.
         this.destroyTweenGroup = Tween_CreateGroup();
         this.fallTweenGroup    = Tween_CreateGroup();
 
-        // Score.
-        this.score = 0;
-
-        // Callbacks.
-        this.onScoreChangeCallback = null;
-        this.onMatchCallback       = null;
+        //
+        // Initialize.
+        this._ChangeState(BOARD_STATE_GENERATING_PIECE);
     } // ctor
 
 
@@ -121,7 +116,7 @@ class Board
             this._UpdateState_Playing(dt);
         }
         else if(this.currState == BOARD_STATE_GAME_OVER) {
-
+            return;
         }
 
         //
@@ -240,13 +235,13 @@ class Board
         if(this.currTimeToMove <= 0) {
             this.currTimeToMove += (this.movingFast)
                 ? BOARD_BLOCK_TIME_TO_MOVE_FAST
-                : this.maxTimeToMove;
+                : this.progressionHandler.maxTimeToMove;
 
             new_position_y += (this.blockSize.y / BOARD_BLOCK_MOVE_SUBSTEPS);
             new_coord.y     = Math_Int(new_position_y / this.blockSize.y);
 
             if(this.movingFast) {
-                this._AddScore(BOARD_SCORE_VALUE_MOVING_FAST)
+                this.progressionHandler.AddScoreForMovingFast();
             }
         }
 
@@ -331,8 +326,7 @@ class Board
         this._ChangeState(BOARD_STATE_FINDING_MATCHES_FINISHED);
 
         if(this.matchInfo.hasMatches) {
-            this.onMatchCallback();
-            this._AddScore(1234);
+            this.progressionHandler.AddScoreWithMatchInfo(this.matchInfo);
         }
     } // _FindMatches
 
@@ -470,14 +464,6 @@ class Board
     {
         block.StartFallAnimation(targetCoord);
     } // _CreateFallBlockAnimation
-
-
-    //--------------------------------------------------------------------------
-    _AddScore(value)
-    {
-        this.score += value;
-        this.onScoreChangeCallback();
-    }
 
 
     //--------------------------------------------------------------------------

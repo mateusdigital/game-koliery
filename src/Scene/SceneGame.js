@@ -40,15 +40,16 @@ class SceneGame
     extends Base_Scene
 {
     //--------------------------------------------------------------------------
-    constructor(level)
+    constructor(difficulty)
     {
         super();
 
         //
         // iVars
         // State.
-        this.prevState = null;
-        this.currState = null;
+        this.prevState  = null;
+        this.currState  = null;
+        this.difficulty = difficulty;
 
         // Board.
         this.board                 = null;
@@ -63,9 +64,10 @@ class SceneGame
 
         //
         // Initialize.
-        this._CreateHud       ();
-        this._CreateBoard     ();
-        this._CreateStateTexts();
+        this._CreateHud               ();
+        this._CreateProgressionHandler();
+        this._CreateBoard             ();
+        this._CreateStateTexts        ();
 
         this._ChangeState(SCENE_GAME_STATE_INITIALING);
         this._OnScoreChanged();
@@ -134,16 +136,24 @@ class SceneGame
 
 
     //--------------------------------------------------------------------------
+    _OnLevelChanged()
+    {
+        this.hud.SetLevel(this.progressionHandler.level);
+    }
+
+    //--------------------------------------------------------------------------
     _OnScoreChanged()
     {
-        HIGHSCORE_MANAGER.UpdateCurrentScoreValue(this.board.score);
-        this.hud.SetScore(this.board.score, HIGHSCORE_MANAGER.GetHighScoreValue());
+        const score   = this.progressionHandler.score;
+        const hiscore = HIGHSCORE_MANAGER.UpdateCurrentScoreValue(score);
+
+        this.hud.SetScore(score, hiscore);
     } // _OnScoreChanged
 
     //--------------------------------------------------------------------------
     _OnMatch()
     {
-        const match_info = this.board.matchInfo;
+
     } // _OnMatch
 
 
@@ -157,10 +167,23 @@ class SceneGame
     } // _CreateHud
 
     //--------------------------------------------------------------------------
+    _CreateProgressionHandler()
+    {
+        // Create
+        this.progressionHandler = new ProgressionHandler(this.difficulty, 0);
+
+        // Set the callbacks.
+        this.progressionHandler.onLevelChangedCallback = ()=>{ this._OnLevelChanged() };
+        this.progressionHandler.onScoreChangeCallback  = ()=>{ this._OnScoreChanged() };
+        this.progressionHandler.onMatchCallback        = ()=>{ this._OnMatch       () };
+    } // _CreateProgressionHandler
+
+
+    //--------------------------------------------------------------------------
     _CreateBoard()
     {
-        this.board       = new Board();
-        this.boardBorder = new BoardBorder(this.board);
+        this.board       = new Board      (this.progressionHandler);
+        this.boardBorder = new BoardBorder(this.board             );
         this.addChild(this.boardBorder);
 
         const screen_size       = Get_Screen_Size();
@@ -168,10 +191,6 @@ class SceneGame
 
         this.boardBorder.x = (screen_size.x / 2) - (this.boardBorder.width / 2);
         this.boardBorder.y = (game_hud_bottom_y);
-
-        // Setup Callbacks.
-        this.board.onScoreChangeCallback = ()=>{ this._OnScoreChanged() };
-        this.board.onMatchCallback       = ()=>{ this._OnMatch       () };
 
         // Create the Board Border Tween.
         this.boardBorderTweenGroup = Tween_CreateGroup();
