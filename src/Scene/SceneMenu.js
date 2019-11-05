@@ -29,6 +29,14 @@ const SCENE_MENU_MARQUEE_TWEEN_DURATION_MS     = 500;
 const SCENE_MENU_MARQUEE_TWEEN_DELAY_MS        = 500;
 const SCENE_MENU_MARQUEE_TWEEN_REPEAT_DELAY_MS = 2000;
 
+const SCENE_MENU_LEVEL_TEXT_OPTIONS = [
+    "1 - EASY",
+    "2 - MEDIUM",
+    "3 - HARD",
+    "h - SCORES",
+    "c - CREDITS",
+    "M - MUTE / UNMUTE",
+];
 
 //------------------------------------------------------------------------------
 class SceneMenu
@@ -80,18 +88,24 @@ class SceneMenu
         this._InitializeLevelText  ();
         this._InitializeMarqueeText();
 
+        gAudio.Play(AUDIO_PLAYER_BACKGROUND_1);
     } // ctor
+
 
     //--------------------------------------------------------------------------
     Update(dt)
     {
         if(IsKeyPress(KEY_1)) {
+            gAudio.PlayEffect(AUDIO_PLAYER_EFFECT_MENU);
             Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
         } else if(IsKeyPress(KEY_2)) {
+            gAudio.PlayEffect(AUDIO_PLAYER_EFFECT_MENU);
             Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_MEDIUM);
         } else if(IsKeyPress(KEY_3)) {
+            gAudio.PlayEffect(AUDIO_PLAYER_EFFECT_MENU);
             Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_HARD);
         } else if(IsKeyPress(KEY_H)){
+            gAudio.PlayEffect(AUDIO_PLAYER_EFFECT_MENU);
             Go_To_Scene(SceneHighScore, SceneMenu, HISCORE_SCENE_OPTIONS_NONE);
         }
 
@@ -149,7 +163,7 @@ class SceneMenu
     //--------------------------------------------------------------------------
     _InitializeLevelText()
     {
-        const strs        = ["1 - EASY", "2 - MEDIUM", "3 - HARD", "h - scores"];
+        const strs        = SCENE_MENU_LEVEL_TEXT_OPTIONS;
         const screen_size = Get_Screen_Size();
 
         for(let i = 0; i < strs.length; ++i) {
@@ -162,16 +176,23 @@ class SceneMenu
             .start();
 
             // Text.
+            let  font_size = SCENE_MENU_LEVEL_FONT_SIZE;
+
             const str   = strs[i];
-            const text  = Create_Normal_Text(str, SCENE_MENU_LEVEL_FONT_SIZE);
+            const text  = Create_Normal_Text(str, font_size);
             const color = chroma("black");
 
             Apply_TextUncoverEffect (text, tween);
             Apply_TextGradientEffect(text, color);
 
+            if(i + 2 >= strs.length) {
+                text.scale.set(0.7);
+            }
+
             text.anchor.set(0.0, 0.5);
             text.x = 0;
-            text.y = (text.height * i);
+            text.y = (font_size * i);
+
 
             this.levelText.push(text);
             this.levelTextLayer.addChild(text);
