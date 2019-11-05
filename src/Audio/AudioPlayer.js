@@ -1,3 +1,19 @@
+//----------------------------------------------------------------------------//
+//                       __      __                  __   __                  //
+//               .-----.|  |_.--|  |.--------.---.-.|  |_|  |_                //
+//               |__ --||   _|  _  ||        |  _  ||   _|   _|               //
+//               |_____||____|_____||__|__|__|___._||____|____|               //
+//                                                                            //
+//  File      : AudioPlayer.js                                                //
+//  Project   : columns                                                       //
+//  Date      : Nov 05, 2019                                                  //
+//  License   : GPLv3                                                         //
+//  Author    : stdmatt <stdmatt@pixelwizards.io>                             //
+//  Copyright : stdmatt - 2019                                                //
+//                                                                            //
+//  Description :                                                             //
+//                                                                            //
+//----------------------------------------------------------------------------//
 
 //----------------------------------------------------------------------------//
 // Audio Player                                                               //
@@ -68,9 +84,9 @@ class AudioPlayer
         }
 
         this.effectName = name;
-        this._AdjustVolumes();
-
-        effect_to_play.play();
+        effect_to_play.play(()=>{
+            this.effectName = null;
+        });
     } // PlayEffect
 
     //--------------------------------------------------------------------------
@@ -83,16 +99,16 @@ class AudioPlayer
         }
 
         const playing_sound = this.sounds[this.soundName];
-        this._AdjustVolumes();
+        const end_callback  = ()=>{ this.Play(name, false); }
 
         if(this.soundName != name) {
             if(playing_sound) {
                 playing_sound.stop();
             }
-            sound_to_play.play();
+            sound_to_play.play(end_callback);
         } else if(restartIfPlaying) {
             playing_sound.stop();
-            sound_to_play.play();
+            sound_to_play.play(end_callback);
         }
 
         this.soundName = name;
@@ -102,22 +118,6 @@ class AudioPlayer
     ToggleMute()
     {
         this.isMuted = !this.isMuted;
-        this._AdjustVolumes();
+        PIXI.sound.toggleMuteAll();
     } // ToggleMute
-
-
-    //--------------------------------------------------------------------------
-    _AdjustVolumes()
-    {
-        const playing_music  = this.sounds[this.soundName];
-        const playing_effect = this.sounds[this.effectName];
-        const volume         = this.isMuted ? 0 : 1;
-
-        if(playing_music) {
-            playing_music.volume = volume;
-        }
-        if(playing_effect) {
-            playing_effect.volume = volume;
-        }
-    } // _AdjustVolumes
 } // AudioPlayer
