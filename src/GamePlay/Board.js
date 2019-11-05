@@ -320,6 +320,7 @@ class Board
         this.currPiece           = null;
         this.currPiecePlaceCoord = null;
 
+        gAudio.PlayEffect(MUSIC_PIECE_PLACE);
         this._ChangeState(BOARD_STATE_PLACING_PIECE_FINISHED);
     } // _PlacePiece
 
