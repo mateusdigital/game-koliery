@@ -195,19 +195,23 @@ class Board
         if(IsKeyDown(KEY_SPACE) && !this.movingFast) {
             this.currTimeToMove = 0;
             this.movingFast     = true;
+            gAudio.PlayEffect(MUSIC_PIECE_ROTATE);
         } else if(IsKeyUp(KEY_SPACE) && this.movingFast) {
             this.movingFast = false;
         }
 
         this.currPiece.Update(dt);
         if(IsKeyPress(KEY_ARROW_DOWN) || IsKeyPress(KEY_ARROW_UP)) {
+            gAudio.PlayEffect(MUSIC_PIECE_ROTATE);
             this.currPiece.Rotate();
         }
 
         let dir_x = 0;
         if(IsKeyPress(KEY_ARROW_LEFT)) {
+            gAudio.PlayEffect(MUSIC_PIECE_MOVE);
             dir_x = -1;
         } else if(IsKeyPress(KEY_ARROW_RIGHT)) {
+            gAudio.PlayEffect(MUSIC_PIECE_MOVE);
             dir_x = +1;
         }
 
@@ -334,12 +338,12 @@ class Board
     _DestroyBlocks()
     {
         this._ChangeState(BOARD_STATE_DESTROYING_PIECES);
-
         if(!this.matchInfo.hasMatches) {
             this._ChangeState(BOARD_STATE_DESTROYING_PIECES_FINISHED);
             return;
         }
 
+        gAudio.PlayEffect(MUSIC_PIECE_DESTROY);
         this.destroyTweenGroup = Tween_CreateGroup();
         for(let i = 0; i < this.matchInfo.allMatchedBlocks.length; ++i) {
             let block = this.matchInfo.allMatchedBlocks[i];
