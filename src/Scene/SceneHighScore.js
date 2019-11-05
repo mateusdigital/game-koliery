@@ -19,16 +19,19 @@
 // SceneHighScore                                                             //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const HIGHSCORE_SCENE_FONT_SIZE                     = 40;
-const HIGHSCORE_SCENE_TEXT_EFFECT_DURATION_MS       = 300;
-const HIGHSCORE_SCENE_TEXT_EFFECT_DELAY_DURATION_MS = 300;
+const SCENE_HIGHSCORE_FONT_SIZE                     = 40;
+const SCENE_HIGHSCORE_TEXT_EFFECT_DURATION_MS       = 300;
+const SCENE_HIGHSCORE_TEXT_EFFECT_DELAY_DURATION_MS = 300;
 
-const HISCORE_SCENE_OPTIONS_NONE                  = 0;
-const HISCORE_SCENE_OPTIONS_GO_BACK_AUTOMATICALLY = 1;
-const HISCORE_SCENE_OPTIONS_EDITABLE              = 2;
+const SCENE_HIGHSCORE_OPTIONS_NONE                  = 0;
+const SCENE_HIGHSCORE_OPTIONS_GO_BACK_AUTOMATICALLY = 1;
+const SCENE_HIGHSCORE_OPTIONS_EDITABLE              = 2;
 
-const HISCORE_SCENE_BOARD_BLINK_TWEEN_DURATION_MS      = 500;
-const HISCORE_SCENE_DELAY_TO_GO_BACK_TO_OTHER_SCENE_MS = 500;
+const SCENE_HIGHSCORE_BOARD_BLINK_TWEEN_DURATION_MS      = 500;
+const SCENE_HIGHSCORE_DELAY_TO_GO_BACK_TO_OTHER_SCENE_MS = 500;
+
+const SCENE_HIGHSCORE_MUSIC_BACKGROUND = MUSIC_KOMIKU_06_SCHOOL;
+const SCENE_HIGHSCORE_EFFECT_MENU      = MUSIC_MENU_INTERACTION;
 
 //------------------------------------------------------------------------------
 class SceneHighScore
@@ -67,18 +70,20 @@ class SceneHighScore
         // Initialize.
         // If player is out of ranks make the scene non editable...
         if(HIGHSCORE_MANAGER.GetCurrentScorePosition() == HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
-            this.options = HISCORE_SCENE_OPTIONS_NONE;
+            this.options = SCENE_HIGHSCORE_OPTIONS_NONE;
         }
 
         this._CreateTitleUI();
         this._CreateScoreUI();
         this._CreateEditUI ();
+
+        gAudio.Play(SCENE_HIGHSCORE_MUSIC_BACKGROUND);
     } // ctor
 
     //--------------------------------------------------------------------------
     OnEnter()
     {
-        if(this.options == HISCORE_SCENE_OPTIONS_EDITABLE) {
+        if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
             Input_AddKeyboardListener(this);
         }
     } // OnEnter
@@ -86,7 +91,7 @@ class SceneHighScore
     //--------------------------------------------------------------------------
     OnExit()
     {
-        if(this.options == HISCORE_SCENE_OPTIONS_EDITABLE) {
+        if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
             Input_RemoveKeyboardListener(this);
         }
     } // OnExit
@@ -100,7 +105,7 @@ class SceneHighScore
     //--------------------------------------------------------------------------
     OnKeyDown(keyCode)
     {
-        if(this.options != HISCORE_SCENE_OPTIONS_EDITABLE) {
+        if(this.options != SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
             return;
         }
 
@@ -133,14 +138,15 @@ class SceneHighScore
         this.scoreTweenGroup.update();
 
         // Viewing high cores.
-        if(this.options != HISCORE_SCENE_OPTIONS_EDITABLE) {
+        if(this.options != SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
             if(IsKeyPress(KEY_SPACE) || IsKeyPress(KEY_ENTER)) {
+                gAudio.PlayEffect(SCENE_HIGHSCORE_EFFECT_MENU);
                 Go_To_Scene(this.sceneToGoBackClass);
             }
         }
 
         // Adding new high score.
-        else if(this.options == HISCORE_SCENE_OPTIONS_EDITABLE) {
+        else if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
             this.editFadeTweenGroup.update();
         }
 
@@ -184,10 +190,10 @@ class SceneHighScore
         for(let i = 0; i < this.scoresInfo.length; ++i) {
             // Tween.
             const tween = Tween_CreateBasic(
-                HIGHSCORE_SCENE_TEXT_EFFECT_DURATION_MS,
+                SCENE_HIGHSCORE_TEXT_EFFECT_DURATION_MS,
                 this.scoreTweenGroup
             )
-            .delay(HIGHSCORE_SCENE_TEXT_EFFECT_DELAY_DURATION_MS * (i + 1))
+            .delay(SCENE_HIGHSCORE_TEXT_EFFECT_DELAY_DURATION_MS * (i + 1))
             .start();
 
             // Text.
@@ -214,7 +220,7 @@ class SceneHighScore
         }
 
         // Animation Finished.
-        if(this.options == HISCORE_SCENE_OPTIONS_GO_BACK_AUTOMATICALLY) {
+        if(this.options == SCENE_HIGHSCORE_OPTIONS_GO_BACK_AUTOMATICALLY) {
             this.scoreTweenGroup.onComplete(()=>{
                  // @XXX This should be encapsulated in a library functionality.
                  // This way the application will have control how to handle
@@ -222,11 +228,11 @@ class SceneHighScore
                  // the setTimeout function.
                 setTimeout(()=>{
                     Go_To_Scene(this.sceneToGoBackClass);
-                }, HISCORE_SCENE_DELAY_TO_GO_BACK_TO_OTHER_SCENE_MS)
+                }, SCENE_HIGHSCORE_DELAY_TO_GO_BACK_TO_OTHER_SCENE_MS)
             });
         }
 
-        if(this.options == HISCORE_SCENE_OPTIONS_EDITABLE) {
+        if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
             const index = HIGHSCORE_MANAGER.GetCurrentScorePosition();
             if(index == HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
                 return;
@@ -239,7 +245,7 @@ class SceneHighScore
             this.scoreTweenGroup.onComplete(()=>{
                 this.blinkTweenGroup = Tween_CreateGroup();
                 this.blinkTween      = Tween_CreateBasic(
-                    HISCORE_SCENE_BOARD_BLINK_TWEEN_DURATION_MS,
+                    SCENE_HIGHSCORE_BOARD_BLINK_TWEEN_DURATION_MS,
                     this.blinkTweenGroup
                 )
                 .repeat(Infinity)
@@ -255,7 +261,7 @@ class SceneHighScore
     //--------------------------------------------------------------------------
     _CreateEditUI()
     {
-        if(this.options != HISCORE_SCENE_OPTIONS_EDITABLE) {
+        if(this.options != SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
             return;
         }
 
@@ -287,7 +293,7 @@ class SceneHighScore
             this.editField.visible = false;
             this.editTitle.visible = false;
 
-            this.options = HISCORE_SCENE_OPTIONS_NONE;
+            this.options = SCENE_HIGHSCORE_OPTIONS_NONE;
 
             const index = HIGHSCORE_MANAGER.GetCurrentScorePosition();
             const info  = this.scoresInfo[index];

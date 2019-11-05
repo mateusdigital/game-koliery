@@ -18,6 +18,7 @@
 //----------------------------------------------------------------------------//
 // SceneMenu                                                                  //
 //----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
 const SCENE_MENU_TITLE_STR           = "KOLIERY";
 const SCENE_MENU_TITLE_SIN_AMPLITUDE = 20;
 const SCENE_MENU_TITLE_SIN_FREQUENCY = 1;
@@ -37,6 +38,10 @@ const SCENE_MENU_LEVEL_TEXT_OPTIONS = [
     "c - CREDITS",
     "M - MUTE / UNMUTE",
 ];
+
+// Sound.
+const SCENE_MENU_MUSIC_BACKGROUND = MUSIC_KOMIKU_06_SCHOOL;
+const SCENE_MENU_EFFECT_MENU      = MUSIC_MENU_INTERACTION;
 
 //------------------------------------------------------------------------------
 class SceneMenu
@@ -88,7 +93,7 @@ class SceneMenu
         this._InitializeLevelText  ();
         this._InitializeMarqueeText();
 
-        gAudio.Play(AUDIO_PLAYER_BACKGROUND_1);
+        gAudio.Play(SCENE_MENU_MUSIC_BACKGROUND);
     } // ctor
 
 
@@ -96,17 +101,17 @@ class SceneMenu
     Update(dt)
     {
         if(IsKeyPress(KEY_1)) {
-            gAudio.PlayEffect(AUDIO_PLAYER_EFFECT_MENU);
+            gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
             Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
         } else if(IsKeyPress(KEY_2)) {
-            gAudio.PlayEffect(AUDIO_PLAYER_EFFECT_MENU);
+            gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
             Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_MEDIUM);
         } else if(IsKeyPress(KEY_3)) {
-            gAudio.PlayEffect(AUDIO_PLAYER_EFFECT_MENU);
+            gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
             Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_HARD);
         } else if(IsKeyPress(KEY_H)){
-            gAudio.PlayEffect(AUDIO_PLAYER_EFFECT_MENU);
-            Go_To_Scene(SceneHighScore, SceneMenu, HISCORE_SCENE_OPTIONS_NONE);
+            gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
+            Go_To_Scene(SceneHighScore, SceneMenu, SCENE_HIGHSCORE_OPTIONS_NONE);
         }
 
         // Tweens.
@@ -260,7 +265,7 @@ class SceneMenu
                     Go_To_Scene(
                         SceneHighScore,
                         SceneMenu,
-                        HISCORE_SCENE_OPTIONS_GO_BACK_AUTOMATICALLY
+                        SCENE_HIGHSCORE_OPTIONS_GO_BACK_AUTOMATICALLY
                     );
                 }
             })

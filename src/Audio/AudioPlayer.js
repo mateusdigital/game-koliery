@@ -19,12 +19,6 @@
 // Audio Player                                                               //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-// Background
-AUDIO_PLAYER_BACKGROUND_1 = "./res/music/blocks_of_fun.mp3";
-// Sound Effects
-AUDIO_PLAYER_EFFECT_MENU = "./res/music/Pickup_Coin2.mp3";
-
-//------------------------------------------------------------------------------
 class AudioPlayer
 {
     //--------------------------------------------------------------------------
@@ -99,7 +93,9 @@ class AudioPlayer
         }
 
         const playing_sound = this.sounds[this.soundName];
-        const end_callback  = ()=>{ this.Play(name, false); }
+        const end_callback  = ()=>{
+            this.Play(name, true);
+        }
 
         if(this.soundName != name) {
             if(playing_sound) {
@@ -112,7 +108,17 @@ class AudioPlayer
         }
 
         this.soundName = name;
+        this.SetSpeed(1.0);
     } // Play
+
+    //--------------------------------------------------------------------------
+    SetSpeed(speed)
+    {
+        const playing_sound = this.sounds[this.soundName];
+        if(playing_sound) {
+            playing_sound.speed =speed;
+        }
+    }
 
     //--------------------------------------------------------------------------
     ToggleMute()

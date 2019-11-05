@@ -22,18 +22,14 @@
 import json;
 import os;
 import os.path;
+import shutil;
 
 ##----------------------------------------------------------------------------##
 ## Constants                                                                  ##
 ##----------------------------------------------------------------------------##
-FONTS_DIR_PATH     = "./res/fonts";
-OUTPUT_DIR_PATH    = os.path.join(FONTS_DIR_PATH, "generated");
-FONTS_DEF_FILENAME = os.path.join(FONTS_DIR_PATH, "FontSizes.json");
-FONTS_JS_FILENAME  = os.path.join(OUTPUT_DIR_PATH, "Fonts.js");
-
-## @XXX(stdmatt): Glypher is not released yet...
-GLYPHER_BIN = "/Users/stdmatt/Documents/Projects/stdmatt/tools/glypher/build.xcode/Debug/glypher";
-
+MUSIC_DIR_PATH    = "./res/music";
+OUTPUT_DIR_PATH   = os.path.join(MUSIC_DIR_PATH, "generated");
+MUSIC_JS_FILENAME = os.path.join(OUTPUT_DIR_PATH, "Music.js");
 
 ##----------------------------------------------------------------------------##
 ## Functions                                                                  ##
@@ -51,31 +47,15 @@ def create_output_contents_header():
     return s;
 
 ##------------------------------------------------------------------------------
-def call_glypher(size, font_filename, output_path):
-    cmd_args = [
-        "-V",
-        # "--no-gui",
-
-        "--font-file",
-        font_filename,
-
-        "--font-size",
-        str(size),
-
-        "--output-file",
-        output_path,
-
-        "--glyphs-string",
-        "upper,digits,special",
-
-        "--fill-color",
-        "FFFFFFFF",
-    ];
-
-    args_str = " ".join(cmd_args);
-    cmd_str  = "{bin} {args}".format(bin=GLYPHER_BIN, args=args_str);
-    os.system(cmd_str);
-
+def call_ffmpeg(input_path, output_path):
+    if(input_path.endswith(".mp3")): ## Already mp3, just copy.
+        shutil.copyfile(input_path, output_path);
+    else:
+        cmd = "ffmpeg -y -i  {audio_filename} -acodec libmp3lame {output_filename}".format(
+            audio_filename  = input_path,
+            output_filename = output_path
+        );
+        os.system(cmd);
 
 ##----------------------------------------------------------------------------##
 ## Entry Point                                                                ##
@@ -87,34 +67,36 @@ def main():
     proj_root_dir = os.path.join(script_dir, "..");
     os.chdir(proj_root_dir);
 
-    ## Read the json with the font sizes.
-    f = open(FONTS_DEF_FILENAME);
-    fonts_def_contents = "\n".join(f.readlines());
-    fonts_def          = json.loads(fonts_def_contents);
-    f.close();
-
-    ## For each font create the bitmap and append the info
-    ## into the final js output file.
     output_contents = create_output_contents_header();
-    for font_def in fonts_def:
-        name = font_def["name"];
-        size = font_def["size"];
-        font = font_def["font"];
+    output_path     = OUTPUT_DIR_PATH;
+    os.system("mkdir -p {path}".format(path=output_path));
 
-        font_filename = os.path.join(FONTS_DIR_PATH, font) + ".ttf";
-        output_path   = OUTPUT_DIR_PATH;
-        os.system("mkdir -p {path}".format(path=output_path));
-        call_glypher(size, font_filename, output_path);
+    for curr_filename in os.listdir(MUSIC_DIR_PATH):
+        ## Hidden or ./, ../
+        if(curr_filename.startswith(".")):
+            continue;
 
-        output_contents += "const {name} = {size}\n".format(name=name, size=size);
+        ## Not an audio file.
+        filename, ext = os.path.splitext(curr_filename);
+        if(ext not in [".wav", ".mp3"]):
+            continue;
 
-    ## Find all the generated fonts on the output folder and add this
-    ## to the "generated fonts array" on the output JS.
-    ## This will allow us to load all the fonts on the main of game.
+        input_filename  = os.path.join(MUSIC_DIR_PATH, curr_filename);
+        output_filename = os.path.join(OUTPUT_DIR_PATH, filename) + ".mp3";
+        call_ffmpeg(input_filename, output_filename);
+
+        output_contents += "const {name} = \"{size}\";\n".format(
+            name = "MUSIC_" + filename.upper(),
+            size = output_filename
+        );
+
+    ## Find all the generated audios on the output folder and add this
+    ## to the "generated audios array" on the output JS.
+    ## This will allow us to load all the audios on the main of game.
     output_contents += "\n\n";
-    output_contents += "const FONTS_TO_LOAD = [\n";
+    output_contents += "const MUSICS_TO_LOAD = [\n";
     for filename in os.listdir(OUTPUT_DIR_PATH):
-        if(filename.endswith(".fnt")):
+        if(filename.endswith(".mp3")):
             output_contents += "    \"{filename}\",\n".format(
                 filename=os.path.join(OUTPUT_DIR_PATH, filename)
             );
@@ -122,7 +104,7 @@ def main():
 
 
     ## Write the JS file.
-    f = open(FONTS_JS_FILENAME, "w");
+    f = open(MUSIC_JS_FILENAME, "w");
     f.write(output_contents);
     f.close();
 

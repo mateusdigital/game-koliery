@@ -79,12 +79,7 @@ function Setup()
     // Initialize Audio.
     gAudio = new AudioPlayer();
 
-    const audios_to_preload = [
-        AUDIO_PLAYER_BACKGROUND_1,
-        AUDIO_PLAYER_EFFECT_MENU
-    ];
-    gAudio.PreloadSounds(audios_to_preload);
-
+    gAudio.PreloadSounds(MUSICS_TO_LOAD);
     Input_AddKeyboardListenerCallback((keyCode, isKeyDown)=>{
         if(keyCode == KEY_M && isKeyDown) {
             gAudio.ToggleMute();
@@ -108,7 +103,7 @@ function Setup()
     Go_To_Scene(SceneSplash);
     // Go_To_Scene(SceneMenu);
     // Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
-    // Go_To_Scene(SceneHighScore, null, HISCORE_SCENE_OPTIONS_EDITABLE);
+    // Go_To_Scene(SceneHighScore, null, SCENE_HIGHSCORE_OPTIONS_EDITABLE);
 
     Application_Start(GameLoop);
 }
