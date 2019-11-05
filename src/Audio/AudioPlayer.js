@@ -94,7 +94,7 @@ class AudioPlayer
 
         const playing_sound = this.sounds[this.soundName];
         const end_callback  = ()=>{
-            this.Play(name, true    );
+            this.Play(name, true);
         }
 
         if(this.soundName != name) {
@@ -108,7 +108,17 @@ class AudioPlayer
         }
 
         this.soundName = name;
+        this.SetSpeed(1.0);
     } // Play
+
+    //--------------------------------------------------------------------------
+    SetSpeed(speed)
+    {
+        const playing_sound = this.sounds[this.soundName];
+        if(playing_sound) {
+            playing_sound.speed =speed;
+        }
+    }
 
     //--------------------------------------------------------------------------
     ToggleMute()

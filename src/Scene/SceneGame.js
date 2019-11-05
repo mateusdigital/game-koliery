@@ -79,6 +79,20 @@ class SceneGame
 
         this._ChangeState(SCENE_GAME_STATE_INITIALING);
         this._OnScoreChanged();
+
+        if(this.difficulty == SCENE_GAME_LEVEL_EASY) {
+            const sound_name = SCENE_GAME_MUSIC_BACKGROUND_EASY;
+            gAudio.Play(sound_name);
+            gAudio.SetSpeed(0.7);
+        } else if(this.difficulty == SCENE_GAME_LEVEL_MEDIUM) {
+            const sound_name = SCENE_GAME_MUSIC_BACKGROUND_MEDIUM;
+            gAudio.Play(sound_name);
+            gAudio.SetSpeed(1.0);
+        } else if(this.difficulty == SCENE_GAME_LEVEL_HARD) {
+            const sound_name = SCENE_GAME_MUSIC_BACKGROUND_HARD;
+            gAudio.Play(sound_name);
+            gAudio.SetSpeed(1.3);
+        }
     } // ctor
 
     //--------------------------------------------------------------------------
