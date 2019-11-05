@@ -76,6 +76,8 @@ class SceneHighScore
         this._CreateTitleUI();
         this._CreateScoreUI();
         this._CreateEditUI ();
+
+        gAudio.Play(SCENE_HIGHSCORE_MUSIC_BACKGROUND);
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -138,6 +140,7 @@ class SceneHighScore
         // Viewing high cores.
         if(this.options != SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
             if(IsKeyPress(KEY_SPACE) || IsKeyPress(KEY_ENTER)) {
+                gAudio.PlayEffect(SCENE_HIGHSCORE_EFFECT_MENU);
                 Go_To_Scene(this.sceneToGoBackClass);
             }
         }
