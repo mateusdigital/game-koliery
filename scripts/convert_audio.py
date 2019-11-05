@@ -94,7 +94,7 @@ def main():
     ## to the "generated audios array" on the output JS.
     ## This will allow us to load all the audios on the main of game.
     output_contents += "\n\n";
-    output_contents += "MUSIC_TO_LOAD = [\n";
+    output_contents += "const MUSIC_TO_LOAD = [\n";
     for filename in os.listdir(OUTPUT_DIR_PATH):
         if(filename.endswith(".mp3")):
             output_contents += "    \"{filename}\",\n".format(

@@ -112,7 +112,7 @@ def main():
     ## to the "generated fonts array" on the output JS.
     ## This will allow us to load all the fonts on the main of game.
     output_contents += "\n\n";
-    output_contents += "FONTS_TO_LOAD = [\n";
+    output_contents += "const FONTS_TO_LOAD = [\n";
     for filename in os.listdir(OUTPUT_DIR_PATH):
         if(filename.endswith(".fnt")):
             output_contents += "    \"{filename}\",\n".format(
