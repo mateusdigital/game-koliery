@@ -111,7 +111,7 @@ class SceneMenu
             Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_HARD);
         } else if(IsKeyPress(KEY_H)){
             gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
-            Go_To_Scene(SceneHighScore, SceneMenu, HISCORE_SCENE_OPTIONS_NONE);
+            Go_To_Scene(SceneHighScore, SceneMenu, SCENE_HIGHSCORE_OPTIONS_NONE);
         }
 
         // Tweens.
