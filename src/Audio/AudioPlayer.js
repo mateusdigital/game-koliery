@@ -85,6 +85,7 @@ class AudioPlayer
 
         this.effectName = name;
         effect_to_play.play(()=>{
+            debugger;
             this.effectName = null;
         });
     } // PlayEffect
@@ -99,7 +100,9 @@ class AudioPlayer
         }
 
         const playing_sound = this.sounds[this.soundName];
-        const end_callback  = ()=>{ this.Play(name, false); }
+        const end_callback  = ()=>{
+            this.Play(name, true    );
+        }
 
         if(this.soundName != name) {
             if(playing_sound) {
