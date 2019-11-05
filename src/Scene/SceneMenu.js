@@ -265,7 +265,7 @@ class SceneMenu
                     Go_To_Scene(
                         SceneHighScore,
                         SceneMenu,
-                        HISCORE_SCENE_OPTIONS_GO_BACK_AUTOMATICALLY
+                        SCENE_HIGHSCORE_OPTIONS_GO_BACK_AUTOMATICALLY
                     );
                 }
             })
