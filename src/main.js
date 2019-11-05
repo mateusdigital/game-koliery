@@ -79,12 +79,7 @@ function Setup()
     // Initialize Audio.
     gAudio = new AudioPlayer();
 
-    const audios_to_preload = [
-        AUDIO_PLAYER_BACKGROUND_1,
-        AUDIO_PLAYER_EFFECT_MENU
-    ];
-    gAudio.PreloadSounds(audios_to_preload);
-
+    gAudio.PreloadSounds(MUSICS_TO_LOAD);
     Input_AddKeyboardListenerCallback((keyCode, isKeyDown)=>{
         if(keyCode == KEY_M && isKeyDown) {
             gAudio.ToggleMute();
