@@ -28,6 +28,7 @@ const GAME_DESIGN_HEIGHT = 700;
 //------------------------------------------------------------------------------
 let gPalette     = null;
 let gStarfield   = null;
+let gAudio       = null;
 
 //------------------------------------------------------------------------------
 function PreInit()
@@ -59,30 +60,53 @@ async function Preload()
 //------------------------------------------------------------------------------
 function Setup()
 {
-    Random_Seed(0);
+    //
+    // Initialize RNG.
+    Random_Seed();
 
+    //
+    // Initialize Scores.
+    HIGHSCORE_MANAGER.FetchScores();
+
+    //
     // Install the Input Handlers.
     Install_MouseHandlers   ();
     Install_KeyboardHandlers();
     g_App.stage.interactive = true;
     g_App.stage.buttonMode  = true;
 
+    //
+    // Initialize Audio.
+    gAudio = new AudioPlayer();
 
-    // //
+    const audios_to_preload = [
+        AUDIO_PLAYER_BACKGROUND_1,
+        AUDIO_PLAYER_EFFECT_MENU
+    ];
+    gAudio.PreloadSounds(audios_to_preload);
+
+    Input_AddKeyboardListenerCallback((keyCode, isKeyDown)=>{
+        if(keyCode == KEY_M && isKeyDown) {
+            gAudio.ToggleMute();
+        }
+    });
+
+    //
+    // Initialize Game Objects
+    // Palette.
     gPalette = new Palette();
-    const screen_size = Get_Screen_Size();
 
-    // Star field
+    // Star field.
+    const screen_size = Get_Screen_Size();
     gStarfield = new Starfield(new PIXI.Rectangle(
         0, 0, screen_size.x, screen_size.y
     ));
-
     g_App.stage.addChild(gStarfield);
 
-    HIGHSCORE_MANAGER.FetchScores();
-
-    // Go_To_Scene(SceneSplash);
-    Go_To_Scene(SceneMenu);
+    //
+    // Start the game.
+    Go_To_Scene(SceneSplash);
+    // Go_To_Scene(SceneMenu);
     // Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
     // Go_To_Scene(SceneHighScore, null, HISCORE_SCENE_OPTIONS_EDITABLE);
 
@@ -102,21 +126,7 @@ function GameLoop(delta)
 //------------------------------------------------------------------------------
 function MouseMove(e)
 {
-}
-
-//------------------------------------------------------------------------------
-function MouseClick(e)
-{
-}
-
-//------------------------------------------------------------------------------
-function KeyboardDown(e)
-{
-}
-
-//------------------------------------------------------------------------------
-function KeyboardUp(e)
-{
+    gAudio.enabled = true;
 }
 
 //----------------------------------------------------------------------------//
