@@ -34,6 +34,14 @@ const SCENE_GAME_STATE_PAUSED     = 2;
 const SCENE_GAME_STATE_EXITING    = 3;
 // UI
 const SCENE_GAME_SCREEN_GAP = 10;
+// Sounds
+// @todo(stdmatt): Different sounds for each difficulty
+const SCENE_GAME_MUSIC_BACKGROUND_EASY   = MUSIC_BLOCKS_OF_FUN;
+const SCENE_GAME_MUSIC_BACKGROUND_MEDIUM = MUSIC_BLOCKS_OF_FUN;
+const SCENE_GAME_MUSIC_BACKGROUND_HARD   = MUSIC_BLOCKS_OF_FUN;
+
+const SCENE_GAME_EFFECT_PROMPT  = MUSIC_MENU_INTERACTION;
+const SCENE_GAME_EFFECT_CONFIRM = MUSIC_MENU_INTERACTION2;
 
 //------------------------------------------------------------------------------
 class SceneGame
@@ -87,13 +95,15 @@ class SceneGame
 
             this.board.Update(dt);
             if(this.board.GetState() == BOARD_STATE_GAME_OVER) {
-                Go_To_Scene(SceneHighScore, SceneMenu, HISCORE_SCENE_OPTIONS_EDITABLE);
+                Go_To_Scene(SceneHighScore, SceneMenu, SCENE_HIGHSCORE_OPTIONS_EDITABLE);
             }
 
             // Change state.
             if(IsKeyPress(KEY_P)) {
+                gAudio.PlayEffect(SCENE_GAME_EFFECT_PROMPT);
                 this._ChangeState(SCENE_GAME_STATE_PAUSED);
             } else if(IsKeyPress(KEY_ESC)) {
+                gAudio.PlayEffect(SCENE_GAME_EFFECT_PROMPT);
                 this._ChangeState(SCENE_GAME_STATE_EXITING);
             }
         }
@@ -105,6 +115,7 @@ class SceneGame
             // Change state.
             if(IsKeyPress(KEY_P)) {
                 this.pauseText.visible = false;
+                gAudio.PlayEffect(SCENE_GAME_EFFECT_CONFIRM);
                 this._ChangeState(SCENE_GAME_STATE_PLAYING);
             }
         }
@@ -116,9 +127,11 @@ class SceneGame
 
             // Change state.
             if(IsKeyPress(KEY_ESC)) {
+                gAudio.PlayEffect(SCENE_GAME_EFFECT_CONFIRM);
                 Go_To_Scene(SceneMenu);
             } else if(IsKeyPress(KEY_ENTER)) {
                 this.exitText.visible = false;
+                gAudio.PlayEffect(SCENE_GAME_EFFECT_CONFIRM);
                 this._ChangeState(SCENE_GAME_STATE_PLAYING);
             }
         }
@@ -155,7 +168,6 @@ class SceneGame
     {
 
     } // _OnMatch
-
 
     //--------------------------------------------------------------------------
     _CreateHud()
