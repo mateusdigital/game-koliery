@@ -40,7 +40,7 @@ const SCENE_MENU_LEVEL_TEXT_OPTIONS = [
 ];
 
 // Sound.
-const SCENE_MENU_MUSIC_BACKGROUND = MUSIC_BLOCKS_OF_FUN;
+const SCENE_MENU_MUSIC_BACKGROUND = MUSIC_KOMIKU_06_SCHOOL;
 const SCENE_MENU_EFFECT_MENU      = MUSIC_MENU_INTERACTION;
 
 //------------------------------------------------------------------------------
