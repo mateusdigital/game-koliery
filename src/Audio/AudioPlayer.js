@@ -19,12 +19,6 @@
 // Audio Player                                                               //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-// Background
-AUDIO_PLAYER_BACKGROUND_1 = "./res/music/blocks_of_fun.mp3";
-// Sound Effects
-AUDIO_PLAYER_EFFECT_MENU = "./res/music/Pickup_Coin2.mp3";
-
-//------------------------------------------------------------------------------
 class AudioPlayer
 {
     //--------------------------------------------------------------------------
@@ -85,7 +79,6 @@ class AudioPlayer
 
         this.effectName = name;
         effect_to_play.play(()=>{
-            debugger;
             this.effectName = null;
         });
     } // PlayEffect
