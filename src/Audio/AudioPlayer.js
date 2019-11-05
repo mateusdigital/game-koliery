@@ -60,11 +60,15 @@ class AudioPlayer
             playing_effect.stop();
         }
 
+
         const effect_to_play = this.sounds[name];
         if(!effect_to_play) {
             debugger;
             return;
         }
+
+        this.effectName = name;
+        this._AdjustVolumes();
 
         effect_to_play.play();
     } // PlayEffect
@@ -79,6 +83,8 @@ class AudioPlayer
         }
 
         const playing_sound = this.sounds[this.soundName];
+        this._AdjustVolumes();
+
         if(this.soundName != name) {
             if(playing_sound) {
                 playing_sound.stop();
@@ -92,14 +98,26 @@ class AudioPlayer
         this.soundName = name;
     } // Play
 
-
     //--------------------------------------------------------------------------
     ToggleMute()
     {
         this.isMuted = !this.isMuted;
-        if(this.soundName) {
-            const sound = this.sounds[this.soundName];
-            sound.volume = this.isMuted ? 0 : 1;
-        }
+        this._AdjustVolumes();
     } // ToggleMute
+
+
+    //--------------------------------------------------------------------------
+    _AdjustVolumes()
+    {
+        const playing_music  = this.sounds[this.soundName];
+        const playing_effect = this.sounds[this.effectName];
+        const volume         = this.isMuted ? 0 : 1;
+
+        if(playing_music) {
+            playing_music.volume = volume;
+        }
+        if(playing_effect) {
+            playing_effect.volume = volume;
+        }
+    } // _AdjustVolumes
 } // AudioPlayer
