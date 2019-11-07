@@ -102,11 +102,17 @@ class SceneGame
         if(this.currState == SCENE_GAME_STATE_INITIALING) {
             this.boardBorderTweenGroup.update();
         }
+
         // Play.
         else if(this.currState == SCENE_GAME_STATE_PLAYING) {
+            // Game Hud Update.
+            this.hud.Update(dt);
+
+            // Boar Visibility.
             this.board      .visible = true;
             this.boardBorder.visible = true;
 
+            // Board Update.
             this.board.Update(dt);
             if(this.board.GetState() == BOARD_STATE_GAME_OVER) {
                 Go_To_Scene(SceneHighScore, SceneMenu, SCENE_HIGHSCORE_OPTIONS_EDITABLE);
@@ -121,6 +127,7 @@ class SceneGame
                 this._ChangeState(SCENE_GAME_STATE_EXITING);
             }
         }
+
         // Paused.
         else if(this.currState == SCENE_GAME_STATE_PAUSED) {
             this.board.visible = false;
@@ -158,7 +165,7 @@ class SceneGame
         this.prevState = this.currState;
         this.currState = newState;
 
-        console.log("[STATE] ", this.prevState, " -> ", this.currState);
+        // console.log("[STATE] ", this.prevState, " -> ", this.currState);
     } // _ChangeState
 
 
@@ -166,7 +173,7 @@ class SceneGame
     _OnLevelChanged()
     {
         this.hud.SetLevel(this.progressionHandler.level);
-    }
+    } // _OnLevelChanged
 
     //--------------------------------------------------------------------------
     _OnScoreChanged()

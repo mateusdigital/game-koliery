@@ -96,9 +96,9 @@ function Setup()
     // Start the game.
     // Go_To_Scene(SceneSplash);
     // Go_To_Scene(SceneMenu);
-    // Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
+    Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
     // Go_To_Scene(SceneHighScore, null, SCENE_HIGHSCORE_OPTIONS_EDITABLE);
-    Go_To_Scene(SceneCredits);
+    // Go_To_Scene(SceneCredits);
     Application_Start(GameLoop);
 }
 

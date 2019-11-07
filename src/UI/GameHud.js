@@ -28,7 +28,6 @@ const GAME_HUD_TEXT_DIGITS_SCORE = HIGHSCORE_MAX_DIGITS;
 const GAME_HUD_TEXT_DIGITS_LEVEL = 2;
 const GAME_HUD_TEXT_GAP          = 15;
 
-
 //------------------------------------------------------------------------------
 class GameHud
     extends PIXI.Container
@@ -53,6 +52,9 @@ class GameHud
 
         s = Build_Digits_String(GAME_HUD_TEXT_PREFIX_LEVEL, GAME_HUD_TEXT_DIGITS_LEVEL, 1)
         this.levelText = Create_Normal_Text(s, GAME_HUD_FONT_SIZE);
+
+        this.score   = 0;
+        this.hiscore = 0;
 
         //
         // Initialize.
@@ -80,8 +82,21 @@ class GameHud
         this.addChild(this.hiScoreText);
         this.addChild(this.marqueeText);
         this.addChild(this.levelText  );
+
+        this.scoreChangeTweens = [];
     } // ctor
 
+    //--------------------------------------------------------------------------
+    Update(dt)
+    {
+        if(!Array_IsEmpty(this.scoreChangeTweens)) {
+            const tween = Array_GetFront(this.scoreChangeTweens);
+            if(!tween.isPlaying()) {
+                tween.start();
+            }
+            tween.update();
+        }
+    } // Update
 
     //--------------------------------------------------------------------------
     SetLevel(level)
@@ -96,10 +111,17 @@ class GameHud
     } // SetLevel
 
     //--------------------------------------------------------------------------
-    SetScore(score, hiScore)
+    SetScore(newScore, newHiScore)
     {
-        this.scoreText  .text = Build_Digits_String(GAME_HUD_TEXT_PREFIX_SCORE, GAME_HUD_TEXT_DIGITS_SCORE, score  );
-        this.hiScoreText.text = Build_Digits_String(GAME_HUD_TEXT_PREFIX_HI,    GAME_HUD_TEXT_DIGITS_SCORE, hiScore);
+        const score_change = new ScoreChange(
+            this.score,   newScore,
+            this.hiscore, newHiScore
+        );
+
+        this._AddNewScoreChangeTween(score_change);
+
+        this.score   = newScore;
+        this.hiscore = newHiScore;
     } // SetScore
 
     //--------------------------------------------------------------------------
@@ -108,4 +130,58 @@ class GameHud
         this.marqueeText.text = str.toUpperCase();
     } // SetMarquee
 
+    //--------------------------------------------------------------------------
+    _AddNewScoreChangeTween(scoreChange)
+    {
+        // @PERF(stdmatt): Optimization considerations.
+        //  -- If the delta of the score change is too small
+        //     would be best to just set it directly....
+        //
+        //  -- Reuse the tweens instead of creating garbage every time.
+        const new_score = scoreChange.newScore;
+        const old_score = scoreChange.oldScore;
+
+        const new_hi_score = scoreChange.newHiScore;
+        const old_hi_score = scoreChange.oldHiScore;
+
+        const time  = (new_score - old_score) * 5; // @todo(stdmatt): Remove magic number...
+        const tween = Tween_CreateBasic(time, null)
+            .onUpdate(()=>{
+                const t = tween.getValue().value;
+                const curr_score   = Math_Int(Math_Map(t, 0, 1, old_score,    new_score   ));
+                const curr_hiscore = Math_Int(Math_Map(t, 0, 1, old_hi_score, new_hi_score));
+
+                this.scoreText.text = Build_Digits_String(
+                    GAME_HUD_TEXT_PREFIX_SCORE,
+                    GAME_HUD_TEXT_DIGITS_SCORE,
+                    curr_score
+                );
+                this.hiScoreText.text = Build_Digits_String(
+                    GAME_HUD_TEXT_PREFIX_HI,
+                    GAME_HUD_TEXT_DIGITS_SCORE,
+                    curr_hiscore
+                );
+            })
+            .onComplete(()=>{
+                Array_RemoveFront(this.scoreChangeTweens);
+            });
+
+        this.scoreChangeTweens.push(tween);
+    } // _AddNewScoreChangeTween
 }; // class GameHud
+
+//----------------------------------------------------------------------------//
+// ScoreChange                                                                //
+//----------------------------------------------------------------------------//
+//------------------------------------------------------------------------------
+class ScoreChange
+{
+    //--------------------------------------------------------------------------
+    constructor(oldScore, newScore, oldHiScore, newHiScore)
+    {
+        this.oldScore   = oldScore;
+        this.newScore   = newScore;
+        this.oldHiScore = oldHiScore;
+        this.newHiScore = newHiScore;
+    } // ctor
+} // ScoreChange
