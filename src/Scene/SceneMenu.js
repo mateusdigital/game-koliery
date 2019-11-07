@@ -30,14 +30,49 @@ const SCENE_MENU_MARQUEE_TWEEN_DURATION_MS     = 500;
 const SCENE_MENU_MARQUEE_TWEEN_DELAY_MS        = 500;
 const SCENE_MENU_MARQUEE_TWEEN_REPEAT_DELAY_MS = 2000;
 
-const SCENE_MENU_LEVEL_TEXT_OPTIONS = [
-    "1 - EASY",
-    "2 - MEDIUM",
-    "3 - HARD",
-    "h - SCORES",
-    "c - CREDITS",
-    "M - MUTE / UNMUTE",
+// const SCENE_MENU_LEVEL_TEXT_OPTIONS = [
+//     "EASY",
+//     "MEDIUM",
+//     "HARD",
+// ];
+
+// const SCENE_MENU_OPTIONS_TEXT_OPTIONS = [
+//     "SOUNDS ON",
+//     "",
+//     "SCORES",
+//     "CREDITS",
+// ];
+
+const SCENE_MENU_MENU_TEXTS = [
+    //
+    {
+        font_size : SCENE_MENU_LEVEL_FONT_SIZE,
+        gap       : 0,
+        texts     : [
+            "EASY",
+            "MEDIUM",
+            "HARD",
+        ]
+    },
+    //
+    {
+        font_size : SCENE_MENU_OPTIONS_FONT_SIZE,
+        gap       : 20,
+        texts     : [
+            "SOUNDS ON"
+        ]
+    },
+    //
+    {
+        font_size : SCENE_MENU_OPTIONS_FONT_SIZE,
+        gap       : 20,
+        texts     : [
+            "SCORES",
+            "CREDITS",
+        ]
+    }
 ];
+
 
 // Sound.
 const SCENE_MENU_MUSIC_BACKGROUND = MUSIC_KOMIKU_06_SCHOOL;
@@ -168,45 +203,53 @@ class SceneMenu
     //--------------------------------------------------------------------------
     _InitializeLevelText()
     {
-        const strs        = SCENE_MENU_LEVEL_TEXT_OPTIONS;
-        const screen_size = Get_Screen_Size();
-
-        for(let i = 0; i < strs.length; ++i) {
+        const screen_size      = Get_Screen_Size();
+        const create_text_func = (str, font_size) => {
             // Tween.
             const tween = Tween_CreateBasic(
                 SCENE_MENU_LEVEL_TEXT_TWEEN_DURATION_MS,
                 this.levelTweenGroup
             )
-            .delay(SCENE_MENU_LEVEL_TEXT_TWEEN_DELAY_MS * (i + 1))
+            .delay(
+                (SCENE_MENU_LEVEL_TEXT_TWEEN_DELAY_MS * this.levelText.length)
+            )
             .start();
 
             // Text.
-            let  font_size = SCENE_MENU_LEVEL_FONT_SIZE;
-
-            const str   = strs[i];
             const text  = Create_Normal_Text(str, font_size);
             const color = chroma("black");
 
             Apply_TextUncoverEffect (text, tween);
             Apply_TextGradientEffect(text, color);
 
-            if(i + 2 >= strs.length) {
-                text.scale.set(0.7);
-            }
+            text.anchor.set(0.5, 0.5);
 
-            text.anchor.set(0.0, 0.5);
-            text.x = 0;
-            text.y = (font_size * i);
-
-
-            this.levelText.push(text);
+            this.levelText     .push    (text);
             this.levelTextLayer.addChild(text);
+
+            return text;
         }
 
+        let curr_y = 0;
+        for(let i = 0; i < SCENE_MENU_MENU_TEXTS.length; ++i) {
+            const section = SCENE_MENU_MENU_TEXTS[i];
+            curr_y += section.gap;
+
+            for(let j = 0; j < section.texts.length; ++j) {
+                const str  = section.texts[j];
+                const text = create_text_func(str, section.font_size);
+
+                text.x = 0; //(layer_width * 0.5) - (text.width * 0.5);
+                text.y = curr_y;
+
+                curr_y += section.font_size;
+            }
+        }
+
+        Apply_Debug_Filter(this.levelTextLayer);
         // Text Layer.
-        this.levelTextLayer.pivot.set(this.levelTextLayer.width  * 0.5, 0);
-        this.levelTextLayer.x = (screen_size.x * 0.5);
-        this.levelTextLayer.y = (screen_size.y * 0.5);
+        this.levelTextLayer.x = (screen_size.x * 0.5);// - (this.levelTextLayer.width * 0.5);
+        this.levelTextLayer.y = (screen_size.y * 0.45);
 
         this.addChild(this.levelTextLayer);
 
@@ -262,11 +305,11 @@ class SceneMenu
                 // @notice(stdmatt): After we loop thru all the marquee texts
                 // go to another scene.
                 if(this.marqueeTextIndex == 0) {
-                    Go_To_Scene(
-                        SceneHighScore,
-                        SceneMenu,
-                        SCENE_HIGHSCORE_OPTIONS_GO_BACK_AUTOMATICALLY
-                    );
+                    // Go_To_Scene(
+                    //     SceneHighScore,
+                    //     SceneMenu,
+                    //     SCENE_HIGHSCORE_OPTIONS_GO_BACK_AUTOMATICALLY
+                    // );
                 }
             })
             .start();
