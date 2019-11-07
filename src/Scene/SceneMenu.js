@@ -100,6 +100,8 @@ class SceneMenu
             this._UpdateMenuSelection(+1);
         } else if(IsKeyPress(KEY_ARROW_UP)) {
             this._UpdateMenuSelection(-1);
+        } else if(IsKeyPress(KEY_ENTER)) {
+            this._OnMenuSelection();
         }
 
 
@@ -114,7 +116,7 @@ class SceneMenu
         //     Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_HARD);
         // } else if(IsKeyPress(KEY_H)){
         //     gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
-        //     Go_To_Scene(SceneHighScore, SceneMenu, SCENE_HIGHSCORE_OPTIONS_NONE);
+        //     ;
         // }
 
         // Tweens.
@@ -154,8 +156,30 @@ class SceneMenu
         new_selection_text.rtvar_gradientEffect.SetColor(select_color);
 
         this.menuSectionIndex = new_selection_index;
-    }
+        gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
+    } // _UpdateMenuSelection
 
+    //--------------------------------------------------------------------------
+    _OnMenuSelection()
+    {
+        gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
+        switch(this.menuSectionIndex) {
+            //
+            case 0: Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY  ); break;
+            case 1: Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_MEDIUM); break;
+            case 2: Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_HARD  ); break;
+            //
+            case 3: {
+                gAudio.ToggleMute();
+                this.levelText[3].text = (gAudio.isMuted)
+                    ? "SOUNDS OFF"
+                    : "SOUNDS ON"
+            }break;
+            //
+            case 4: Go_To_Scene(SceneHighScore, SceneMenu, SCENE_HIGHSCORE_OPTIONS_NONE);
+            case 5: Go_To_Scene(SceneHighScore, SceneMenu, SCENE_HIGHSCORE_OPTIONS_NONE); // @todo(stdmatt): Shoulda go to credits.
+        }
+    } // _OnMenuSelection
 
     //--------------------------------------------------------------------------
     _CreateMenuStructure()
@@ -189,7 +213,7 @@ class SceneMenu
                 ]
             }
         ];
-    }
+    } // _CreateMenuStructure
 
     //--------------------------------------------------------------------------
     _InitializeTitleText()
@@ -241,7 +265,9 @@ class SceneMenu
 
             // Text.
             const text  = Create_Normal_Text(str, font_size);
-            const color = gPalette.GetMenuTextNormalColor();
+            const color = (this.menuSectionIndex != this.levelText.length)
+                ? gPalette.GetMenuTextNormalColor()
+                : gPalette.GetMenuTextSelectColor(this.menuSectionIndex);
 
             Apply_TextUncoverEffect (text, tween);
             Apply_TextGradientEffect(text, color);
