@@ -171,13 +171,11 @@ class SceneMenu
             //
             case 3: {
                 gAudio.ToggleMute();
-                this.levelText[3].text = (gAudio.isMuted)
-                    ? "SOUNDS OFF"
-                    : "SOUNDS ON"
+                this.levelText[3].text = this._GetSoundStatusString();
             }break;
             //
-            case 4: Go_To_Scene(SceneHighScore, SceneMenu, SCENE_HIGHSCORE_OPTIONS_NONE);
-            case 5: Go_To_Scene(SceneHighScore, SceneMenu, SCENE_HIGHSCORE_OPTIONS_NONE); // @todo(stdmatt): Shoulda go to credits.
+            case 4: Go_To_Scene(SceneHighScore, SceneMenu, SCENE_HIGHSCORE_OPTIONS_NONE); break;
+            case 5: Go_To_Scene(SceneCredits); break;
         }
     } // _OnMenuSelection
 
@@ -200,7 +198,7 @@ class SceneMenu
                 font_size : SCENE_MENU_OPTIONS_FONT_SIZE,
                 gap       : 20,
                 texts     : [
-                    "SOUNDS ON"
+                    this._GetSoundStatusString()
                 ]
             },
             //
@@ -368,4 +366,10 @@ class SceneMenu
                 this._SetupMarqueeTween();
             });
     } // _SetupMarqueeTween
+
+    //--------------------------------------------------------------------------
+    _GetSoundStatusString()
+    {
+        return (gAudio.isMuted) ? "SOUNDS OFF" : "SOUNDS ON";
+    } // _GetSoundStatusString
 }; // class SceneMenu
