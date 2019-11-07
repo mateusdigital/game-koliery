@@ -78,13 +78,7 @@ function Setup()
     //
     // Initialize Audio.
     gAudio = new AudioPlayer();
-
     gAudio.PreloadSounds(MUSICS_TO_LOAD);
-    Input_AddKeyboardListenerCallback((keyCode, isKeyDown)=>{
-        if(keyCode == KEY_M && isKeyDown) {
-            gAudio.ToggleMute();
-        }
-    });
 
     //
     // Initialize Game Objects

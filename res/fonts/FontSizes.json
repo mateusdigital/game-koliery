@@ -1,14 +1,19 @@
  [
+    { "name" : "SPLASH_SCENE_FONT_SIZE"                 , "size" : 40 , "font" : "Commodore_Rounded_v1.2" },
+
     { "name" : "SCENE_MENU_TITLE_FONT_SIZE"             , "size" : 90 , "font" : "PixelForce" },
-    { "name" : "SCENE_MENU_LEVEL_FONT_SIZE"             , "size" : 40 , "font" : "Commodore_Rounded_v1.2" },
+    { "name" : "SCENE_MENU_LEVEL_FONT_SIZE"             , "size" : 50 , "font" : "Commodore_Rounded_v1.2" },
+    { "name" : "SCENE_MENU_OPTIONS_FONT_SIZE"           , "size" : 35 , "font" : "Commodore_Rounded_v1.2" },
     { "name" : "SCENE_MENU_MARQUEE_FONT_SIZE"           , "size" : 25 , "font" : "PixelForce" },
+
     { "name" : "SCENE_GAME_PAUSED_FONT_SIZE"            , "size" : 42 , "font" : "Commodore_Rounded_v1.2" },
     { "name" : "SCENE_GAME_EXIT_PROMPT_TITLE_FONT_SIZE" , "size" : 40 , "font" : "Commodore_Rounded_v1.2" },
     { "name" : "SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE"   , "size" : 24 , "font" : "Commodore_Rounded_v1.2" },
+
     { "name" : "SCENE_HIGHSCORE_TITLE_FONT_SIZE"        , "size" : 50 , "font" : "Commodore_Rounded_v1.2" },
     { "name" : "SCENE_HIGHSCORE_SCORE_ITEM_FONT_SIZE"   , "size" : 40 , "font" : "Commodore_Rounded_v1.2" },
     { "name" : "SCENE_HIGHSCORE_EDIT_TITLE_FONT_SIZE"   , "size" : 22 , "font" : "Commodore_Rounded_v1.2" },
     { "name" : "SCENE_HIGHSCORE_EDIT_FIELD_FONT_SIZE"   , "size" : 40 , "font" : "Commodore_Rounded_v1.2" },
-    { "name" : "SPLASH_SCENE_FONT_SIZE"                 , "size" : 40 , "font" : "Commodore_Rounded_v1.2" },
+
     { "name" : "GAME_HUD_FONT_SIZE"                     , "size" : 31 , "font" : "Commodore_Rounded_v1.2" }
  ]

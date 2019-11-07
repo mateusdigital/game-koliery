@@ -486,7 +486,7 @@ class Board
                 if(p == null) {
                     s += ". ";
                 } else {
-                    // let v = p.objectId;
+                    // let v = p.blockId;
                     let v = p.colorIndex;
                     s += v;
                     if(v < 10) s += " ";

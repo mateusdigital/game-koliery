@@ -19,7 +19,7 @@ function _PRINT_OBJECTS_ID(col)
 {
     let s ="";
     for(let i = 0; i < col.length; ++i) {
-        s += col[i].objectId + ",";
+        s += col[i].blockId + ",";
     }
     // console.log(s);
 }
@@ -27,7 +27,7 @@ function _PRINT_OBJECTS_ID(col)
 function _SORT_OBJECTS_ID(col)
 {
     col.sort((a, b)=>{
-        return a.objectId - b.objectId;
+        return a.blockId - b.blockId;
     });
 }
 
@@ -79,13 +79,13 @@ class MatchInfo
             const block = blocks_to_check[i];
 
             // const contains = Array_Contains(this.allMatchedBlocks, (b)=>{
-            //     return b.objectId == block.objectId;
+            //     return b.blockId == block.blockId;
             // });
             // if(contains) {
             //     continue;
             // }
 
-            // console.log(i, " - Checking block: ", block.objectId);
+            // console.log(i, " - Checking block: ", block.blockId);
             const info = this._CheckMatches(block);
             if(info.horizontal_blocks.length != 0) {
                 // console.log("Horizontal");
@@ -234,7 +234,7 @@ class MatchInfo
         for(let i = 0; i < arr.length; ++i) {
             let cp = arr[i];
             let contains = Array_Contains(this.allMatchedBlocks, (p)=>{
-                return p.objectId == cp.objectId
+                return p.blockId == cp.blockId
             });
             if(!contains) {
                 this.allMatchedBlocks.push(cp);
@@ -262,7 +262,7 @@ class MatchInfo
             }
             // Already added to matched blocks.
             let found = Array_Contains(matchedArr, (block)=>{
-                block.objectId == targetBlock.objectId;
+                block.blockId == targetBlock.blockId;
             });
             if(found) {
                 break;

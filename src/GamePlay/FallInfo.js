@@ -83,7 +83,7 @@ class FallInfo
             let block = this.boardRef.GetBlockAt(indexX, i);
             if(block != null) {
                 let contains = Array_Contains(this.allFallingBlocks, (p)=>{
-                   return p.objectId == block.objectId;
+                   return p.blockId == block.blockId;
                 });
                 if(contains) {
                     continue;

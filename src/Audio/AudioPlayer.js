@@ -108,7 +108,6 @@ class AudioPlayer
         }
 
         this.soundName = name;
-        this.SetSpeed(1.0);
     } // Play
 
     //--------------------------------------------------------------------------
