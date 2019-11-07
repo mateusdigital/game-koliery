@@ -73,7 +73,7 @@ class AudioPlayer
 
         const effect_to_play = this.sounds[name];
         if(!effect_to_play) {
-            debugger;
+            // debugger;
             return;
         }
 
@@ -88,7 +88,7 @@ class AudioPlayer
     {
         const sound_to_play = this.sounds[name];
         if(!sound_to_play) {
-            debugger;
+            // debugger;
             return;
         }
 
