@@ -85,4 +85,24 @@ class Palette
         ];
 
     } // _InitializeBlockColors
+
+    //--------------------------------------------------------------------------
+    GetMenuTextNormalColor()
+    {
+        return chroma("black");
+    } // GetMenuTextNormalColor
+
+    //--------------------------------------------------------------------------
+    GetMenuTextSelectColor(index)
+    {
+        const len = SCENE_MENU_TITLE_STR.length;
+        return chroma.hsl((360 / len) * index, 0.8, 0.5);
+    } // GetMenuTextSelectColor
+
+    //--------------------------------------------------------------------------
+    GetTitleCharColor(index)
+    {
+        const len = SCENE_MENU_TITLE_STR.length;
+        return chroma.hsl((360 / len) * index, 0.5, 0.5);
+    }
 }; // class Palette

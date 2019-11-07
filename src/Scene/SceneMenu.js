@@ -30,50 +30,6 @@ const SCENE_MENU_MARQUEE_TWEEN_DURATION_MS     = 500;
 const SCENE_MENU_MARQUEE_TWEEN_DELAY_MS        = 500;
 const SCENE_MENU_MARQUEE_TWEEN_REPEAT_DELAY_MS = 2000;
 
-// const SCENE_MENU_LEVEL_TEXT_OPTIONS = [
-//     "EASY",
-//     "MEDIUM",
-//     "HARD",
-// ];
-
-// const SCENE_MENU_OPTIONS_TEXT_OPTIONS = [
-//     "SOUNDS ON",
-//     "",
-//     "SCORES",
-//     "CREDITS",
-// ];
-
-const SCENE_MENU_MENU_TEXTS = [
-    //
-    {
-        font_size : SCENE_MENU_LEVEL_FONT_SIZE,
-        gap       : 0,
-        texts     : [
-            "EASY",
-            "MEDIUM",
-            "HARD",
-        ]
-    },
-    //
-    {
-        font_size : SCENE_MENU_OPTIONS_FONT_SIZE,
-        gap       : 20,
-        texts     : [
-            "SOUNDS ON"
-        ]
-    },
-    //
-    {
-        font_size : SCENE_MENU_OPTIONS_FONT_SIZE,
-        gap       : 20,
-        texts     : [
-            "SCORES",
-            "CREDITS",
-        ]
-    }
-];
-
-
 // Sound.
 const SCENE_MENU_MUSIC_BACKGROUND = MUSIC_KOMIKU_06_SCHOOL;
 const SCENE_MENU_EFFECT_MENU      = MUSIC_MENU_INTERACTION;
@@ -122,8 +78,14 @@ class SceneMenu
         this.marqueeTextIndex  = 0;
         this.marqueeTweenGroup = Tween_CreateGroup();
 
+        // Menu Structure.
+        this.menuStructure    = null;
+        this.menuSectionIndex = 0;
+
         //
         // Initialize.
+        this._CreateMenuStructure();
+
         this._InitializeTitleText  ();
         this._InitializeLevelText  ();
         this._InitializeMarqueeText();
@@ -131,23 +93,29 @@ class SceneMenu
         gAudio.Play(SCENE_MENU_MUSIC_BACKGROUND);
     } // ctor
 
-
     //--------------------------------------------------------------------------
     Update(dt)
     {
-        if(IsKeyPress(KEY_1)) {
-            gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
-            Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
-        } else if(IsKeyPress(KEY_2)) {
-            gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
-            Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_MEDIUM);
-        } else if(IsKeyPress(KEY_3)) {
-            gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
-            Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_HARD);
-        } else if(IsKeyPress(KEY_H)){
-            gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
-            Go_To_Scene(SceneHighScore, SceneMenu, SCENE_HIGHSCORE_OPTIONS_NONE);
+        if(IsKeyPress(KEY_ARROW_DOWN)) {
+            this._UpdateMenuSelection(+1);
+        } else if(IsKeyPress(KEY_ARROW_UP)) {
+            this._UpdateMenuSelection(-1);
         }
+
+
+        // if(IsKeyPress(KEY_1)) {
+        //     gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
+        //     Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
+        // } else if(IsKeyPress(KEY_2)) {
+        //     gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
+        //     Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_MEDIUM);
+        // } else if(IsKeyPress(KEY_3)) {
+        //     gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
+        //     Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_HARD);
+        // } else if(IsKeyPress(KEY_H)){
+        //     gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
+        //     Go_To_Scene(SceneHighScore, SceneMenu, SCENE_HIGHSCORE_OPTIONS_NONE);
+        // }
 
         // Tweens.
         this.levelTweenGroup  .update();
@@ -166,6 +134,62 @@ class SceneMenu
         }
     } // Update
 
+    //--------------------------------------------------------------------------
+    _UpdateMenuSelection(delta)
+    {
+        const old_selection_index = this.menuSectionIndex;
+        const new_selection_index = Math_Wrap(
+            0,
+            this.levelText.length - 1,
+            this.menuSectionIndex + delta,
+        );
+
+        const normal_color = gPalette.GetMenuTextNormalColor();
+        const select_color = gPalette.GetMenuTextSelectColor(new_selection_index);
+
+        const old_selection_text = this.levelText[old_selection_index];
+        const new_selection_text = this.levelText[new_selection_index];
+
+        old_selection_text.rtvar_gradientEffect.SetColor(normal_color);
+        new_selection_text.rtvar_gradientEffect.SetColor(select_color);
+
+        this.menuSectionIndex = new_selection_index;
+    }
+
+
+    //--------------------------------------------------------------------------
+    _CreateMenuStructure()
+    {
+        this.menuStructure = [
+            //
+            {
+                font_size : SCENE_MENU_LEVEL_FONT_SIZE,
+                gap       : 0,
+                texts     : [
+                    "EASY",
+                    "MEDIUM",
+                    "HARD",
+                ]
+            },
+            //
+            {
+                font_size : SCENE_MENU_OPTIONS_FONT_SIZE,
+                gap       : 20,
+                texts     : [
+                    "SOUNDS ON"
+                ]
+            },
+            //
+            {
+                font_size : SCENE_MENU_OPTIONS_FONT_SIZE,
+                gap       : 20,
+                texts     : [
+                    "SCORES",
+                    "CREDITS",
+                ]
+            }
+        ];
+    }
 
     //--------------------------------------------------------------------------
     _InitializeTitleText()
@@ -217,7 +241,7 @@ class SceneMenu
 
             // Text.
             const text  = Create_Normal_Text(str, font_size);
-            const color = chroma("black");
+            const color = gPalette.GetMenuTextNormalColor();
 
             Apply_TextUncoverEffect (text, tween);
             Apply_TextGradientEffect(text, color);
@@ -231,8 +255,8 @@ class SceneMenu
         }
 
         let curr_y = 0;
-        for(let i = 0; i < SCENE_MENU_MENU_TEXTS.length; ++i) {
-            const section = SCENE_MENU_MENU_TEXTS[i];
+        for(let i = 0; i < this.menuStructure.length; ++i) {
+            const section = this.menuStructure[i];
             curr_y += section.gap;
 
             for(let j = 0; j < section.texts.length; ++j) {
@@ -246,9 +270,9 @@ class SceneMenu
             }
         }
 
-        Apply_Debug_Filter(this.levelTextLayer);
+        // Apply_Debug_Filter(this.levelTextLayer);
         // Text Layer.
-        this.levelTextLayer.x = (screen_size.x * 0.5);// - (this.levelTextLayer.width * 0.5);
+        this.levelTextLayer.x = (screen_size.x * 0.50);
         this.levelTextLayer.y = (screen_size.y * 0.45);
 
         this.addChild(this.levelTextLayer);
@@ -296,7 +320,7 @@ class SceneMenu
                 const strings_len = this.marqueeStrings.length;
                 const index       = this.marqueeTextIndex;
 
-                const color = chroma.hsl((360 / strings_len) * index, 0.5, 0.5);
+                const color = gPalette.GetTitleCharColor(index);
                 this.marqueeText.filters[1].SetColor(color);
 
                 this.marqueeTextIndex = (index + 1) % strings_len;
