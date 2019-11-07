@@ -24,7 +24,11 @@ function Apply_TextGradientEffect(textRef, color)
     if(!textRef.filters) {
         textRef.filters = [];
     }
-    textRef.filters.push(new TextGradientEffect(textRef, color));
+
+    const effect = new TextGradientEffect(textRef, color)
+    textRef.filters.push(effect);
+
+    Utils_AddRuntimeProperty(textRef, "gradientEffect", effect);
 }
 
 //------------------------------------------------------------------------------
