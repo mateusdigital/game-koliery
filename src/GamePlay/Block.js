@@ -60,7 +60,7 @@ class Block
         // References.
         this.boardRef = boardRef;
         // HouseKeeping.
-        this.objectId     = S_BLOCK_OBJECT_ID++;
+        this.blockId      = S_BLOCK_OBJECT_ID++;
         this.coordInBoard = Vector_Create(0, 0);
         this.colorIndex   = colorIndex;
         this.isDestroying = false;
@@ -75,7 +75,7 @@ class Block
         this.addChild(this.sprite);
 
         // Debug.
-        // let text = new PIXI.Text(this.objectId,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'left'});
+        // let text = new PIXI.Text(this.blockId,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'left'});
         // text.x = this.width  / 2 - text.width  / 2;
         // text.y = this.height / 2 - text.height / 2;
         // this.addChild(text);
