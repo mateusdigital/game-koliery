@@ -53,22 +53,24 @@ class Palette
     } // GetBlockColor
 
     //--------------------------------------------------------------------------
-    GetScoreColor(colorIndex)
+    GetScoreColor(index)
     {
-        const colors = [
-            "#8C2000",
-            "#C17D00",
-            "#C5B50C",
-            "#009427",
-            "#00B385",
-            "#266DC3",
-            "#7037D9",
-            "#8D24C1",
-            "#B0325E",
-            "#8C2000",
-        ];
+        // const colors = [
+        //     "#8C2000",
+        //     "#C17D00",
+        //     "#C5B50C",
+        //     "#009427",
+        //     "#00B385",
+        //     "#266DC3",
+        //     "#7037D9",
+        //     "#8D24C1",
+        //     "#B0325E",
+        //     "#8C2000",
+        // ];
 
-        return chroma(colors[colorIndex]);
+        // return chroma(colors[colorIndex]);
+        const len = HIGHSCORE_MAX_ENTRIES;
+        return chroma.hsl((360 / len) * index, 0.7, 0.5);
     }
 
     //--------------------------------------------------------------------------
@@ -96,13 +98,14 @@ class Palette
     GetMenuTextSelectColor(index)
     {
         const len = SCENE_MENU_TITLE_STR.length;
-        return chroma.hsl((360 / len) * index, 0.8, 0.5);
+        return chroma.hsl((360 / len) * index, 0.7, 0.5);
     } // GetMenuTextSelectColor
 
     //--------------------------------------------------------------------------
     GetTitleCharColor(index)
     {
         const len = SCENE_MENU_TITLE_STR.length;
-        return chroma.hsl((360 / len) * index, 0.5, 0.5);
+        return chroma.hsl((360 / len) * index, 0.7, 0.5);
+        // return chroma.hsl((360 / len) * index, 0.5, 0.5);
     }
 }; // class Palette
