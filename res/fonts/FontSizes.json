@@ -3,7 +3,7 @@
 
     { "name" : "SCENE_MENU_TITLE_FONT_SIZE"             , "size" : 90 , "font" : "PixelForce" },
     { "name" : "SCENE_MENU_LEVEL_FONT_SIZE"             , "size" : 50 , "font" : "Commodore_Rounded_v1.2" },
-    { "name" : "SCENE_MENU_OPTIONS_FONT_SIZE"           , "size" : 40 , "font" : "Commodore_Rounded_v1.2" },
+    { "name" : "SCENE_MENU_OPTIONS_FONT_SIZE"           , "size" : 35 , "font" : "Commodore_Rounded_v1.2" },
     { "name" : "SCENE_MENU_MARQUEE_FONT_SIZE"           , "size" : 25 , "font" : "PixelForce" },
 
     { "name" : "SCENE_GAME_PAUSED_FONT_SIZE"            , "size" : 42 , "font" : "Commodore_Rounded_v1.2" },
