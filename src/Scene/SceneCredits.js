@@ -21,6 +21,10 @@
 const SCENE_CREDITS_TEXT_TWEEN_DURATION_MS = 300;
 const SCENE_CREDITS_TEXT_TWEEN_DELAY_MS    = 300;
 
+// Sound
+const SCENE_CREDITS_MUSIC_BACKGROUND = MUSIC_KOMIKU_06_SCHOOL;
+const SCENE_CREDITS_EFFECT_MENU      = MUSIC_MENU_INTERACTION;
+
 //------------------------------------------------------------------------------
 class SceneCredits
     extends Base_Scene
@@ -40,12 +44,15 @@ class SceneCredits
         // Initialize.
         this._CreateCreditsStructure();
         this._CreateTexts           ();
+
+        gAudio.Play(SCENE_CREDITS_MUSIC_BACKGROUND);
     } // ctor
 
     //--------------------------------------------------------------------------
     Update(dt)
     {
         if(IsKeyPress(KEY_SPACE, KEY_ENTER, KEY_ESC)) {
+            gAudio.PlayEffect(SCENE_CREDITS_EFFECT_MENU);
             Go_To_Scene(SceneMenu);
         }
 
