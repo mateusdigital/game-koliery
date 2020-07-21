@@ -1,0 +1,4 @@
+
+[submodule "libs/pw_pixi"]
+	path = libs/pw_pixi
+	url = https://gitlab.com/stdmatt-libs/pw_pixi
