@@ -19,41 +19,48 @@
 <html lang="en-us">
 <head>
     <meta charset="utf-8">
-
-    <script type="text/javascript" src="./libs/pixi_helpers/libs/pixi.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/libs/pixi-sound.js"></script>
-
-    <script type="text/javascript" src="./libs/pixi_helpers/Application.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/Array.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/Scene_Manager.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/Base_Scene.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/Base_Shake.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/Base_Timer.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/Base_BMPText.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/Base_TTFText.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/Input.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/Math.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/RES.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/Random.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/String.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/Utils.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/Tween.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/Vector.js"></script>
-
-    <script type="text/javascript" src="./libs/pixi_helpers/libs/tween.umd.js"></script>
-    <script type="text/javascript" src="./libs/pixi_helpers/libs/chroma.js"></script>
+    <!-- pw_js_core -->
+    <script type="text/javascript" src="libs/pw_js_core/libs/third_party/chroma.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/libs/third_party/perlin.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/libs/third_party/tween.umd.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/Algo/Floodfill.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/Array.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/DOM/DOM.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/Input.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/Math.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/Noise.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/Random.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/Shake.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/String.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/Timer.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/Tween.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/Utils.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/Vector.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/Version.js"></script>
+    <script type="text/javascript" src="libs/pw_js_core/src/Window.js"></script>
+    <!-- pw_pixi -->
+    <script type="text/javascript" src="libs/pw_pixi/libs/pixi.js"></script>
+    <script type="text/javascript" src="libs/pw_pixi/Application.js"></script>
+    <script type="text/javascript" src="libs/pw_pixi/Base_BMPText.js"></script>
+    <script type="text/javascript" src="libs/pw_pixi/Base_Scene.js"></script>
+    <script type="text/javascript" src="libs/pw_pixi/Base_TTFText.js"></script>
+    <script type="text/javascript" src="libs/pw_pixi/libs/hack_pixi-particles.js"></script>
+    <script type="text/javascript" src="libs/pw_pixi/libs/pixi-sound.js"></script>
+    <script type="text/javascript" src="libs/pw_pixi/RES.js"></script>
+    <script type="text/javascript" src="libs/pw_pixi/Scene_Manager.js"></script>
+    <script type="text/javascript" src="libs/pw_pixi/Utils.js"></script>
 </head>
+
 <body>
 
-    <!-- <script type="text/javascript" src="./libs/base/src/BASE.js"></script> -->
     <!-- Other -->
     <script type="text/javascript" src="./src/Palette.js"></script>
     <script type="text/javascript" src="./src/Helpers.js"></script>
     <script type="text/javascript" src="./src/HighScoreManager.js"></script>
 
     <!-- Generated -->
-    <script type="text/javascript" src="./res/fonts/generated/Fonts.js"></script>
-    <script type="text/javascript" src="./res/music/generated/Music.js"></script>
+    <script type="text/javascript" src="./src/Resources.Generated.js"></script>
+    <script type="text/javascript" src="./src/FontDefs.Generated.js"></script>
 
     <!-- Audio -->
     <script type="text/javascript" src="./src/Audio/AudioPlayer.js"></script>

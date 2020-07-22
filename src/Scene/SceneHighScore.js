@@ -36,7 +36,7 @@ const SCENE_HIGHSCORE_EFFECT_MENU      = MUSIC_MENU_INTERACTION;
 
 //------------------------------------------------------------------------------
 class SceneHighScore
-    extends Base_Scene
+    extends pw_Base_Scene
 {
     //--------------------------------------------------------------------------
     constructor(sceneToGoBackClass, options)
@@ -55,7 +55,7 @@ class SceneHighScore
         this.titleLine  = null;
         // Score Panel.
         this.scoreTexts      = [];
-        this.scoreTweenGroup = Tween_CreateGroup();
+        this.scoreTweenGroup = pw_Tween_CreateGroup();
         // Edit.
         this.editTitle          = null;
         this.editField          = null;
@@ -111,8 +111,8 @@ class SceneHighScore
         }
 
         // Erase
-        if(keyCode == KEY_BACKSPACE) {
-            Array_RemoveLast(this.editFieldChars);
+        if(keyCode == PW_KEY_BACKSPACE) {
+            pw_Array_RemoveLast(this.editFieldChars);
         }
         // Enter char
         else if(keyCode >= 65 && keyCode < 65 + 26) {
@@ -122,7 +122,7 @@ class SceneHighScore
             }
         }
         // Confirm
-        else if(keyCode == KEY_ENTER && !this.editLocked) {
+        else if(keyCode == PW_KEY_ENTER && !this.editLocked) {
             this.editLocked = true;
             Apply_TextUncoverEffect (this.editTitle, this.editFadeTween);
             Apply_TextUncoverEffect (this.editField, this.editFadeTween);
@@ -140,7 +140,7 @@ class SceneHighScore
 
         // Viewing high cores.
         if(this.options != SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
-            if(IsKeyPress(KEY_SPACE) || IsKeyPress(KEY_ENTER)) {
+            if(pw_Keyboard_IsClick(PW_KEY_SPACE) || pw_Keyboard_IsClick(PW_KEY_ENTER)) {
                 gAudio.PlayEffect(SCENE_HIGHSCORE_EFFECT_MENU);
                 Go_To_Scene(this.sceneToGoBackClass);
             }
@@ -190,7 +190,7 @@ class SceneHighScore
 
         for(let i = 0; i < this.scoresInfo.length; ++i) {
             // Tween.
-            const tween = Tween_CreateBasic(
+            const tween = pw_Tween_CreateBasic(
                 SCENE_HIGHSCORE_TEXT_EFFECT_DURATION_MS,
                 this.scoreTweenGroup
             )
@@ -244,8 +244,8 @@ class SceneHighScore
             this.scoreTexts[index].text = this._BuildScoreString(index + 1, info);
 
             this.scoreTweenGroup.onComplete(()=>{
-                this.blinkTweenGroup = Tween_CreateGroup();
-                this.blinkTween      = Tween_CreateBasic(
+                this.blinkTweenGroup = pw_Tween_CreateGroup();
+                this.blinkTween      = pw_Tween_CreateBasic(
                     SCENE_HIGHSCORE_BOARD_BLINK_TWEEN_DURATION_MS,
                     this.blinkTweenGroup
                 )
@@ -267,7 +267,7 @@ class SceneHighScore
         }
 
         const screen_size     = Get_Screen_Size();
-        const last_score_text = Array_GetLast(this.scoreTexts);
+        const last_score_text = pw_Array_GetLast(this.scoreTexts);
 
         // Edit Title.
         this.editTitle = Create_Normal_Text("Enter your initials", SCENE_HIGHSCORE_EDIT_TITLE_FONT_SIZE);
@@ -287,8 +287,8 @@ class SceneHighScore
 
         this.addChild(this.editField);
 
-        this.editFadeTweenGroup = Tween_CreateGroup();
-        this.editFadeTween      = Tween_CreateBasic(400, this.editFadeTweenGroup)
+        this.editFadeTweenGroup = pw_Tween_CreateGroup();
+        this.editFadeTween      = pw_Tween_CreateBasic(400, this.editFadeTweenGroup)
 
         this.editFadeTweenGroup.onComplete(()=>{
             this.editField.visible = false;
@@ -315,7 +315,7 @@ class SceneHighScore
         const name_str  = info.name;
         const score_str = Build_Digits_String("", HIGHSCORE_MAX_DIGITS, info.score);
 
-        return String_Cat(pos_str, " ", name_str, " ", score_str);
+        return pw_String_Cat(pos_str, " ", name_str, " ", score_str);
     } // _BuildScoreString
 
     //--------------------------------------------------------------------------

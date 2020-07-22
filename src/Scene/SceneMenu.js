@@ -20,23 +20,27 @@
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
 const SCENE_MENU_TITLE_STR           = "KOLIERY";
+const SCENE_MENU_TITLE_SIZE          = 90;
 const SCENE_MENU_TITLE_SIN_AMPLITUDE = 20;
 const SCENE_MENU_TITLE_SIN_FREQUENCY = 1;
 
 const SCENE_MENU_LEVEL_TEXT_TWEEN_DURATION_MS = 300;
 const SCENE_MENU_LEVEL_TEXT_TWEEN_DELAY_MS    = 300;
+const SCENE_MENU_LEVEL_FONT_SIZE              = 40;
+const SCENE_MENU_OPTIONS_FONT_SIZE            = 30;
+const SCENE_MENU_MARQUEE_FONT_SIZE            = 20;
 
 const SCENE_MENU_MARQUEE_TWEEN_DURATION_MS     = 500;
 const SCENE_MENU_MARQUEE_TWEEN_DELAY_MS        = 500;
 const SCENE_MENU_MARQUEE_TWEEN_REPEAT_DELAY_MS = 2000;
 
 // Sound.
-const SCENE_MENU_MUSIC_BACKGROUND = MUSIC_KOMIKU_06_SCHOOL;
-const SCENE_MENU_EFFECT_MENU      = MUSIC_MENU_INTERACTION;
+const SCENE_MENU_MUSIC_BACKGROUND = ""; // MUSIC_KOMIKU_06_SCHOOL;
+const SCENE_MENU_EFFECT_MENU      = ""; // MUSIC_MENU_INTERACTION;
 
 //------------------------------------------------------------------------------
 class SceneMenu
-    extends Base_Scene
+    extends pw_Base_Scene
 {
     //--------------------------------------------------------------------------
     constructor()
@@ -54,7 +58,7 @@ class SceneMenu
         // Level Text.
         this.levelText       = [];
         this.levelTextLayer  = new PIXI.Container();
-        this.levelTweenGroup = Tween_CreateGroup();
+        this.levelTweenGroup = pw_Tween_CreateGroup();
 
         // Marquee Text.
         this.marqueeStrings = [
@@ -76,7 +80,7 @@ class SceneMenu
         this.marqueeText       = null;
         this.marqueeTween      = null;
         this.marqueeTextIndex  = 0;
-        this.marqueeTweenGroup = Tween_CreateGroup();
+        this.marqueeTweenGroup = pw_Tween_CreateGroup();
 
         // Menu Structure.
         this.menuStructure    = null;
@@ -96,25 +100,25 @@ class SceneMenu
     //--------------------------------------------------------------------------
     Update(dt)
     {
-        if(IsKeyPress(KEY_ARROW_DOWN)) {
+        if(pw_Keyboard_IsClick(PW_KEY_ARROW_DOWN)) {
             this._UpdateMenuSelection(+1);
-        } else if(IsKeyPress(KEY_ARROW_UP)) {
+        } else if(pw_Keyboard_IsClick(PW_KEY_ARROW_UP)) {
             this._UpdateMenuSelection(-1);
-        } else if(IsKeyPress(KEY_ENTER)) {
+        } else if(pw_Keyboard_IsClick(PW_KEY_ENTER)) {
             this._OnMenuSelection();
         }
 
 
-        // if(IsKeyPress(KEY_1)) {
+        // if(pw_Keyboard_IsClick(PW_KEY_1)) {
         //     gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
         //     Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
-        // } else if(IsKeyPress(KEY_2)) {
+        // } else if(pw_Keyboard_IsClick(PW_KEY_2)) {
         //     gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
         //     Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_MEDIUM);
-        // } else if(IsKeyPress(KEY_3)) {
+        // } else if(pw_Keyboard_IsClick(PW_KEY_3)) {
         //     gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
         //     Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_HARD);
-        // } else if(IsKeyPress(KEY_H)){
+        // } else if(pw_Keyboard_IsClick(PW_KEY_H)){
         //     gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
         //     ;
         // }
@@ -128,8 +132,8 @@ class SceneMenu
             const text = this.titleText[i];
             const len_i = (this.titleText.length - i);
 
-            const value = -Math_Sin(
-                (Application_Total_Time * MATH_2PI + len_i) / this.titleTextSinFrequency
+            const value = -pw_Math_Sin(
+                (pw_Application_Total_Time * PW_MATH_2PI + len_i) / this.titleTextSinFrequency
             );
 
             text.y = (value * this.titleTextSinAmplitude);
@@ -140,7 +144,7 @@ class SceneMenu
     _UpdateMenuSelection(delta)
     {
         const old_selection_index = this.menuSectionIndex;
-        const new_selection_index = Math_Wrap(
+        const new_selection_index = pw_Math_Wrap(
             0,
             this.levelText.length - 1,
             this.menuSectionIndex + delta,
@@ -220,7 +224,7 @@ class SceneMenu
         for(let i = 0; i < str_len; ++i) {
             const c     = SCENE_MENU_TITLE_STR[i];
             const color = chroma.hsl((360 / str_len) * i, 0.5, 0.5);
-            const text  = Create_Title_Text(c, SCENE_MENU_TITLE_FONT_SIZE, color.num());
+            const text  = new pw_Text(c, FONT_PIXELFORCE, SCENE_MENU_TITLE_SIZE, color.num());
 
             let prev_x = 0;
             let prev_w = 0;
@@ -252,7 +256,7 @@ class SceneMenu
         const screen_size      = Get_Screen_Size();
         const create_text_func = (str, font_size) => {
             // Tween.
-            const tween = Tween_CreateBasic(
+            const tween = pw_Tween_CreateBasic(
                 SCENE_MENU_LEVEL_TEXT_TWEEN_DURATION_MS,
                 this.levelTweenGroup
             )
@@ -262,7 +266,7 @@ class SceneMenu
             .start();
 
             // Text.
-            const text  = Create_Normal_Text(str, font_size);
+            const text  = new pw_Text(str, FONT_COMMODORE, font_size);
             const color = (this.menuSectionIndex != this.levelText.length)
                 ? gPalette.GetMenuTextNormalColor()
                 : gPalette.GetMenuTextSelectColor(this.menuSectionIndex);
@@ -311,7 +315,7 @@ class SceneMenu
     _InitializeMarqueeText()
     {
         // Tween.
-        this.marqueeTween = Tween_CreateBasic(
+        this.marqueeTween = pw_Tween_CreateBasic(
             SCENE_MENU_MARQUEE_TWEEN_DURATION_MS,
             this.marqueeTweenGroup
         );
@@ -321,7 +325,7 @@ class SceneMenu
         const str         = this.marqueeStrings[0];
         const color       = chroma("black");
 
-        this.marqueeText = Create_Title_Text(str, SCENE_MENU_MARQUEE_FONT_SIZE);
+        this.marqueeText = new pw_Text(str, FONT_PIXELFORCE, SCENE_MENU_MARQUEE_FONT_SIZE);
         Apply_TextUncoverEffect (this.marqueeText, this.marqueeTween);
         Apply_TextGradientEffect(this.marqueeText, color            );
 

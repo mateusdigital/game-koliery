@@ -21,13 +21,16 @@
 const SCENE_CREDITS_TEXT_TWEEN_DURATION_MS = 300;
 const SCENE_CREDITS_TEXT_TWEEN_DELAY_MS    = 300;
 
+const SCENE_CREDITS_SECTION_TITLE_FONT_SIZE = 40;
+const SCENE_CREDITS_SECTION_TEXT_FONT_SIZE  = 40;
+
 // Sound
-const SCENE_CREDITS_MUSIC_BACKGROUND = MUSIC_KOMIKU_06_SCHOOL;
-const SCENE_CREDITS_EFFECT_MENU      = MUSIC_MENU_INTERACTION;
+const SCENE_CREDITS_MUSIC_BACKGROUND = ""; // MUSIC_KOMIKU_06_SCHOOL;
+const SCENE_CREDITS_EFFECT_MENU      = ""; // MUSIC_MENU_INTERACTION;
 
 //------------------------------------------------------------------------------
 class SceneCredits
-    extends Base_Scene
+    extends pw_Base_Scene
 {
     //--------------------------------------------------------------------------
     constructor()
@@ -37,7 +40,7 @@ class SceneCredits
         //
         // iVars.
         // Properties.
-        this.sceneTweenGroup  = Tween_CreateGroup();
+        this.sceneTweenGroup  = pw_Tween_CreateGroup();
         this.creditsStructure = null;
 
         //
@@ -51,7 +54,7 @@ class SceneCredits
     //--------------------------------------------------------------------------
     Update(dt)
     {
-        if(IsKeyPress(KEY_SPACE, KEY_ENTER, KEY_ESC)) {
+        if(pw_Keyboard_IsClick(PW_KEY_SPACE, PW_KEY_ENTER, PW_KEY_ESC)) {
             gAudio.PlayEffect(SCENE_CREDITS_EFFECT_MENU);
             Go_To_Scene(SceneMenu);
         }
@@ -99,7 +102,7 @@ class SceneCredits
         const screen_size      = Get_Screen_Size();
         const create_text_func = (str, font_size, pos_y, color, index) => {
             // Tween.
-            const tween = Tween_CreateBasic(
+            const tween = pw_Tween_CreateBasic(
                 SCENE_CREDITS_TEXT_TWEEN_DURATION_MS,
                 this.sceneTweenGroup
             )
@@ -108,7 +111,7 @@ class SceneCredits
             )
             .start();
 
-            const text = Create_Normal_Text(str.toUpperCase(), font_size);
+            const text = new pw_Text(str.toUpperCase(), FONT_COMMODORE, font_size);
             text.anchor.set(0.5, 0.5);
             text.x = (screen_size.x * 0.5);
             text.y = curr_y;

@@ -31,6 +31,7 @@ MUSIC_DIR_PATH    = "./res/music";
 OUTPUT_DIR_PATH   = os.path.join(MUSIC_DIR_PATH, "generated");
 MUSIC_JS_FILENAME = os.path.join(OUTPUT_DIR_PATH, "Music.js");
 
+
 ##----------------------------------------------------------------------------##
 ## Functions                                                                  ##
 ##----------------------------------------------------------------------------##

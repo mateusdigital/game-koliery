@@ -36,10 +36,7 @@ class BlockTintEffect
     //--------------------------------------------------------------------------
     constructor(blockRef, color)
     {
-        super(
-            null,
-            PIXI_LOADER_RES["src/FX/Shaders/BlockTint.frag"].data
-        );
+        super(null, pw_Data_Get(RES_SHADERS_BLOCKTINT_FRAG));
 
         //
         // iVars

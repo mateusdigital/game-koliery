@@ -78,7 +78,7 @@ class MatchInfo
         for(let i = 0; i < blocks_to_check.length; ++i) {
             const block = blocks_to_check[i];
 
-            // const contains = Array_Contains(this.allMatchedBlocks, (b)=>{
+            // const contains = pw_Array_Contains(this.allMatchedBlocks, (b)=>{
             //     return b.blockId == block.blockId;
             // });
             // if(contains) {
@@ -119,7 +119,7 @@ class MatchInfo
     _FloodFill(startBlock, targetColorIndex)
     {
         let matched_blocks = [];
-        let coords_to_check = Coords_GetSurrounding(startBlock.coordInBoard);
+        let coords_to_check = pw_Coords_GetSurrounding(startBlock.coordInBoard);
         for(let i = 0; i < coords_to_check.length; ++i) {
             const coord = coords_to_check[i];
             // Outside bounds.
@@ -138,7 +138,7 @@ class MatchInfo
                 continue;
             }
 
-            const test_coords = Coords_GetSurrounding(block.coordInBoard);
+            const test_coords = pw_Coords_GetSurrounding(block.coordInBoard);
             for(let j = 0; j < test_coords.length; ++j) {
                 const test_coord = test_coords[j];
                 // There's no point to try to check an invalid coord.
@@ -176,17 +176,17 @@ class MatchInfo
         info.diagonal2_blocks  = [];
         info.has_match         = false;
 
-        this._GetMatchingBlocks(targetBlock, VECTOR_LEFT , info.horizontal_blocks);
-        this._GetMatchingBlocks(targetBlock, VECTOR_RIGHT, info.horizontal_blocks);
+        this._GetMatchingBlocks(targetBlock, pw_Vector_Left , info.horizontal_blocks);
+        this._GetMatchingBlocks(targetBlock, pw_Vector_Right, info.horizontal_blocks);
 
-        this._GetMatchingBlocks(targetBlock, VECTOR_TOP   , info.vertical_blocks);
-        this._GetMatchingBlocks(targetBlock, VECTOR_BOTTOM, info.vertical_blocks);
+        this._GetMatchingBlocks(targetBlock, pw_Vector_Top   , info.vertical_blocks);
+        this._GetMatchingBlocks(targetBlock, pw_Vector_Bottom, info.vertical_blocks);
 
-        this._GetMatchingBlocks(targetBlock, Vector_Create(-1, -1), info.diagonal1_blocks);
-        this._GetMatchingBlocks(targetBlock, Vector_Create(+1, +1), info.diagonal1_blocks);
+        this._GetMatchingBlocks(targetBlock, pw_Vector_Create(-1, -1), info.diagonal1_blocks);
+        this._GetMatchingBlocks(targetBlock, pw_Vector_Create(+1, +1), info.diagonal1_blocks);
 
-        this._GetMatchingBlocks(targetBlock, Vector_Create(+1, -1), info.diagonal2_blocks);
-        this._GetMatchingBlocks(targetBlock, Vector_Create(-1, +1), info.diagonal2_blocks);
+        this._GetMatchingBlocks(targetBlock, pw_Vector_Create(+1, -1), info.diagonal2_blocks);
+        this._GetMatchingBlocks(targetBlock, pw_Vector_Create(-1, +1), info.diagonal2_blocks);
 
         if(info.horizontal_blocks.length + 1 >= 3) {
             info.has_match = true;
@@ -233,7 +233,7 @@ class MatchInfo
     {
         for(let i = 0; i < arr.length; ++i) {
             let cp = arr[i];
-            let contains = Array_Contains(this.allMatchedBlocks, (p)=>{
+            let contains = pw_Array_Contains(this.allMatchedBlocks, (p)=>{
                 return p.blockId == cp.blockId
             });
             if(!contains) {
@@ -245,7 +245,7 @@ class MatchInfo
     //--------------------------------------------------------------------------
     _GetMatchingBlocks(targetBlock, dir, matchedArr)
     {
-        let start_coord = targetBlock.coordInBoard.clone();
+        let start_coord = targetBlock.coordInBoard.Clone();
         let match_count = 0;
         while(true) {
             let curr_block = this.boardRef.GetBlockAt(
@@ -261,7 +261,7 @@ class MatchInfo
                 break;
             }
             // Already added to matched blocks.
-            let found = Array_Contains(matchedArr, (block)=>{
+            let found = pw_Array_Contains(matchedArr, (block)=>{
                 block.blockId == targetBlock.blockId;
             });
             if(found) {

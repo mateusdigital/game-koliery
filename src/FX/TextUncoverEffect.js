@@ -34,10 +34,7 @@ class TextUncoverEffect
     //--------------------------------------------------------------------------
     constructor(textRef, tweenRef)
     {
-        super(
-            null,
-            PIXI_LOADER_RES["src/FX/Shaders/TextUncover.frag"].data
-        );
+        super(null, pw_Data_Get(RES_SHADERS_TEXTUNCOVER_FRAG));
 
         //
         // iVars

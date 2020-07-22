@@ -40,11 +40,11 @@ let S_BLOCK_OBJECT_ID = 0;
 //------------------------------------------------------------------------------
 function Create_Random_Block(boardRef)
 {
-    let color_index = Random_Int(0, BLOCK_COLOR_INDEX_COUNT);
+    let color_index = pw_Random_Int(0, BLOCK_COLOR_INDEX_COUNT);
     let block       = new Block(boardRef, color_index);
 
     return block;
-} // Create_Random_Block
+} // Create_pw_Random_Block
 
 //------------------------------------------------------------------------------
 class Block
@@ -61,16 +61,16 @@ class Block
         this.boardRef = boardRef;
         // HouseKeeping.
         this.blockId      = S_BLOCK_OBJECT_ID++;
-        this.coordInBoard = Vector_Create(0, 0);
+        this.coordInBoard = pw_Vector_Create(0, 0);
         this.colorIndex   = colorIndex;
         this.isDestroying = false;
         this.destroyValue = 0;
 
-        const size = Vector_Copy(this.boardRef.blockSize);
+        const size = pw_Vector_Copy(this.boardRef.blockSize);
         size.x -= 0;
         size.y -= 1;
 
-        this.sprite = Sprite_White(size);
+        this.sprite = pw_Sprite_White(size);
         Apply_BlockTintEffect(this.sprite, gPalette.GetBlockColor(this.colorIndex));
         this.addChild(this.sprite);
 
@@ -100,8 +100,8 @@ class Block
     //--------------------------------------------------------------------------
     StartFallAnimation(targetCoord)
     {
-        let position = Vector_Copy(this.position);
-        let target   = Vector_Create(position.x, targetCoord.y * this.boardRef.blockSize.y);
+        let position = pw_Vector_Copy(this.position);
+        let target   = pw_Vector_Create(position.x, targetCoord.y * this.boardRef.blockSize.y);
 
         // debugger;
         let tween = new TWEEN.Tween(position, this.boardRef.fallTweenGroup)
@@ -122,7 +122,7 @@ class Block
     //--------------------------------------------------------------------------
     _CreateSquashAnimation()
     {
-        let tween = Tween_CreateBasic(
+        let tween = pw_Tween_CreateBasic(
             BLOCK_DESTROY_TWEEN_DURATION_MS,
             this.boardRef.destroyTweenGroup
         )
@@ -145,7 +145,7 @@ class Block
             ? BLOCK_BLINK_TWEEN_BLINK_COUNT + 2
             : BLOCK_BLINK_TWEEN_BLINK_COUNT + 1;
 
-        let tween = Tween_CreateBasic(
+        let tween = pw_Tween_CreateBasic(
             BLOCK_BLINK_TWEEN_BLINK_DURATION_MS
         )
         .repeat(repeat_ms)

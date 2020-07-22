@@ -27,6 +27,7 @@
 ##  of the vars generated:                                                    ##
 ##      .png  -> TEXTURES_TO_LOAD                                             ##
 ##      .frag -> SHADERS_TO_LOAD                                              ##
+##      .fnt  -> FONTS_TO_LOAD                                                ##
 ##      .wav  -> SOUNDS_TO_LOAD                                               ##
 ##      .mp3  -> MUSIC_TO_LOAD                                                ##
 ##                                                                            ##
@@ -81,8 +82,8 @@ def gen_assets_names(type_extension, variable_name):
         quoted_path = pw_str_remove_all("\"{0}\"".format(path), root_path);
         filenames.append(quoted_path);
 
-        var_name = pw_str_remove_all(str(path), "./", root_path, extension_pattern);
-        var_name = var_name.replace("/", "_").upper();
+        var_name = pw_str_remove_all(str(path), "./", root_path);
+        var_name = pw_str_make_valid_var_name(var_name, is_upper_case=True);
 
         decl = "const {varname} = {filename}".format(
             varname  = var_name,
@@ -105,6 +106,7 @@ def gen_assets_names(type_extension, variable_name):
 ##----------------------------------------------------------------------------##
 gen_assets_names("png",  "TEXTURES_TO_LOAD");
 gen_assets_names("frag", "SHADERS_TO_LOAD" );
+gen_assets_names("fnt",  "FONTS_TO_LOAD"   );
 gen_assets_names("wav",  "SOUNDS_TO_LOAD"  );
 gen_assets_names("mp3",  "MUSIC_TO_LOAD"   );
 

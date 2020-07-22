@@ -34,10 +34,7 @@ class BoardBorderEffect
     //--------------------------------------------------------------------------
     constructor(boardBorderRef, tweenRef)
     {
-        super(
-            null,
-            PIXI_LOADER_RES["src/FX/Shaders/BoardBorder.frag"].data
-        );
+        super(null, pw_Data_Get(RES_SHADERS_BOARDBORDER_FRAG));
 
         //
         // iVars

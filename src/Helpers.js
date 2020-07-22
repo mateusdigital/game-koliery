@@ -24,17 +24,17 @@
 function Get_Screen_Size()
 {
     // @TODO(stdmatt): cache the values...
-    return Vector_Create(GAME_DESIGN_WIDTH, GAME_DESIGN_HEIGHT);
+    return pw_Vector_Create(GAME_DESIGN_WIDTH, GAME_DESIGN_HEIGHT);
 }
 
 //------------------------------------------------------------------------------
 function Go_To_Scene(...args)
 {
     const scene_class = args[0];
-    Array_RemoveFront(args);
+    pw_Array_RemoveFront(args);
 
     const scene = new scene_class(...args);
-    SCENE_MANAGER.SetScene(scene);
+    PW_SCENE_MANAGER.SetScene(scene);
 }
 
 
@@ -64,7 +64,7 @@ function Build_Digits_String(prefix, digits, value)
 {
     let value_str = value.toString().substr(0, digits);
 
-    return String_Cat(
+    return pw_String_Cat(
         prefix.toUpperCase(),
         "0".repeat(digits - value_str.length),
         value_str

@@ -40,10 +40,10 @@ class Piece
         this.blocks = [];
         this._InitializeBlocks();
 
-        this.rotateTimer = new Base_Timer(PIECE_ROTATE_COOLDOWN_DURATION);
+        this.rotateTimer = new pw_Timer(PIECE_ROTATE_COOLDOWN_DURATION);
         this.rotateTimer.Start();
 
-        this.coord = Vector_Create(0, 0);
+        this.coord = pw_Vector_Create(0, 0);
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -51,8 +51,8 @@ class Piece
     {
         this.rotateTimer.Update(dt);
 
-        this.coord.x = Math_Int(this.x                    / this.boardRef.blockSize.x);
-        this.coord.y = Math_Int(this.GetBottomPositionY() / this.boardRef.blockSize.y);
+        this.coord.x = pw_Math_Int(this.x                    / this.boardRef.blockSize.x);
+        this.coord.y = pw_Math_Int(this.GetBottomPositionY() / this.boardRef.blockSize.y);
     }
 
     //--------------------------------------------------------------------------

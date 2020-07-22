@@ -31,38 +31,33 @@ let gStarfield   = null;
 let gAudio       = null;
 
 //------------------------------------------------------------------------------
-function PreInit()
+function
+PreInit()
 {
-    Application_Create(GAME_DESIGN_WIDTH, GAME_DESIGN_HEIGHT);
+    pw_Application_Create(GAME_DESIGN_WIDTH, GAME_DESIGN_HEIGHT);
 }
 
 
 //------------------------------------------------------------------------------
-async function Preload()
+async function
+Preload()
 {
-    Texture_SetBasePath("res/textures/");
-    RES_LoadResources(
-        // Callback.
+    pw_RES_LoadResources(
         Setup,
-        // Fonts.
+        TEXTURES_TO_LOAD,
         FONTS_TO_LOAD,
-        // Shaders
-        "src/FX/Shaders/Debug.frag",
-        "src/FX/Shaders/TextUncover.frag",
-        "src/FX/Shaders/TextGradient.frag",
-        "src/FX/Shaders/BoardBorder.frag",
-        "src/FX/Shaders/BlockTint.frag",
-        "src/FX/Shaders/BlockSquash.frag",
+        SHADERS_TO_LOAD
     );
 }
 
 
 //------------------------------------------------------------------------------
-function Setup()
+function
+Setup()
 {
     //
     // Initialize RNG.
-    Random_Seed();
+    pw_Random_Seed();
 
     //
     // Initialize Scores.
@@ -70,15 +65,13 @@ function Setup()
 
     //
     // Install the Input Handlers.
-    Install_MouseHandlers   ();
-    Install_KeyboardHandlers();
-    g_App.stage.interactive = true;
-    g_App.stage.buttonMode  = true;
+    pw_Input_InstallBasicMouseHandler   ();
+    pw_Input_InstallBasicKeyboardHandler();
 
     //
     // Initialize Audio.
     gAudio = new AudioPlayer();
-    gAudio.PreloadSounds(MUSICS_TO_LOAD);
+    gAudio.PreloadSounds(SOUNDS_TO_LOAD);
 
     //
     // Initialize Game Objects
@@ -90,7 +83,7 @@ function Setup()
     gStarfield = new Starfield(new PIXI.Rectangle(
         0, 0, screen_size.x, screen_size.y
     ));
-    g_App.stage.addChild(gStarfield);
+    pw_Application_GetStage().addChild(gStarfield);
 
     //
     // Start the game.
@@ -99,21 +92,25 @@ function Setup()
     Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
     // Go_To_Scene(SceneHighScore, null, SCENE_HIGHSCORE_OPTIONS_EDITABLE);
     // Go_To_Scene(SceneCredits);
-    Application_Start(GameLoop);
+    pw_Application_Start(GameLoop);
 }
 
 
 //------------------------------------------------------------------------------
-function GameLoop(delta)
+function
+GameLoop(delta)
 {
     gStarfield.Update(delta);
+    pw_Input_KeyboardEndFrame();
 }
+
 
 //----------------------------------------------------------------------------//
 // Input Handlers                                                             //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-function MouseMove(e)
+function
+MouseMove(e)
 {
     gAudio.enabled = true;
 }

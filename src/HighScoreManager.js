@@ -31,14 +31,16 @@ const HIGHSCORE_MOCK_SCORE_MAX = 5000;
 
 const HIGHSCORE_SCORE_POSITION_OUT_OF_RANK = -1;
 
+
 //------------------------------------------------------------------------------
-function _Create_MockScores()
+function
+_Create_MockScores()
 {
     data = [];
     const names = ["std", "ale", "sol", "don", "pin"];
     for(let i = 1; i <= HIGHSCORE_MAX_ENTRIES; ++i) {
-        const name  = names[Random_Int(0, names.length)];
-        const score = Random_Int(HIGHSCORE_MOCK_SCORE_MIN, HIGHSCORE_MOCK_SCORE_MAX);
+        const name  = names[pw_Random_Int(0, names.length)];
+        const score = pw_Random_Int(HIGHSCORE_MOCK_SCORE_MIN, HIGHSCORE_MOCK_SCORE_MAX);
         data.push({
             name  : name,
             score : score
@@ -53,7 +55,8 @@ function _Create_MockScores()
 }
 
 //------------------------------------------------------------------------------
-async function _Fetch_Async(url)
+async function
+_Fetch_Async(url)
 {
     let data = null;
     try {
@@ -69,7 +72,8 @@ async function _Fetch_Async(url)
 }
 
 //------------------------------------------------------------------------------
-async function _Insert_Async(url)
+async function
+_Insert_Async(url)
 {
     try {
         const response = await fetch(url);
@@ -78,9 +82,9 @@ async function _Insert_Async(url)
     }
 }
 
-
 //------------------------------------------------------------------------------
-class HighscoreManager
+class
+HighscoreManager
 {
     //--------------------------------------------------------------------------
     constructor()
@@ -93,7 +97,7 @@ class HighscoreManager
     //--------------------------------------------------------------------------
     async FetchScores()
     {
-        const url  = String_Cat(HIGHSCORE_MANAGER_ENDPOINT, HIGHSCORE_MANAGER_ENDPOINT_FETCH);
+        const url  = pw_String_Cat(HIGHSCORE_MANAGER_ENDPOINT, HIGHSCORE_MANAGER_ENDPOINT_FETCH);
         const data = await _Fetch_Async(url);
 
         this.scores       = data;
@@ -107,7 +111,7 @@ class HighscoreManager
             return;
         }
 
-        const url = String_Cat(
+        const url = pw_String_Cat(
             HIGHSCORE_MANAGER_ENDPOINT,
             HIGHSCORE_MANAGER_ENDPOINT_INSERT,
             "?name=", name,

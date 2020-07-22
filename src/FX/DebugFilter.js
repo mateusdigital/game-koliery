@@ -29,10 +29,7 @@ class DebugFilter
 {
     constructor(obj)
     {
-        super(
-            null,
-            PIXI_LOADER_RES["src/FX/Shaders/Debug.frag"].data
-        );
+        super(null, pw_Data_Get(RES_SHADERS_DEBUG_FRAG));
 
         this.objRef = obj;
         this.uniforms.dimensions = [0, 0];

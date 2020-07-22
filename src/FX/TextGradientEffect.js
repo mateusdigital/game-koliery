@@ -28,7 +28,7 @@ function Apply_TextGradientEffect(textRef, color)
     const effect = new TextGradientEffect(textRef, color)
     textRef.filters.push(effect);
 
-    Utils_AddRuntimeProperty(textRef, "gradientEffect", effect);
+    pw_Utils_AddRuntimeProperty(textRef, "gradientEffect", effect);
 }
 
 //------------------------------------------------------------------------------
@@ -38,10 +38,7 @@ class TextGradientEffect
     //--------------------------------------------------------------------------
     constructor(textRef, color)
     {
-        super(
-            null,
-            PIXI_LOADER_RES["src/FX/Shaders/TextGradient.frag"].data
-        );
+        super(null, pw_Data_Get(RES_SHADERS_TEXTGRADIENT_FRAG));
 
         //
         // iVars

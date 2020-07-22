@@ -48,6 +48,7 @@ const BOARD_STATE_FINDING_FALL_FINISHED      = "BOARD_STATE_FINDING_FALL_FINISHE
 const BOARD_STATE_FALLING_PIECES             = "BOARD_STATE_FALLING_PIECES";
 const BOARD_STATE_FALLING_PIECES_FINISHED    = "BOARD_STATE_FALLING_PIECES_FINISHED";
 
+const SCENE_GAME_PAUSED_FONT_SIZE = 40;
 
 //------------------------------------------------------------------------------
 class Board
@@ -67,8 +68,8 @@ class Board
         this.progressionHandler = progressionHandler;
 
         // Field.
-        this.field     = Array_Create2D(BOARD_FIELD_ROWS, BOARD_FIELD_COLUMNS);
-        this.blockSize = Vector_Create(BOARD_BLOCK_SIZE, BOARD_BLOCK_SIZE);
+        this.field     = pw_Array_Create2D(BOARD_FIELD_ROWS, BOARD_FIELD_COLUMNS);
+        this.blockSize = pw_Vector_Create(BOARD_BLOCK_SIZE, BOARD_BLOCK_SIZE);
 
         // Infos.
         this.matchInfo            = new MatchInfo(this);
@@ -82,8 +83,8 @@ class Board
         this.movingFast          = false;
 
         // Tweens.
-        this.destroyTweenGroup = Tween_CreateGroup();
-        this.fallTweenGroup    = Tween_CreateGroup();
+        this.destroyTweenGroup = pw_Tween_CreateGroup();
+        this.fallTweenGroup    = pw_Tween_CreateGroup();
 
         //
         // Initialize.
@@ -192,31 +193,31 @@ class Board
     //--------------------------------------------------------------------------
     _UpdateState_Playing(dt)
     {
-        if(IsKeyDown(KEY_SPACE) && !this.movingFast) {
+        if(pw_Keyboard_IsDown(PW_KEY_SPACE) && !this.movingFast) {
             this.currTimeToMove = 0;
             this.movingFast     = true;
-            gAudio.PlayEffect(MUSIC_PIECE_ROTATE);
-        } else if(IsKeyUp(KEY_SPACE) && this.movingFast) {
+            gAudio.PlayEffect(RES_AUDIO_PIECE_MOVE_WAV);
+        } else if(pw_Keyboard_IsUp(PW_KEY_SPACE) && this.movingFast) {
             this.movingFast = false;
         }
 
         this.currPiece.Update(dt);
-        if(IsKeyPress(KEY_ARROW_DOWN) || IsKeyPress(KEY_ARROW_UP)) {
-            gAudio.PlayEffect(MUSIC_PIECE_ROTATE);
+        if(pw_Keyboard_IsClick(PW_KEY_ARROW_DOWN) || pw_Keyboard_IsClick(PW_KEY_ARROW_UP)) {
+            gAudio.PlayEffect(RES_AUDIO_PIECE_ROTATE_WAV);
             this.currPiece.Rotate();
         }
 
         let dir_x = 0;
-        if(IsKeyPress(KEY_ARROW_LEFT)) {
-            gAudio.PlayEffect(MUSIC_PIECE_MOVE);
+        if(pw_Keyboard_IsClick(PW_KEY_ARROW_LEFT)) {
+            gAudio.PlayEffect(RES_AUDIO_PIECE_MOVE_WAV);
             dir_x = -1;
-        } else if(IsKeyPress(KEY_ARROW_RIGHT)) {
-            gAudio.PlayEffect(MUSIC_PIECE_MOVE);
+        } else if(pw_Keyboard_IsClick(PW_KEY_ARROW_RIGHT)) {
+            gAudio.PlayEffect(RES_AUDIO_PIECE_MOVE_WAV);
             dir_x = +1;
         }
 
         const curr_coord = this.currPiece.coord;
-        let   new_coord  = Vector_Copy(curr_coord);
+        let   new_coord  = pw_Vector_Copy(curr_coord);
 
         //
         // Try to move horizontally.
@@ -242,7 +243,7 @@ class Board
                 : this.progressionHandler.maxTimeToMove;
 
             new_position_y += (this.blockSize.y / BOARD_BLOCK_MOVE_SUBSTEPS);
-            new_coord.y     = Math_Int(new_position_y / this.blockSize.y);
+            new_coord.y     = pw_Math_Int(new_position_y / this.blockSize.y);
 
             if(this.movingFast) {
                 this.progressionHandler.AddScoreForMovingFast();
@@ -320,7 +321,7 @@ class Board
         this.currPiece           = null;
         this.currPiecePlaceCoord = null;
 
-        gAudio.PlayEffect(MUSIC_PIECE_PLACE);
+        gAudio.PlayEffect(RES_AUDIO_PIECE_PLACE_WAV);
         this._ChangeState(BOARD_STATE_PLACING_PIECE_FINISHED);
     } // _PlacePiece
 
@@ -344,8 +345,8 @@ class Board
             return;
         }
 
-        gAudio.PlayEffect(MUSIC_PIECE_DESTROY);
-        this.destroyTweenGroup = Tween_CreateGroup();
+        gAudio.PlayEffect(RES_AUDIO_PIECE_DESTROY_WAV);
+        this.destroyTweenGroup = pw_Tween_CreateGroup();
         for(let i = 0; i < this.matchInfo.allMatchedBlocks.length; ++i) {
             let block = this.matchInfo.allMatchedBlocks[i];
             this._CreateDestroyBlockAnimation(block);
@@ -422,7 +423,7 @@ class Board
         block.x = (this.blockSize.x * indexX);
         block.y = (this.blockSize.y * indexY);
 
-        block.coordInBoard = Vector_Create(indexX, indexY);
+        block.coordInBoard = pw_Vector_Create(indexX, indexY);
         this.field[indexY][indexX] = block;
 
         // this.ascii();
@@ -480,7 +481,7 @@ class Board
                 s += " ";
             }
 
-            s += String_Cat(" (", i, ") ");
+            s += pw_String_Cat(" (", i, ") ");
             for(let j = 0; j < BOARD_FIELD_COLUMNS; ++j) {
                 let p = this.GetBlockAt(j, i);
                 if(p == null) {
@@ -493,7 +494,7 @@ class Board
                 }
                 s += " ";
             }
-            s += String_Cat(" (", i, ")\n")
+            s += pw_String_Cat(" (", i, ")\n")
         }
         console.log(s);
     }

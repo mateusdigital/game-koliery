@@ -27,6 +27,7 @@ const GAME_HUD_TEXT_GAME_NAME    = "--------";
 const GAME_HUD_TEXT_DIGITS_SCORE = HIGHSCORE_MAX_DIGITS;
 const GAME_HUD_TEXT_DIGITS_LEVEL = 2;
 const GAME_HUD_TEXT_GAP          = 15;
+const GAME_HUD_FONT_SIZE         = 40;
 
 //------------------------------------------------------------------------------
 class GameHud
@@ -42,16 +43,16 @@ class GameHud
         // Properties.
         let s = "";
         s = Build_Digits_String(GAME_HUD_TEXT_PREFIX_SCORE, GAME_HUD_TEXT_DIGITS_SCORE, 0);
-        this.scoreText = Create_Normal_Text(s, GAME_HUD_FONT_SIZE);
+        this.scoreText = new pw_Text(s, FONT_COMMODORE, GAME_HUD_FONT_SIZE);
 
         s = Build_Digits_String(GAME_HUD_TEXT_PREFIX_HI, GAME_HUD_TEXT_DIGITS_SCORE, 0);
-        this.hiScoreText = Create_Normal_Text(s, GAME_HUD_FONT_SIZE);
+        this.hiScoreText = new pw_Text(s, FONT_COMMODORE, GAME_HUD_FONT_SIZE);
 
         s = GAME_HUD_TEXT_GAME_NAME;
-        this.marqueeText = Create_Normal_Text(s, GAME_HUD_FONT_SIZE);
+        this.marqueeText = new pw_Text(s, FONT_COMMODORE, GAME_HUD_FONT_SIZE);
 
         s = Build_Digits_String(GAME_HUD_TEXT_PREFIX_LEVEL, GAME_HUD_TEXT_DIGITS_LEVEL, 1)
-        this.levelText = Create_Normal_Text(s, GAME_HUD_FONT_SIZE);
+        this.levelText = new pw_Text(s, FONT_COMMODORE, GAME_HUD_FONT_SIZE);
 
         this.score   = 0;
         this.hiscore = 0;
@@ -89,8 +90,8 @@ class GameHud
     //--------------------------------------------------------------------------
     Update(dt)
     {
-        if(!Array_IsEmpty(this.scoreChangeTweens)) {
-            const tween = Array_GetFront(this.scoreChangeTweens);
+        if(!pw_Array_IsEmpty(this.scoreChangeTweens)) {
+            const tween = pw_Array_GetFront(this.scoreChangeTweens);
             if(!tween.isPlaying()) {
                 tween.start();
             }
@@ -145,11 +146,11 @@ class GameHud
         const old_hi_score = scoreChange.oldHiScore;
 
         const time  = (new_score - old_score) * 5; // @todo(stdmatt): Remove magic number...
-        const tween = Tween_CreateBasic(time, null)
+        const tween = pw_Tween_CreateBasic(time, null)
             .onUpdate(()=>{
                 const t = tween.getValue().value;
-                const curr_score   = Math_Int(Math_Map(t, 0, 1, old_score,    new_score   ));
-                const curr_hiscore = Math_Int(Math_Map(t, 0, 1, old_hi_score, new_hi_score));
+                const curr_score   = pw_Math_Int(pw_Math_Map(t, 0, 1, old_score,    new_score   ));
+                const curr_hiscore = pw_Math_Int(pw_Math_Map(t, 0, 1, old_hi_score, new_hi_score));
 
                 this.scoreText.text = Build_Digits_String(
                     GAME_HUD_TEXT_PREFIX_SCORE,
@@ -163,7 +164,7 @@ class GameHud
                 );
             })
             .onComplete(()=>{
-                Array_RemoveFront(this.scoreChangeTweens);
+                pw_Array_RemoveFront(this.scoreChangeTweens);
             });
 
         this.scoreChangeTweens.push(tween);

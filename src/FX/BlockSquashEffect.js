@@ -34,9 +34,7 @@ class BlockSquashEffect
     //--------------------------------------------------------------------------
     constructor(objRef, tweenRef)
     {
-        const frag_src = PIXI_LOADER_RES["src/FX/Shaders/BlockSquash.frag"].data;
-
-        super(null, frag_src);
+        super(null, pw_Data_Get(RES_SHADERS_BLOCKSQUASH_FRAG));
 
         //
         // iVars

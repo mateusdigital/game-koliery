@@ -23,9 +23,12 @@ const SPLASH_SCENE_TEXT_EFFECT_DURATION_MS         = 1300;
 const SPLASH_SCENE_TEXT_EFFECT_DELAY_DURATION_MS   = 500;
 const SPLASH_SCENE_DELAY_TO_GO_TO_ANOTHER_SCENE_MS = 500;
 
+
+const SPLASH_SCENE_FONT_SIZE = 40;
+
 //------------------------------------------------------------------------------
 class SceneSplash
-    extends Base_Scene
+    extends pw_Base_Scene
 {
     //--------------------------------------------------------------------------
     constructor()
@@ -35,12 +38,12 @@ class SceneSplash
         //
         // iVars.
         // Properties.
-        this.sceneTweenGroup = Tween_CreateGroup();
+        this.sceneTweenGroup = pw_Tween_CreateGroup();
         this.effectTween     = this._CreateEffectTween();
 
         // Texts.
-        this.stdmattText  = Create_Normal_Text("stdmatt",  SPLASH_SCENE_FONT_SIZE);
-        this.presentsText = Create_Normal_Text("presents", SPLASH_SCENE_FONT_SIZE);
+        this.stdmattText  = new pw_Text("stdmatt",  FONT_COMMODORE, SPLASH_SCENE_FONT_SIZE);
+        this.presentsText = new pw_Text("presents", FONT_COMMODORE, SPLASH_SCENE_FONT_SIZE);
 
         //
         // Initialize.
@@ -48,7 +51,7 @@ class SceneSplash
         const color       = chroma("black");
 
         // stdmatt Text.
-        this.stdmattText.pivot.set(0.5);
+        pw_Anchor_Center(this.stdmattText);
         this.stdmattText.x = (screen_size.x * 0.5);
         this.stdmattText.y = (screen_size.y * 0.5) - this.stdmattText.height;
 
@@ -56,7 +59,7 @@ class SceneSplash
         Apply_TextGradientEffect(this.stdmattText, color           );
 
         // Presents Text.
-        this.presentsText.pivot.set(0.5);
+        pw_Anchor_Center(this.presentsText);
         this.presentsText.x = (screen_size.x * 0.5);
         this.presentsText.y = (screen_size.y * 0.5) + this.presentsText.height;
 
@@ -70,7 +73,7 @@ class SceneSplash
     //--------------------------------------------------------------------------
     Update(dt)
     {
-        if(IsKeyPress(KEY_SPACE) || IsKeyPress(KEY_ENTER)) {
+        if(pw_Keyboard_IsClick(PW_KEY_SPACE) || pw_Keyboard_IsClick(PW_KEY_ENTER)) {
             Go_To_Scene(SceneMenu);
         }
 
@@ -95,7 +98,7 @@ class SceneSplash
     //--------------------------------------------------------------------------
     _CreateEffectTween()
     {
-        const tween = Tween_CreateBasic(
+        const tween = pw_Tween_CreateBasic(
             SPLASH_SCENE_TEXT_EFFECT_DURATION_MS,
             this.sceneTweenGroup
         );

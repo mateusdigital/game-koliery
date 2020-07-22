@@ -34,18 +34,21 @@ const SCENE_GAME_STATE_PAUSED     = 2;
 const SCENE_GAME_STATE_EXITING    = 3;
 // UI
 const SCENE_GAME_SCREEN_GAP = 10;
+
+const SCENE_GAME_EXIT_PROMPT_TITLE_FONT_SIZE = 40;
+const SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE   = 40;
 // Sounds
 // @todo(stdmatt): Different sounds for each difficulty
-const SCENE_GAME_MUSIC_BACKGROUND_EASY   = MUSIC_BLOCKS_OF_FUN;
-const SCENE_GAME_MUSIC_BACKGROUND_MEDIUM = MUSIC_BLOCKS_OF_FUN;
-const SCENE_GAME_MUSIC_BACKGROUND_HARD   = MUSIC_BLOCKS_OF_FUN;
+const SCENE_GAME_MUSIC_BACKGROUND_EASY   = "" // MUSIC_BLOCKS_OF_FUN;
+const SCENE_GAME_MUSIC_BACKGROUND_MEDIUM = "" // MUSIC_BLOCKS_OF_FUN;
+const SCENE_GAME_MUSIC_BACKGROUND_HARD   = "" // MUSIC_BLOCKS_OF_FUN;
 
-const SCENE_GAME_EFFECT_PROMPT  = MUSIC_MENU_INTERACTION;
-const SCENE_GAME_EFFECT_CONFIRM = MUSIC_MENU_INTERACTION2;
+const SCENE_GAME_EFFECT_PROMPT  = "" // MUSIC_MENU_INTERACTION;
+const SCENE_GAME_EFFECT_CONFIRM = "" // MUSIC_MENU_INTERACTION2;
 
 //------------------------------------------------------------------------------
 class SceneGame
-    extends Base_Scene
+    extends pw_Base_Scene
 {
     //--------------------------------------------------------------------------
     constructor(difficulty)
@@ -68,7 +71,7 @@ class SceneGame
         // State Texts.
         this.pauseText       = null;
         this.exitText        = null;
-        this.stateTweenGroup = Tween_CreateGroup();
+        this.stateTweenGroup = pw_Tween_CreateGroup();
 
         //
         // Initialize.
@@ -119,10 +122,10 @@ class SceneGame
             }
 
             // Change state.
-            if(IsKeyPress(KEY_P)) {
+            if(pw_Keyboard_IsClick(PW_KEY_P)) {
                 gAudio.PlayEffect(SCENE_GAME_EFFECT_PROMPT);
                 this._ChangeState(SCENE_GAME_STATE_PAUSED);
-            } else if(IsKeyPress(KEY_ESC)) {
+            } else if(pw_Keyboard_IsClick(PW_KEY_ESC)) {
                 gAudio.PlayEffect(SCENE_GAME_EFFECT_PROMPT);
                 this._ChangeState(SCENE_GAME_STATE_EXITING);
             }
@@ -134,7 +137,7 @@ class SceneGame
             this.stateTweenGroup.update();
 
             // Change state.
-            if(IsKeyPress(KEY_P)) {
+            if(pw_Keyboard_IsClick(PW_KEY_P)) {
                 this.pauseText.visible = false;
                 gAudio.PlayEffect(SCENE_GAME_EFFECT_CONFIRM);
                 this._ChangeState(SCENE_GAME_STATE_PLAYING);
@@ -147,10 +150,10 @@ class SceneGame
             this.exitText   .visible = true;
 
             // Change state.
-            if(IsKeyPress(KEY_ESC)) {
+            if(pw_Keyboard_IsClick(PW_KEY_ESC)) {
                 gAudio.PlayEffect(SCENE_GAME_EFFECT_CONFIRM);
                 Go_To_Scene(SceneMenu);
-            } else if(IsKeyPress(KEY_ENTER)) {
+            } else if(pw_Keyboard_IsClick(PW_KEY_ENTER)) {
                 this.exitText.visible = false;
                 gAudio.PlayEffect(SCENE_GAME_EFFECT_CONFIRM);
                 this._ChangeState(SCENE_GAME_STATE_PLAYING);
@@ -226,8 +229,8 @@ class SceneGame
         this.boardBorder.y = (game_hud_bottom_y);
 
         // Create the Board Border Tween.
-        this.boardBorderTweenGroup = Tween_CreateGroup();
-        this.boardBorderTween      = Tween_CreateBasic(
+        this.boardBorderTweenGroup = pw_Tween_CreateGroup();
+        this.boardBorderTween      = pw_Tween_CreateBasic(
                 SCENE_GAME_BOARD_BORDER_TWEEN_SHOW_DURATION_MS,
                 this.boardBorderTweenGroup
             )
@@ -250,7 +253,7 @@ class SceneGame
         const color       = chroma("black");
 
         // Pause Text.
-        this.pauseText = Create_Normal_Text("PAUSED", SCENE_GAME_PAUSED_FONT_SIZE);
+        this.pauseText = new pw_Text("PAUSED", FONT_COMMODORE, SCENE_GAME_PAUSED_FONT_SIZE);
         this.pauseText.x = screen_size.x * 0.5;
         this.pauseText.y = screen_size.y * 0.4;
         this.pauseText.visible = false;
@@ -261,17 +264,16 @@ class SceneGame
         // Exit Text.
         {
             this.exitText = new PIXI.Container();
-
-            let l0 = Create_Normal_Text("ARE YOU SURE?", SCENE_GAME_EXIT_PROMPT_TITLE_FONT_SIZE);
+            let l0 = new pw_Text("ARE YOU SURE?", FONT_COMMODORE, SCENE_GAME_EXIT_PROMPT_TITLE_FONT_SIZE);
             Apply_TextGradientEffect(l0, color);
             this.exitText.addChild(l0);
 
-            let l1 = Create_Normal_Text("PRESS ESC AGAIN TO EXIT", SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE);
+            let l1 = new pw_Text("PRESS ESC AGAIN TO EXIT", FONT_COMMODORE, SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE);
             l1.y = (l0.y + l0.height + l1.height);
             Apply_TextGradientEffect(l1, color);
             this.exitText.addChild(l1);
 
-            let l2 = Create_Normal_Text("OR ENTER TO CONTINUE", SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE);
+            let l2 = new pw_Text("OR ENTER TO CONTINUE", FONT_COMMODORE, SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE);
             l2.y = (l1.y + l1.height);
             Apply_TextGradientEffect(l2, color);
             this.exitText.addChild(l2);
@@ -284,7 +286,7 @@ class SceneGame
         }
 
         // Blink tween.
-        this.blinkTween = Tween_CreateBasic(
+        this.blinkTween = pw_Tween_CreateBasic(
             SCENE_GAME_BOARD_BLINK_TWEEN_DURATION_MS,
             this.stateTweenGroup
         )

@@ -69,7 +69,7 @@ class FallInfo
                 let block = this._FindFirstNonNullBlock(x, y-1);
                 if(block != null) {
                     this.allFallingBlocks.push(block);
-                    this.allTargetCoords .push(Vector_Create(x, y));
+                    this.allTargetCoords .push(pw_Vector_Create(x, y));
                 }
             }
         }
@@ -82,7 +82,7 @@ class FallInfo
         for(let i = indexY; i >= 0; i--) {
             let block = this.boardRef.GetBlockAt(indexX, i);
             if(block != null) {
-                let contains = Array_Contains(this.allFallingBlocks, (p)=>{
+                let contains = pw_Array_Contains(this.allFallingBlocks, (p)=>{
                    return p.blockId == block.blockId;
                 });
                 if(contains) {
