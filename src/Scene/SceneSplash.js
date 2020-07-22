@@ -23,8 +23,8 @@ const SPLASH_SCENE_TEXT_EFFECT_DURATION_MS         = 1300;
 const SPLASH_SCENE_TEXT_EFFECT_DELAY_DURATION_MS   = 500;
 const SPLASH_SCENE_DELAY_TO_GO_TO_ANOTHER_SCENE_MS = 500;
 
-
 const SPLASH_SCENE_FONT_SIZE = 40;
+
 
 //------------------------------------------------------------------------------
 class SceneSplash
@@ -42,8 +42,8 @@ class SceneSplash
         this.effectTween     = this._CreateEffectTween();
 
         // Texts.
-        this.stdmattText  = new pw_Text("stdmatt",  FONT_COMMODORE, SPLASH_SCENE_FONT_SIZE);
-        this.presentsText = new pw_Text("presents", FONT_COMMODORE, SPLASH_SCENE_FONT_SIZE);
+        this.stdmattText  = new pw_Text("STDMATT",  FONT_COMMODORE, SPLASH_SCENE_FONT_SIZE);
+        this.presentsText = new pw_Text("PRESENTS", FONT_COMMODORE, SPLASH_SCENE_FONT_SIZE);
 
         //
         // Initialize.

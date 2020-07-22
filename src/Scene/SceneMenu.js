@@ -20,15 +20,15 @@
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
 const SCENE_MENU_TITLE_STR           = "KOLIERY";
-const SCENE_MENU_TITLE_SIZE          = 90;
+const SCENE_MENU_TITLE_SIZE          = 100;
 const SCENE_MENU_TITLE_SIN_AMPLITUDE = 20;
 const SCENE_MENU_TITLE_SIN_FREQUENCY = 1;
 
 const SCENE_MENU_LEVEL_TEXT_TWEEN_DURATION_MS = 300;
 const SCENE_MENU_LEVEL_TEXT_TWEEN_DELAY_MS    = 300;
-const SCENE_MENU_LEVEL_FONT_SIZE              = 40;
-const SCENE_MENU_OPTIONS_FONT_SIZE            = 30;
-const SCENE_MENU_MARQUEE_FONT_SIZE            = 20;
+const SCENE_MENU_LEVEL_FONT_SIZE              = 50;
+const SCENE_MENU_OPTIONS_FONT_SIZE            = 35;
+const SCENE_MENU_MARQUEE_FONT_SIZE            = 25;
 
 const SCENE_MENU_MARQUEE_TWEEN_DURATION_MS     = 500;
 const SCENE_MENU_MARQUEE_TWEEN_DELAY_MS        = 500;
@@ -37,6 +37,7 @@ const SCENE_MENU_MARQUEE_TWEEN_REPEAT_DELAY_MS = 2000;
 // Sound.
 const SCENE_MENU_MUSIC_BACKGROUND = ""; // MUSIC_KOMIKU_06_SCHOOL;
 const SCENE_MENU_EFFECT_MENU      = ""; // MUSIC_MENU_INTERACTION;
+
 
 //------------------------------------------------------------------------------
 class SceneMenu

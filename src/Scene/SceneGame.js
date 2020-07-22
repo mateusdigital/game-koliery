@@ -35,8 +35,10 @@ const SCENE_GAME_STATE_EXITING    = 3;
 // UI
 const SCENE_GAME_SCREEN_GAP = 10;
 
-const SCENE_GAME_EXIT_PROMPT_TITLE_FONT_SIZE = 40;
+const SCENE_GAME_EXIT_PROMPT_TITLE_FONT_SIZE = 24;
 const SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE   = 40;
+const SCENE_GAME_PAUSED_FONT_SIZE            = 42;
+
 // Sounds
 // @todo(stdmatt): Different sounds for each difficulty
 const SCENE_GAME_MUSIC_BACKGROUND_EASY   = "" // MUSIC_BLOCKS_OF_FUN;

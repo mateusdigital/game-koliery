@@ -21,8 +21,8 @@
 const SCENE_CREDITS_TEXT_TWEEN_DURATION_MS = 300;
 const SCENE_CREDITS_TEXT_TWEEN_DELAY_MS    = 300;
 
-const SCENE_CREDITS_SECTION_TITLE_FONT_SIZE = 40;
-const SCENE_CREDITS_SECTION_TEXT_FONT_SIZE  = 40;
+const SCENE_CREDITS_SECTION_TITLE_FONT_SIZE = 22;
+const SCENE_CREDITS_SECTION_TEXT_FONT_SIZE  = 32;
 
 // Sound
 const SCENE_CREDITS_MUSIC_BACKGROUND = ""; // MUSIC_KOMIKU_06_SCHOOL;
@@ -67,29 +67,34 @@ class SceneCredits
     {
         this.creditsStructure = [
             {
-                title: "Programming",
+                title: ["Programming"],
                 texts: ["stdmatt"],
                 gap  : 0,
             },
             {
-                title: "Balancing",
+                title: ["Balancing"],
                 texts: ["Alex"],
-                gap  : 20,
+                gap  : 15,
             },
             {
-                title: "Inspired by",
+                title: ["Inspired by"],
                 texts: ["iss colours", "sega columns"],
-                gap  : 20,
+                gap  : 15,
             },
             {
-                title: "Made using",
+                title: ["Made using"],
                 texts: ["pixi.js", "chroma.js", "Bfxr"],
-                gap  : 20,
+                gap  : 15,
             },
             {
-                title: "Original Songs by",
+                title: ["Original Songs by"],
                 texts: ["Rolemusic", "KOMIKU", "OurMusicBox"],
-                gap  : 20,
+                gap  : 15,
+            },
+            {
+               title: ["STDMATT - MMXX", "gplv3 - hack, share it"],
+                   texts: ["\n#blacklivesmatter"],
+               gap: 25
             }
         ];
     } // _CreateCreditsStructure
@@ -131,17 +136,18 @@ class SceneCredits
             const section    = this.creditsStructure[i];
             const texts_strs = section.texts;
             const gap        = section.gap;
-
             curr_y += gap;
-            create_text_func(
-                section.title,
-                SCENE_CREDITS_SECTION_TITLE_FONT_SIZE,
-                curr_y,
-                chroma("gray"),
-                ++index
-            );
-            curr_y += SCENE_CREDITS_SECTION_TITLE_FONT_SIZE;
-            curr_y += 5;
+            for(let j = 0; j < section.title.length; ++j) {
+                create_text_func(
+                    section.title[j],
+                    SCENE_CREDITS_SECTION_TITLE_FONT_SIZE,
+                    curr_y,
+                    chroma("gray"),
+                    ++index
+                );
+                curr_y += SCENE_CREDITS_SECTION_TITLE_FONT_SIZE;
+                curr_y += 5;
+            }
 
             for(let j = 0; j < texts_strs.length; ++j) {
                 const text_str  = texts_strs[j].toUpperCase();

@@ -48,7 +48,6 @@ const BOARD_STATE_FINDING_FALL_FINISHED      = "BOARD_STATE_FINDING_FALL_FINISHE
 const BOARD_STATE_FALLING_PIECES             = "BOARD_STATE_FALLING_PIECES";
 const BOARD_STATE_FALLING_PIECES_FINISHED    = "BOARD_STATE_FALLING_PIECES_FINISHED";
 
-const SCENE_GAME_PAUSED_FONT_SIZE = 40;
 
 //------------------------------------------------------------------------------
 class Board
