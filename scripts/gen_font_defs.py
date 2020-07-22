@@ -105,6 +105,7 @@ def gen_font_defs():
 
         output_text += "const FONT_{0} = {1};\n".format(var_name, quoted);
 
+    print("Writting on: ", OUTPUT_FILENAME);
     pw_file_write_all_text(OUTPUT_FILENAME, output_text);
 
 
