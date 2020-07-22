@@ -2,3 +2,6 @@
 [submodule "libs/pw_pixi"]
 	path = libs/pw_pixi
 	url = https://gitlab.com/stdmatt-libs/pw_pixi
+[submodule "libs/pw_js_core"]
+	path = libs/pw_js_core
+	url = https://gitlab.com/stdmatt-libs/pw_js_core
