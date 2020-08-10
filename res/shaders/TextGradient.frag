@@ -24,10 +24,15 @@ void main()
     vec2 uv = vTextureCoord * inputPixel.xy / dimensions.xy;
 
     vec4 c0 = texture2D(uSampler, vTextureCoord);
-    float a = 0.0;
-    float c = 0.9;
-    vec4 c1 = targetColor;
-    vec4 c2 = vec4(c, c, c, 1.0);
+    if(c0.w== 0.0) {
+        gl_FragColor = c0;
+        return;
+    }
+
+    float alpha      = 0.0;
+    float gray       = 0.9;
+    vec4  gray_color = vec4(gray, gray, gray, 1.0);
+
 
     float y = uv.y;
     if(uv.y < 0.5) {
@@ -37,12 +42,7 @@ void main()
     }
     float m = steep_step(y, 7.0);
 
-    vec4 grad_color = mix(c1, c2, m);
-    vec4 final_color = c0;
 
-    if(final_color.a != 0.0) {
-        final_color = mix(grad_color, final_color, 0.0);
-    }
-
-    gl_FragColor = final_color;
+    vec4 grad_color =
+    gl_FragColor    = mix(targetColor, gray_color, m);
 }

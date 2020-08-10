@@ -91,7 +91,7 @@ class Palette
     //--------------------------------------------------------------------------
     GetMenuTextNormalColor()
     {
-        return chroma("black");
+        return chroma("#3F3F3F");
     } // GetMenuTextNormalColor
 
     //--------------------------------------------------------------------------
