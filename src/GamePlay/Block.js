@@ -20,6 +20,7 @@
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
 const BLOCK_COLOR_INDEX_COUNT = 3;
+const BLOCK_GRAY_INDEX        = 7;
 const BLOCK_BORDER_SIZE       = 1;
 
 // Tweens
@@ -35,8 +36,9 @@ const BLOCK_BLINK_TWEEN_BLINK_DURATION_MS = (BLOCK_BLINK_TWEEN_DURATION_MS / BLO
 
 
 //------------------------------------------------------------------------------
-let _S_BLOCK_OBJECT_ID = 0;
-let _BLOCKS_TEXTURE    = null;
+let _S_BLOCK_OBJECT_ID  = 0;
+let _BLOCKS_TEXTURE     = null;
+let _GRAY_BLOCK_TEXTURE = null;
 
 //------------------------------------------------------------------------------
 function Create_Random_Block(boardRef)
@@ -56,15 +58,25 @@ class Block
     constructor(boardRef, colorIndex)
     {
         if(!_BLOCKS_TEXTURE) {
-            _BLOCKS_TEXTURE = pw_Texture_Get(RES_TEXTURES_BLOCKS_PNG);
+            _BLOCKS_TEXTURE     = pw_Texture_Get(RES_TEXTURES_BLOCKS_PNG);
+            _GRAY_BLOCK_TEXTURE = pw_Texture_GetFromCoords(
+                _BLOCKS_TEXTURE,
+                boardRef.blockSize.x * BLOCK_GRAY_INDEX,
+                0,
+                boardRef.blockSize.x,
+                boardRef.blockSize.y
+            );
         }
-        super(pw_Texture_GetFromCoords(
+
+        const texture = pw_Texture_GetFromCoords(
             _BLOCKS_TEXTURE,
             colorIndex * boardRef.blockSize.x,
             0,
             boardRef.blockSize.x,
             boardRef.blockSize.y
-        ));
+        );
+
+        super(texture);
 
         //
         // iVars
@@ -79,13 +91,14 @@ class Block
         this.width  = this.boardRef.blockSize.x;
         this.height = this.boardRef.blockSize.y;
 
-        this.mask = this.boardRef.board_mask_sprite;
+        this.default_texture = texture;
+        this.mask            = this.boardRef.board_mask_sprite;
 
         // Debug.
-        let text = new PIXI.Text(this.blockId,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'left'});
-        text.x = this.width  / 2 - text.width  / 2;
-        text.y = this.height / 2 - text.height / 2;
-        this.addChild(text);
+        // let text = new PIXI.Text(this.blockId,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'left'});
+        // text.x = this.width  / 2 - text.width  / 2;
+        // text.y = this.height / 2 - text.height / 2;
+        // this.addChild(text);
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -155,12 +168,11 @@ class Block
         .repeat(repeat_ms)
         .yoyo(true)
         .onRepeat(()=>{
-            const color = (!tween._reversed)
-                ? gPalette.GetBlockColor     (this.colorIndex)
-                : gPalette.GetBlockBlinkColor(this.colorIndex);
+            const texture = (!tween._reversed)
+                ? this.default_texture
+                : _GRAY_BLOCK_TEXTURE;
 
-            // @XXX
-            // this.blockTintEffect.SetColor(color);
+            this.texture = texture;
         })
         .onComplete(()=>{
             const squash = this._CreateSquashAnimation();
