@@ -227,7 +227,7 @@ class SceneGame
 
         this.board = new Board(this.progressionHandler);
         this.boardBorder = new BoardBorder(this.board);
-        pw_Add_Child(this, this.boardBorder);
+        pw_Add_To_Parent(this, this.boardBorder);
 
         const game_hud_bottom_y = (this.hud.y + this.hud.height + SCENE_GAME_SCREEN_GAP);
         this.boardBorder.x = (screen_size.x / 2) - (this.boardBorder.width / 2);
