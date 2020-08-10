@@ -34,22 +34,23 @@ class BoardBorder
 
         // Make the board be positioned inside the border...
         this.boardRef.x = this.boardRef.blockSize.x;
-        this.boardRef.y = this.boardRef.blockSize.y / 2;
+        this.boardRef.y = this.boardRef.blockSize.y * 0.5;
 
-        this.addChild(this.graphics);
-        this.addChild(this.boardRef);
+        pw_Add_To_Parent(this, this.graphics, this.boardRef);
     } // ctor
 
     //--------------------------------------------------------------------------
     _DrawGraphics()
     {
-        const blocks_y_count = (BOARD_FIELD_ROWS    * 2) + 3;
-        const blocks_x_count = (BOARD_FIELD_COLUMNS * 2) + 4;
-        const block_size     = (this.boardRef.blockSize.x / 2);
-        const colors         = gPalette.GetBlockColors();
+        const blocks_y_count      = (BOARD_FIELD_ROWS * 2) + 3;
+        const blocks_x_count      = (BOARD_FIELD_COLS * 2) + 4;
+        const blocks_half_x_count = blocks_x_count * 0.5;
+        const block_size          = (this.boardRef.blockSize.x * 0.5);
+        const colors              = gPalette.GetBlockColors();
 
-        for(let i = 0; i < blocks_y_count; ++i) {
-            for(let j = 0; j < blocks_x_count / 2; ++j) {
+        for(let i = 1; i < blocks_y_count; ++i) {
+            for(let j = 0; j < blocks_half_x_count; ++j) {
+                // Skip the inside the board.
                 if(j > 1 && i < blocks_y_count -2) {
                     continue;
                 }
