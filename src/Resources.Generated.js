@@ -13,14 +13,12 @@ const TEXTURES_TO_LOAD = [ "res/fonts/commodore.png",
 
 //--------------------------------------------------------------------------------
 const RES_SHADERS_BLOCKSQUASH_FRAG = "res/shaders/BlockSquash.frag"
-const RES_SHADERS_BLOCKTINT_FRAG = "res/shaders/BlockTint.frag"
 const RES_SHADERS_BOARDBORDER_FRAG = "res/shaders/BoardBorder.frag"
 const RES_SHADERS_DEBUG_FRAG = "res/shaders/Debug.frag"
 const RES_SHADERS_TEXTGRADIENT_FRAG = "res/shaders/TextGradient.frag"
 const RES_SHADERS_TEXTUNCOVER_FRAG = "res/shaders/TextUncover.frag"
 
 const SHADERS_TO_LOAD = [ "res/shaders/BlockSquash.frag",
-"res/shaders/BlockTint.frag",
 "res/shaders/BoardBorder.frag",
 "res/shaders/Debug.frag",
 "res/shaders/TextGradient.frag",
