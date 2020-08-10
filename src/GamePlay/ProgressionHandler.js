@@ -33,6 +33,7 @@ class ProgressionHandler
 
         //
         this.pieceSpeed         = 200;
+        this.pieceFastSpeed     = 500;
         this.scoreForMovingFast = 1;
 
         // Callbacks.

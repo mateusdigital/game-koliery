@@ -222,11 +222,15 @@ class Board
         if(!this.movingFast && pw_Keyboard_IsDown(PW_KEY_SPACE)) {
             this.movingFast     = true;
             gAudio.PlayEffect(RES_AUDIO_PIECE_MOVE_WAV);
+            console.log("FAST");
         } else if(pw_Keyboard_IsUp(PW_KEY_SPACE) && this.movingFast) {
             this.movingFast = false;
+
+            console.log("SLOW");
         }
 
         if(pw_Keyboard_IsClick(PW_KEY_ARROW_DOWN) || pw_Keyboard_IsClick(PW_KEY_ARROW_UP)) {
+            console.log("cick")
             gAudio.PlayEffect(RES_AUDIO_PIECE_ROTATE_WAV);
             this.currPiece.Rotate();
         }
@@ -259,7 +263,11 @@ class Board
         //
         // Try to move vertically.
         {
-            this.currPiece.y += (this.progressionHandler.pieceSpeed * dt)
+            const speed = (this.movingFast)
+                ? this.progressionHandler.pieceFastSpeed
+                : this.progressionHandler.pieceSpeed;
+
+            this.currPiece.y += (speed * dt)
             this.currPiece.UpdateCoords();
 
             if(this.currPiece.coord.y >= BOARD_FIELD_ROWS ||
@@ -439,8 +447,6 @@ class Board
 
         block.coordInBoard = pw_Vector_Create(indexX, indexY);
         this.field[indexY][indexX] = block;
-
-        console.log("--- ", block.y);
         // this.ascii();
     } // _SetBlockAt
 
