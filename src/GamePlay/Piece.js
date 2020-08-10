@@ -82,6 +82,12 @@ class Piece
     } // UpdateCoords
 
     //--------------------------------------------------------------------------
+    UpdatePosition()
+    {
+        this.y = (this.coord.y - BLOCK_COLOR_INDEX_COUNT) * this.boardRef.blockSize.y;
+    } // UpdatePosition
+
+    //--------------------------------------------------------------------------
     _InitializeBlocks()
     {
         for(let i = 0; i < PIECE_BLOCKS_COUNT; ++i) {

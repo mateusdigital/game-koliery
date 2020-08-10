@@ -273,6 +273,8 @@ class Board
             if(this.currPiece.coord.y >= BOARD_FIELD_ROWS ||
                !this.IsBoardEmptyAt(this.currPiece.coord.x, this.currPiece.coord.y))
             {
+
+                this.currPiece.UpdatePosition();
                 this.currPiecePlaceCoord = pw_Vector_Copy(this.currPiece.coord);
                 this._ChangeState(BOARD_STATE_PLACING_PIECE);
             }
