@@ -224,18 +224,12 @@ class SceneGame
         const screen_size = Get_Screen_Size();
 
         this.board = new Board(this.progressionHandler);
-        pw_Anchor_Center(this.board);
-        this.board.x = screen_size.x * 0.5;
-        this.board.y = screen_size.y * 0.5;
-        this.addChild(this.board);
+        this.boardBorder = new BoardBorder(this.board);
+        pw_Add_Child(this, this.boardBorder);
 
-        // this.boardBorder = new BoardBorder(this.board             );
-        // this.addChild(this.boardBorder);
-
-        // const game_hud_bottom_y = (this.hud.y + this.hud.height + SCENE_GAME_SCREEN_GAP);
-
-        // this.boardBorder.x = (screen_size.x / 2) - (this.boardBorder.width / 2);
-        // this.boardBorder.y = (game_hud_bottom_y);
+        const game_hud_bottom_y = (this.hud.y + this.hud.height + SCENE_GAME_SCREEN_GAP);
+        this.boardBorder.x = (screen_size.x / 2) - (this.boardBorder.width / 2);
+        this.boardBorder.y = (game_hud_bottom_y);
 
         // Create the Board Border Tween.
         this.boardBorderTweenGroup = pw_Tween_CreateGroup();
@@ -250,7 +244,7 @@ class SceneGame
             })
             .start();
 
-        // Apply_BoardBorderEffect(this.boardBorder, this.boardBorderTween);
+        Apply_BoardBorderEffect(this.boardBorder, this.boardBorderTween);
     } // _CreateBoard
 
     //--------------------------------------------------------------------------
