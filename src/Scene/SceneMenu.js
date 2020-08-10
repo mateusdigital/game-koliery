@@ -223,7 +223,9 @@ class SceneMenu
     //--------------------------------------------------------------------------
     _InitializeTitleText()
     {
-        const str_len = SCENE_MENU_TITLE_STR.length;
+        const str_len    = SCENE_MENU_TITLE_STR.length;
+        const LETTER_GAP = 10;
+
         for(let i = 0; i < str_len; ++i) {
             const c     = SCENE_MENU_TITLE_STR[i];
             const color = chroma.hsl((360 / str_len) * i, 0.5, 0.5);
@@ -236,7 +238,7 @@ class SceneMenu
                 prev_w = this.titleText[i-1].width;
             }
 
-            text.x = (prev_x + prev_w);
+            text.x = (prev_x + prev_w) + LETTER_GAP;
 
             this.titleTextLayer.addChild(text);
             this.titleText.push(text);
