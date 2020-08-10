@@ -19,10 +19,8 @@
 // Piece                                                                      //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const PIECE_ANCHOR                   = 0.5;
-const PIECE_BLOCKS_COUNT             = 3;
-const PIECE_ROTATE_COOLDOWN_DURATION = 0.5;
-
+const PIECE_ANCHOR       = 0.5;
+const PIECE_BLOCKS_COUNT = 3;
 
 //------------------------------------------------------------------------------
 class Piece
@@ -39,26 +37,19 @@ class Piece
         this.boardRef = boardRef;
         // Properties
         this.blocks = [];
+        this.coord  = pw_Vector_Create(0, 0);
+        this.locked = false;
+
         this._InitializeBlocks();
-
-        this.rotateTimer = new pw_Timer(PIECE_ROTATE_COOLDOWN_DURATION);
-        this.rotateTimer.Start();
-
-        this.coord = pw_Vector_Create(0, 0);
     } // ctor
-
-    //--------------------------------------------------------------------------
-    Update(dt)
-    {
-        this.rotateTimer.Update(dt);
-
-        this.coord.x = pw_Math_Int(this.x                    / this.boardRef.blockSize.x);
-        this.coord.y = pw_Math_Int(this.GetBottomPositionY() / this.boardRef.blockSize.y);
-    }
 
     //--------------------------------------------------------------------------
     Rotate()
     {
+        if(this.locked) {
+            return;
+        }
+
         // @XXX(stdmatt): How js handles the assignments???
         let new_arr = []
         for(let i = 0; i < PIECE_BLOCKS_COUNT; ++i) {
@@ -68,9 +59,18 @@ class Piece
 
         this.blocks = new_arr;
         this._FixBlocksPositions();
+    } // Rotate
 
-        this.rotateTimer.Start();
-    }
+    //--------------------------------------------------------------------------
+    MoveHorizontal(dir)
+    {
+        if(this.locked) {
+            return;
+        }
+
+        this.x += (this.boardRef.blockSize.x * dir);
+        this.UpdateCoords();
+    } // MoveHorizontal
 
     //--------------------------------------------------------------------------
     SetBottomPositionY(y)
@@ -81,8 +81,17 @@ class Piece
     //--------------------------------------------------------------------------
     GetBottomPositionY()
     {
-        return this.y + this.height;
+        return this.y + this.height + this.boardRef.blockSize.y * 0.5;
     } // GetBottomPositionY
+
+    //--------------------------------------------------------------------------
+    UpdateCoords()
+    {
+        const x = this.x;
+        const y = this.y + (this.boardRef.blockSize.y * PIECE_BLOCKS_COUNT);
+        this.coord.x = pw_Math_Int(x / this.boardRef.blockSize.x);
+        this.coord.y = pw_Math_Int(y / this.boardRef.blockSize.y);
+    } // UpdateCoords
 
     //--------------------------------------------------------------------------
     _InitializeBlocks()
@@ -103,5 +112,6 @@ class Piece
             let block = this.blocks[i];
             block.y = this.boardRef.blockSize.y * (PIECE_BLOCKS_COUNT - i -1);
         }
-    }
+    } // _FixBlocksPositions
+
 }; // class Piece

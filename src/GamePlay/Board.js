@@ -24,7 +24,7 @@ const BOARD_FIELD_ROWS = 21;
 const BOARD_BLOCK_SIZE = 27;
 
 const BOARD_BLOCK_TIME_TO_MOVE_FAST = 0.025;
-const BOARD_BLOCK_MOVE_SUBSTEPS     = 2;
+const BOARD_BLOCK_MOVE_SUBSTEPS     = 10;
 
 // State: Playing / Game Over
 const BOARD_STATE_PLAYING                    = "BOARD_STATE_PLAYING";
@@ -68,7 +68,7 @@ class Board
 
         // Field.
         this.field     = pw_Array_Create2D(BOARD_FIELD_ROWS, BOARD_FIELD_COLS);
-        this.blockSize = pw_Vector_Create(BOARD_BLOCK_SIZE, BOARD_BLOCK_SIZE);
+        this.blockSize = pw_Vector_Create (BOARD_BLOCK_SIZE, BOARD_BLOCK_SIZE);
 
         // Infos.
         this.matchInfo            = new MatchInfo(this);
@@ -78,7 +78,6 @@ class Board
         // Piece.
         this.currPiece           = null;
         this.currPiecePlaceCoord = null;
-        this.currTimeToMove      = 0;
         this.movingFast          = false;
 
         // Tweens.
@@ -89,39 +88,32 @@ class Board
         // Initialize.
         this._ChangeState(BOARD_STATE_GENERATING_PIECE);
 
+
+        //
+        // Create the Filler and the Mask for the board.
         {
-            const screen_size  = Get_Screen_Size();
             const board_height = BOARD_FIELD_ROWS * BOARD_BLOCK_SIZE;
             const board_width  = BOARD_FIELD_COLS * BOARD_BLOCK_SIZE;
-            const board_x      = screen_size.x * 0.5;
-            const board_y      = screen_size.y * 0.5;
 
-            // this.width  = board_width;
-            // this.height = board_height;
+            // Filler
+            // @notice: We need that because PIXI.js containers can't have
+            // a size without have children, and we need a specific size
+            // to make the positions to work correct.
+            this.board_filler_sprite = pw_Sprite_White(board_width, board_height);
+            this.board_filler_sprite.tint  = 0xFF00FF;
+            this.board_filler_sprite.alpha = 0;
+            this.board_filler_sprite.x     = 0;
+            this.board_filler_sprite.y     = 0;
 
+            // Mask
+            // @notice: This is what will make the blocks to not appear on the
+            // screen until the entered the actual board spoce.
+            this.board_mask_sprite      = pw_Sprite_White(board_width, board_height);
+            this.board_mask_sprite.tint = 0x000000;
+            this.board_mask_sprite.x  = 0;
+            this.board_mask_sprite.y  = 0;
 
-        const block2 = pw_Sprite_White(board_width, board_height);
-        block2.tint = 0x00000;
-        block2.alpha = 1;
-        this.addChild(block2);
-
-        block2.x = 0;
-        block2.y = 0;
-
-        const block3 = pw_Sprite_White(board_width, board_height);
-        block3.tint = 0x0000FF;
-        this.addChild(block3);
-
-        for(let i = 0; i < 7; ++i) {
-            const block = new Block(this, i);
-            // block.mask = this;
-            block.x = i * 27;
-            block.y = 0;
-
-            this.addChild(block);
-        }
-
-
+            pw_Add_To_Parent(this, this.board_filler_sprite, this.board_mask_sprite);
         }
     } // ctor
 
@@ -142,7 +134,6 @@ class Board
     //--------------------------------------------------------------------------
     Update(dt)
     {
-        return;
         if(this.paused) {
             return;
         }
@@ -228,71 +219,55 @@ class Board
     //--------------------------------------------------------------------------
     _UpdateState_Playing(dt)
     {
-        if(pw_Keyboard_IsDown(PW_KEY_SPACE) && !this.movingFast) {
-            this.currTimeToMove = 0;
+        if(!this.movingFast && pw_Keyboard_IsDown(PW_KEY_SPACE)) {
             this.movingFast     = true;
             gAudio.PlayEffect(RES_AUDIO_PIECE_MOVE_WAV);
         } else if(pw_Keyboard_IsUp(PW_KEY_SPACE) && this.movingFast) {
             this.movingFast = false;
         }
 
-        this.currPiece.Update(dt);
         if(pw_Keyboard_IsClick(PW_KEY_ARROW_DOWN) || pw_Keyboard_IsClick(PW_KEY_ARROW_UP)) {
             gAudio.PlayEffect(RES_AUDIO_PIECE_ROTATE_WAV);
             this.currPiece.Rotate();
         }
 
-        let dir_x = 0;
-        if(pw_Keyboard_IsClick(PW_KEY_ARROW_LEFT)) {
-            gAudio.PlayEffect(RES_AUDIO_PIECE_MOVE_WAV);
-            dir_x = -1;
-        } else if(pw_Keyboard_IsClick(PW_KEY_ARROW_RIGHT)) {
-            gAudio.PlayEffect(RES_AUDIO_PIECE_MOVE_WAV);
-            dir_x = +1;
+        if(this.movingFast) {
+            this.progressionHandler.AddScoreForMovingFast();
         }
-
-        const curr_coord = this.currPiece.coord;
-        let   new_coord  = pw_Vector_Copy(curr_coord);
 
         //
         // Try to move horizontally.
-        //   Horizontal movement is block based - So we just check if there's
-        //   room to move and set the new coord to that position.
-        if(dir_x != 0                                 &&
-           this.IsCoordXValid (curr_coord.x + dir_x)  &&
-           this.IsBoardEmptyAt(curr_coord.x + dir_x, curr_coord.y))
         {
-            new_coord.x = (curr_coord.x + dir_x)
+            let dir_x = 0;
+            if(pw_Keyboard_IsClick(PW_KEY_ARROW_LEFT)) {
+                gAudio.PlayEffect(RES_AUDIO_PIECE_MOVE_WAV);
+                dir_x = -1;
+            } else if(pw_Keyboard_IsClick(PW_KEY_ARROW_RIGHT)) {
+                gAudio.PlayEffect(RES_AUDIO_PIECE_MOVE_WAV);
+                dir_x = +1;
+            }
+
+            const curr_coord = this.currPiece.coord;
+            if(dir_x != 0                                 &&
+               this.IsCoordXValid (curr_coord.x + dir_x)  &&
+               this.IsBoardEmptyAt(curr_coord.x + dir_x, curr_coord.y))
+            {
+                this.currPiece.MoveHorizontal(dir_x);
+            }
         }
 
         //
         // Try to move vertically.
-        //   Vertical movement is "pixel" based - So we need to move the piece
-        //   by that amount of pixels and check if the resulting coord is valid.
-        let new_position_y = this.currPiece.GetBottomPositionY();
-
-        this.currTimeToMove -= dt;
-        if(this.currTimeToMove <= 0) {
-            this.currTimeToMove += (this.movingFast)
-                ? BOARD_BLOCK_TIME_TO_MOVE_FAST
-                : this.progressionHandler.maxTimeToMove;
-
-            new_position_y += (this.blockSize.y / BOARD_BLOCK_MOVE_SUBSTEPS);
-            new_coord.y     = pw_Math_Int(new_position_y / this.blockSize.y);
-
-            if(this.movingFast) {
-                this.progressionHandler.AddScoreForMovingFast();
-            }
-        }
-
-        if(new_coord.y >= BOARD_FIELD_ROWS ||
-           !this.IsBoardEmptyAt(new_coord.x, new_coord.y))
         {
-            this.currPiecePlaceCoord = new_coord;
-            this._ChangeState(BOARD_STATE_PLACING_PIECE);
-        } else {
-            this.currPiece.x = (new_coord.x * this.blockSize.x);
-            this.currPiece.SetBottomPositionY(new_position_y);
+            this.currPiece.y += (this.progressionHandler.pieceSpeed * dt)
+            this.currPiece.UpdateCoords();
+
+            if(this.currPiece.coord.y >= BOARD_FIELD_ROWS ||
+               !this.IsBoardEmptyAt(this.currPiece.coord.x, this.currPiece.coord.y))
+            {
+                this.currPiecePlaceCoord = pw_Vector_Copy(this.currPiece.coord);
+                this._ChangeState(BOARD_STATE_PLACING_PIECE);
+            }
         }
     } // _UpdateState_Playing
 
@@ -329,7 +304,7 @@ class Board
         this.addChild(piece);
 
         const x = (BOARD_FIELD_COLS / 2) * this.blockSize.x;
-        const y = -this.blockSize.y * 1.5; //PIECE_BLOCKS_COUNT * this.blockSize.x;
+        const y = -this.blockSize.y * 0.5; //PIECE_BLOCKS_COUNT * this.blockSize.x;
 
         piece.x = x;
         piece.SetBottomPositionY(y);
@@ -341,6 +316,8 @@ class Board
     //--------------------------------------------------------------------------
     _PlacePiece()
     {
+        this.currPiece.locked = true; // Prevent the piece to do anything else.
+
         const index_x = this.currPiecePlaceCoord.x;
         const index_y = this.currPiecePlaceCoord.y;
 
@@ -463,6 +440,7 @@ class Board
         block.coordInBoard = pw_Vector_Create(indexX, indexY);
         this.field[indexY][indexX] = block;
 
+        console.log("--- ", block.y);
         // this.ascii();
     } // _SetBlockAt
 

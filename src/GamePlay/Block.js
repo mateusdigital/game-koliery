@@ -35,7 +35,8 @@ const BLOCK_BLINK_TWEEN_BLINK_DURATION_MS = (BLOCK_BLINK_TWEEN_DURATION_MS / BLO
 
 
 //------------------------------------------------------------------------------
-let S_BLOCK_OBJECT_ID = 0;
+let _S_BLOCK_OBJECT_ID = 0;
+let _BLOCKS_TEXTURE    = null;
 
 //------------------------------------------------------------------------------
 function Create_Random_Block(boardRef)
@@ -54,28 +55,37 @@ class Block
     //--------------------------------------------------------------------------
     constructor(boardRef, colorIndex)
     {
-        super(PIXI.Texture.WHITE);
+        if(!_BLOCKS_TEXTURE) {
+            _BLOCKS_TEXTURE = pw_Texture_Get(RES_TEXTURES_BLOCKS_PNG);
+        }
+        super(pw_Texture_GetFromCoords(
+            _BLOCKS_TEXTURE,
+            colorIndex * boardRef.blockSize.x,
+            0,
+            boardRef.blockSize.x,
+            boardRef.blockSize.y
+        ));
 
         //
         // iVars
         // References.
         this.boardRef = boardRef;
         // HouseKeeping.
-        this.blockId      = S_BLOCK_OBJECT_ID++;
+        this.blockId      = _S_BLOCK_OBJECT_ID++;
         this.coordInBoard = pw_Vector_Create(0, 0);
         this.colorIndex   = colorIndex;
         this.isDestroying = false;
 
-        this.width = this.boardRef.blockSize.x;
-        this.height = this.boardRef.blockSize.y -1;
-        this.tint = 0xFF0000;
-        Apply_BlockTintEffect(this, gPalette.GetBlockColor(this.colorIndex));
+        this.width  = this.boardRef.blockSize.x;
+        this.height = this.boardRef.blockSize.y;
 
-        // // Debug.
-        // let text = new PIXI.Text(this.blockId,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'left'});
-        // text.x = this.width  / 2 - text.width  / 2;
-        // text.y = this.height / 2 - text.height / 2;
-        // this.addChild(text);
+        this.mask = this.boardRef.board_mask_sprite;
+
+        // Debug.
+        let text = new PIXI.Text(this.blockId,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'left'});
+        text.x = this.width  / 2 - text.width  / 2;
+        text.y = this.height / 2 - text.height / 2;
+        this.addChild(text);
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -95,11 +105,11 @@ class Block
     //--------------------------------------------------------------------------
     StartFallAnimation(targetCoord)
     {
-        let position = pw_Vector_Copy(this.position);
-        let target   = pw_Vector_Create(position.x, targetCoord.y * this.boardRef.blockSize.y);
+        const position = pw_Vector_Copy(this.position);
+        const target   = pw_Vector_Create(position.x, targetCoord.y * this.boardRef.blockSize.y);
 
         // debugger;
-        let tween = new TWEEN.Tween(position, this.boardRef.fallTweenGroup)
+        const tween = new TWEEN.Tween(position, this.boardRef.fallTweenGroup)
             .to(target, BLOCK_FALL_TWEEN_DURATION_MS)
             .onUpdate(()=>{
                 this.x = position.x;
@@ -116,7 +126,7 @@ class Block
     //--------------------------------------------------------------------------
     _CreateSquashAnimation()
     {
-        let tween = pw_Tween_CreateBasic(
+        const tween = pw_Tween_CreateBasic(
             BLOCK_DESTROY_TWEEN_DURATION_MS,
             this.boardRef.destroyTweenGroup
         )
@@ -149,7 +159,8 @@ class Block
                 ? gPalette.GetBlockColor     (this.colorIndex)
                 : gPalette.GetBlockBlinkColor(this.colorIndex);
 
-            this.blockTintEffect.SetColor(color);
+            // @XXX
+            // this.blockTintEffect.SetColor(color);
         })
         .onComplete(()=>{
             const squash = this._CreateSquashAnimation();

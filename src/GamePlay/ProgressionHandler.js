@@ -32,7 +32,7 @@ class ProgressionHandler
         this.score      = 0;
 
         //
-        this.maxTimeToMove      = 0.5;
+        this.pieceSpeed         = 200;
         this.scoreForMovingFast = 1;
 
         // Callbacks.
