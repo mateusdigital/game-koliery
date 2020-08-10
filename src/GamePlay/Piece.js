@@ -73,18 +73,6 @@ class Piece
     } // MoveHorizontal
 
     //--------------------------------------------------------------------------
-    SetBottomPositionY(y)
-    {
-        this.y = (y - this.height);
-    } // GetBottomPositionY
-
-    //--------------------------------------------------------------------------
-    GetBottomPositionY()
-    {
-        return this.y + this.height + this.boardRef.blockSize.y * 0.5;
-    } // GetBottomPositionY
-
-    //--------------------------------------------------------------------------
     UpdateCoords()
     {
         const x = this.x;

@@ -308,14 +308,14 @@ class Board
     //--------------------------------------------------------------------------
     _GeneratePiece()
     {
-        let piece = new Piece(this);
+        const piece = new Piece(this);
         this.addChild(piece);
 
         const x = (BOARD_FIELD_COLS / 2) * this.blockSize.x;
         const y = -this.blockSize.y * 0.5; //PIECE_BLOCKS_COUNT * this.blockSize.x;
 
         piece.x = x;
-        piece.SetBottomPositionY(y);
+        piece.y = y;
 
         this.currPiece = piece;
         this._ChangeState(BOARD_STATE_GENERATING_PIECE_FINISHED);
