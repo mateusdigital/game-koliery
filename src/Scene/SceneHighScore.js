@@ -137,6 +137,8 @@ class SceneHighScore
     //--------------------------------------------------------------------------
     Update(dt)
     {
+        gStarfield.Update(dt);
+
         this.scoreTweenGroup.update();
 
         // Viewing high cores.

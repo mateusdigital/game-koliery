@@ -73,6 +73,8 @@ class SceneSplash
     //--------------------------------------------------------------------------
     Update(dt)
     {
+        gStarfield.Update(dt);
+
         if(pw_Keyboard_IsClick(PW_KEY_SPACE) || pw_Keyboard_IsClick(PW_KEY_ENTER)) {
             Go_To_Scene(SceneMenu);
         }

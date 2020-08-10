@@ -101,6 +101,8 @@ class SceneMenu
     //--------------------------------------------------------------------------
     Update(dt)
     {
+        gStarfield.Update(dt);
+
         if(pw_Keyboard_IsClick(PW_KEY_ARROW_DOWN)) {
             this._UpdateMenuSelection(+1);
         } else if(pw_Keyboard_IsClick(PW_KEY_ARROW_UP)) {

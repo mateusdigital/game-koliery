@@ -104,6 +104,8 @@ class SceneGame
     //--------------------------------------------------------------------------
     Update(dt)
     {
+        gStarfield.Update(dt);
+
         // Initialize.
         if(this.currState == SCENE_GAME_STATE_INITIALING) {
             this.boardBorderTweenGroup.update();

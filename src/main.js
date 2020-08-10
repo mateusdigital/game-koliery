@@ -57,17 +57,8 @@ function
 Setup()
 {
     //
-    // Initialize RNG.
-    pw_Random_Seed();
-
-    //
     // Initialize Scores.
     HIGHSCORE_MANAGER.FetchScores();
-
-    //
-    // Install the Input Handlers.
-    pw_Input_InstallBasicMouseHandler   ();
-    pw_Input_InstallBasicKeyboardHandler();
 
     //
     // Initialize Audio.
@@ -106,8 +97,6 @@ Setup()
 function
 GameLoop(delta)
 {
-    gStarfield.Update(delta);
-    pw_Input_KeyboardEndFrame();
 }
 
 

@@ -55,6 +55,8 @@ class SceneCredits
     //--------------------------------------------------------------------------
     Update(dt)
     {
+        gStarfield.Update(dt);
+
         if(pw_Keyboard_IsClick(PW_KEY_SPACE) ||
            pw_Keyboard_IsClick(PW_KEY_ENTER) ||
            pw_Keyboard_IsClick(PW_KEY_ESC))
