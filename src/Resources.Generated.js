@@ -3,11 +3,13 @@ const RES_FONTS_COMMODORE_PNG = "res/fonts/commodore.png"
 const RES_FONTS_COMMODORE_40_PNG = "res/fonts/commodore_40.png"
 const RES_FONTS_PIXELFORCE_25_PNG = "res/fonts/PixelForce_25.png"
 const RES_FONTS_PIXELFORCE_90_PNG = "res/fonts/PixelForce_90.png"
+const RES_TEXTURES_BLOCKS_PNG = "res/textures/blocks.png"
 
 const TEXTURES_TO_LOAD = [ "res/fonts/commodore.png",
 "res/fonts/commodore_40.png",
 "res/fonts/PixelForce_25.png",
-"res/fonts/PixelForce_90.png" ] 
+"res/fonts/PixelForce_90.png",
+"res/textures/blocks.png" ] 
 
 //--------------------------------------------------------------------------------
 const RES_SHADERS_BLOCKSQUASH_FRAG = "res/shaders/BlockSquash.frag"

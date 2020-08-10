@@ -22,6 +22,7 @@
 const GAME_DESIGN_WIDTH  = 500;
 const GAME_DESIGN_HEIGHT = 700;
 
+
 //----------------------------------------------------------------------------//
 // Globals                                                                    //
 //----------------------------------------------------------------------------//
@@ -85,13 +86,18 @@ Setup()
     ));
     pw_Application_GetStage().addChild(gStarfield);
 
-    //
-    // Start the game.
-    // Go_To_Scene(SceneSplash);
-    // Go_To_Scene(SceneMenu);
-    Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
-    // Go_To_Scene(SceneHighScore, null, SCENE_HIGHSCORE_OPTIONS_EDITABLE);
-    // Go_To_Scene(SceneCredits);
+    PW_SCENE_MANAGER.RegisterScenes(
+        SceneSplash,
+        SceneMenu,
+        SceneGame,
+        SceneHighScore,
+        SceneCredits
+    );
+
+    if(!PW_SCENE_MANAGER.StartWithQueryString()){
+        Go_To_Scene(SceneSplash);
+    }
+
     pw_Application_Start(GameLoop);
 }
 

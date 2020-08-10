@@ -19,9 +19,9 @@
 // Board                                                                      //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const BOARD_FIELD_COLUMNS  = 8;
-const BOARD_FIELD_ROWS     = 21;
-const BOARD_BLOCK_SIZE     = 27;
+const BOARD_FIELD_COLS = 8;
+const BOARD_FIELD_ROWS = 21;
+const BOARD_BLOCK_SIZE = 27;
 
 const BOARD_BLOCK_TIME_TO_MOVE_FAST = 0.025;
 const BOARD_BLOCK_MOVE_SUBSTEPS     = 2;
@@ -67,7 +67,7 @@ class Board
         this.progressionHandler = progressionHandler;
 
         // Field.
-        this.field     = pw_Array_Create2D(BOARD_FIELD_ROWS, BOARD_FIELD_COLUMNS);
+        this.field     = pw_Array_Create2D(BOARD_FIELD_ROWS, BOARD_FIELD_COLS);
         this.blockSize = pw_Vector_Create(BOARD_BLOCK_SIZE, BOARD_BLOCK_SIZE);
 
         // Infos.
@@ -88,6 +88,41 @@ class Board
         //
         // Initialize.
         this._ChangeState(BOARD_STATE_GENERATING_PIECE);
+
+        {
+            const screen_size  = Get_Screen_Size();
+            const board_height = BOARD_FIELD_ROWS * BOARD_BLOCK_SIZE;
+            const board_width  = BOARD_FIELD_COLS * BOARD_BLOCK_SIZE;
+            const board_x      = screen_size.x * 0.5;
+            const board_y      = screen_size.y * 0.5;
+
+            // this.width  = board_width;
+            // this.height = board_height;
+
+
+        const block2 = pw_Sprite_White(board_width, board_height);
+        block2.tint = 0x00000;
+        block2.alpha = 1;
+        this.addChild(block2);
+
+        block2.x = 0;
+        block2.y = 0;
+
+        const block3 = pw_Sprite_White(board_width, board_height);
+        block3.tint = 0x0000FF;
+        this.addChild(block3);
+
+        for(let i = 0; i < 7; ++i) {
+            const block = new Block(this, i);
+            // block.mask = this;
+            block.x = i * 27;
+            block.y = 0;
+
+            this.addChild(block);
+        }
+
+
+        }
     } // ctor
 
 
@@ -107,6 +142,7 @@ class Board
     //--------------------------------------------------------------------------
     Update(dt)
     {
+        return;
         if(this.paused) {
             return;
         }
@@ -270,7 +306,7 @@ class Board
     //--------------------------------------------------------------------------
     IsCoordXValid(indexX)
     {
-        return indexX >= 0 && indexX < BOARD_FIELD_COLUMNS;
+        return indexX >= 0 && indexX < BOARD_FIELD_COLS;
     } // IsCoordXValid
 
     //--------------------------------------------------------------------------
@@ -292,11 +328,11 @@ class Board
         let piece = new Piece(this);
         this.addChild(piece);
 
-        const x = (BOARD_FIELD_COLUMNS / 2) * this.blockSize.x;
-        const y = (3) * this.blockSize.x;
+        const x = (BOARD_FIELD_COLS / 2) * this.blockSize.x;
+        const y = -this.blockSize.y * 1.5; //PIECE_BLOCKS_COUNT * this.blockSize.x;
 
-        piece.x = x
-        piece.SetBottomPositionY(y)
+        piece.x = x;
+        piece.SetBottomPositionY(y);
 
         this.currPiece = piece;
         this._ChangeState(BOARD_STATE_GENERATING_PIECE_FINISHED);
@@ -327,6 +363,7 @@ class Board
     //--------------------------------------------------------------------------
     _FindMatches()
     {
+        // debugger;
         this.matchInfo.FindMatches(this.blocksToTryFindMatch);
         this._ChangeState(BOARD_STATE_FINDING_MATCHES_FINISHED);
 
@@ -392,6 +429,7 @@ class Board
     {
         this._SetBlockAt(block, coord.x, coord.y);
     }
+
     //--------------------------------------------------------------------------
     RemoveBlock(block)
     {
@@ -431,7 +469,7 @@ class Board
     //--------------------------------------------------------------------------
     _CheckGameOver()
     {
-        for(let j = 0; j < BOARD_FIELD_COLUMNS; ++j) {
+        for(let j = 0; j < BOARD_FIELD_COLS; ++j) {
             if(this.GetBlockAt(j, 0) != null) {
                this._ChangeState(BOARD_STATE_GAME_OVER);
                return;
@@ -481,7 +519,7 @@ class Board
             }
 
             s += pw_String_Cat(" (", i, ") ");
-            for(let j = 0; j < BOARD_FIELD_COLUMNS; ++j) {
+            for(let j = 0; j < BOARD_FIELD_COLS; ++j) {
                 let p = this.GetBlockAt(j, i);
                 if(p == null) {
                     s += ". ";

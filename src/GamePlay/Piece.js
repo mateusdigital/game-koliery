@@ -23,6 +23,7 @@ const PIECE_ANCHOR                   = 0.5;
 const PIECE_BLOCKS_COUNT             = 3;
 const PIECE_ROTATE_COOLDOWN_DURATION = 0.5;
 
+
 //------------------------------------------------------------------------------
 class Piece
     extends PIXI.Container

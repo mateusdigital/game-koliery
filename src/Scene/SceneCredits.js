@@ -28,6 +28,7 @@ const SCENE_CREDITS_SECTION_TEXT_FONT_SIZE  = 32;
 const SCENE_CREDITS_MUSIC_BACKGROUND = ""; // MUSIC_KOMIKU_06_SCHOOL;
 const SCENE_CREDITS_EFFECT_MENU      = ""; // MUSIC_MENU_INTERACTION;
 
+
 //------------------------------------------------------------------------------
 class SceneCredits
     extends pw_Base_Scene
@@ -54,7 +55,10 @@ class SceneCredits
     //--------------------------------------------------------------------------
     Update(dt)
     {
-        if(pw_Keyboard_IsClick(PW_KEY_SPACE, PW_KEY_ENTER, PW_KEY_ESC)) {
+        if(pw_Keyboard_IsClick(PW_KEY_SPACE) ||
+           pw_Keyboard_IsClick(PW_KEY_ENTER) ||
+           pw_Keyboard_IsClick(PW_KEY_ESC))
+        {
             gAudio.PlayEffect(SCENE_CREDITS_EFFECT_MENU);
             Go_To_Scene(SceneMenu);
         }

@@ -35,25 +35,26 @@ const SCENE_GAME_STATE_EXITING    = 3;
 // UI
 const SCENE_GAME_SCREEN_GAP = 10;
 
-const SCENE_GAME_EXIT_PROMPT_TITLE_FONT_SIZE = 24;
-const SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE   = 40;
 const SCENE_GAME_PAUSED_FONT_SIZE            = 42;
+const SCENE_GAME_EXIT_PROMPT_TITLE_FONT_SIZE = 42;
+const SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE   = 24;
 
 // Sounds
 // @todo(stdmatt): Different sounds for each difficulty
-const SCENE_GAME_MUSIC_BACKGROUND_EASY   = "" // MUSIC_BLOCKS_OF_FUN;
+const SCENE_GAME_MUSIC_BACKGROUND_EASY   = "" /// MUSIC_BLOCKS_OF_FUN;
 const SCENE_GAME_MUSIC_BACKGROUND_MEDIUM = "" // MUSIC_BLOCKS_OF_FUN;
 const SCENE_GAME_MUSIC_BACKGROUND_HARD   = "" // MUSIC_BLOCKS_OF_FUN;
 
 const SCENE_GAME_EFFECT_PROMPT  = "" // MUSIC_MENU_INTERACTION;
 const SCENE_GAME_EFFECT_CONFIRM = "" // MUSIC_MENU_INTERACTION2;
 
+
 //------------------------------------------------------------------------------
 class SceneGame
     extends pw_Base_Scene
 {
     //--------------------------------------------------------------------------
-    constructor(difficulty)
+    constructor(difficulty = SCENE_GAME_LEVEL_EASY)
     {
         super();
 
@@ -113,9 +114,9 @@ class SceneGame
             // Game Hud Update.
             this.hud.Update(dt);
 
-            // Boar Visibility.
+            // Board Visibility.
             this.board      .visible = true;
-            this.boardBorder.visible = true;
+            // this.boardBorder.visible = true;
 
             // Board Update.
             this.board.Update(dt);
@@ -220,15 +221,21 @@ class SceneGame
     //--------------------------------------------------------------------------
     _CreateBoard()
     {
-        this.board       = new Board      (this.progressionHandler);
-        this.boardBorder = new BoardBorder(this.board             );
-        this.addChild(this.boardBorder);
+        const screen_size = Get_Screen_Size();
 
-        const screen_size       = Get_Screen_Size();
-        const game_hud_bottom_y = (this.hud.y + this.hud.height + SCENE_GAME_SCREEN_GAP);
+        this.board = new Board(this.progressionHandler);
+        pw_Anchor_Center(this.board);
+        this.board.x = screen_size.x * 0.5;
+        this.board.y = screen_size.y * 0.5;
+        this.addChild(this.board);
 
-        this.boardBorder.x = (screen_size.x / 2) - (this.boardBorder.width / 2);
-        this.boardBorder.y = (game_hud_bottom_y);
+        // this.boardBorder = new BoardBorder(this.board             );
+        // this.addChild(this.boardBorder);
+
+        // const game_hud_bottom_y = (this.hud.y + this.hud.height + SCENE_GAME_SCREEN_GAP);
+
+        // this.boardBorder.x = (screen_size.x / 2) - (this.boardBorder.width / 2);
+        // this.boardBorder.y = (game_hud_bottom_y);
 
         // Create the Board Border Tween.
         this.boardBorderTweenGroup = pw_Tween_CreateGroup();
@@ -243,9 +250,7 @@ class SceneGame
             })
             .start();
 
-        Apply_BoardBorderEffect(this.boardBorder, this.boardBorderTween);
-
-
+        // Apply_BoardBorderEffect(this.boardBorder, this.boardBorderTween);
     } // _CreateBoard
 
     //--------------------------------------------------------------------------
@@ -256,6 +261,7 @@ class SceneGame
 
         // Pause Text.
         this.pauseText = new pw_Text("PAUSED", FONT_COMMODORE, SCENE_GAME_PAUSED_FONT_SIZE);
+        pw_Anchor_Center(this.pauseText);
         this.pauseText.x = screen_size.x * 0.5;
         this.pauseText.y = screen_size.y * 0.4;
         this.pauseText.visible = false;
@@ -266,24 +272,29 @@ class SceneGame
         // Exit Text.
         {
             this.exitText = new PIXI.Container();
+
             let l0 = new pw_Text("ARE YOU SURE?", FONT_COMMODORE, SCENE_GAME_EXIT_PROMPT_TITLE_FONT_SIZE);
+            pw_Anchor_Center(l0);
+            l0.x = screen_size.x * 0.5;
+            l0.y = screen_size.y * 0.4;
             Apply_TextGradientEffect(l0, color);
             this.exitText.addChild(l0);
 
             let l1 = new pw_Text("PRESS ESC AGAIN TO EXIT", FONT_COMMODORE, SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE);
-            l1.y = (l0.y + l0.height + l1.height);
+            pw_Anchor_Center(l1);
+            l1.x = l0.x;
+            l1.y = (l0.y + l0.height * 0.5 + l1.height * 0.5) + l1.height;
             Apply_TextGradientEffect(l1, color);
             this.exitText.addChild(l1);
 
             let l2 = new pw_Text("OR ENTER TO CONTINUE", FONT_COMMODORE, SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE);
-            l2.y = (l1.y + l1.height);
+            pw_Anchor_Center(l2);
+            l2.x = l1.x;
+            l2.y = (l1.y + l1.height * 0.5 + l2.height * 0.5);
             Apply_TextGradientEffect(l2, color);
             this.exitText.addChild(l2);
 
-            this.exitText.x = screen_size.x * 0.5;
-            this.exitText.y = screen_size.y * 0.4;
             this.exitText.visible = false;
-
             this.addChild(this.exitText);
         }
 

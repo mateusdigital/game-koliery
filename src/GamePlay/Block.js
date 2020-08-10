@@ -19,7 +19,7 @@
 // Block                                                                      //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const BLOCK_COLOR_INDEX_COUNT = 5;
+const BLOCK_COLOR_INDEX_COUNT = 3;
 const BLOCK_BORDER_SIZE       = 1;
 
 // Tweens
@@ -44,16 +44,17 @@ function Create_Random_Block(boardRef)
     let block       = new Block(boardRef, color_index);
 
     return block;
-} // Create_pw_Random_Block
+} // Create_Random_Block
+
 
 //------------------------------------------------------------------------------
 class Block
-    extends PIXI.Container
+    extends PIXI.Sprite
 {
     //--------------------------------------------------------------------------
     constructor(boardRef, colorIndex)
     {
-        super();
+        super(PIXI.Texture.WHITE);
 
         //
         // iVars
@@ -64,17 +65,13 @@ class Block
         this.coordInBoard = pw_Vector_Create(0, 0);
         this.colorIndex   = colorIndex;
         this.isDestroying = false;
-        this.destroyValue = 0;
 
-        const size = pw_Vector_Copy(this.boardRef.blockSize);
-        size.x -= 0;
-        size.y -= 1;
+        this.width = this.boardRef.blockSize.x;
+        this.height = this.boardRef.blockSize.y -1;
+        this.tint = 0xFF0000;
+        Apply_BlockTintEffect(this, gPalette.GetBlockColor(this.colorIndex));
 
-        this.sprite = pw_Sprite_White(size);
-        Apply_BlockTintEffect(this.sprite, gPalette.GetBlockColor(this.colorIndex));
-        this.addChild(this.sprite);
-
-        // Debug.
+        // // Debug.
         // let text = new PIXI.Text(this.blockId,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'left'});
         // text.x = this.width  / 2 - text.width  / 2;
         // text.y = this.height / 2 - text.height / 2;
@@ -91,8 +88,6 @@ class Block
     StartDestroyAnimation()
     {
         this.isDestroying = true;
-        this.destroyValue = 0;
-
         const blink  = this._CreateBlinkAnimation();
         blink.start();
     } // StartDestroyAnimation
@@ -117,7 +112,6 @@ class Block
             .easing(BLOCK_FALL_TWEEN_EASING)
             .start();
     }
-
 
     //--------------------------------------------------------------------------
     _CreateSquashAnimation()
@@ -155,11 +149,11 @@ class Block
                 ? gPalette.GetBlockColor     (this.colorIndex)
                 : gPalette.GetBlockBlinkColor(this.colorIndex);
 
-            this.sprite.blockTintEffect.SetColor(color);
+            this.blockTintEffect.SetColor(color);
         })
         .onComplete(()=>{
             const squash = this._CreateSquashAnimation();
-            Apply_BlockSquashEffect(this.sprite, squash);
+            Apply_BlockSquashEffect(this, squash);
             squash.start();
         });
 

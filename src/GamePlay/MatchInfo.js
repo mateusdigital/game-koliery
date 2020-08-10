@@ -176,11 +176,11 @@ class MatchInfo
         info.diagonal2_blocks  = [];
         info.has_match         = false;
 
-        this._GetMatchingBlocks(targetBlock, pw_Vector_Left , info.horizontal_blocks);
-        this._GetMatchingBlocks(targetBlock, pw_Vector_Right, info.horizontal_blocks);
+        this._GetMatchingBlocks(targetBlock, pw_Vector_Left (), info.horizontal_blocks);
+        this._GetMatchingBlocks(targetBlock, pw_Vector_Right(), info.horizontal_blocks);
 
-        this._GetMatchingBlocks(targetBlock, pw_Vector_Up,   info.vertical_blocks);
-        this._GetMatchingBlocks(targetBlock, pw_Vector_Down, info.vertical_blocks);
+        this._GetMatchingBlocks(targetBlock, pw_Vector_Up  (),   info.vertical_blocks);
+        this._GetMatchingBlocks(targetBlock, pw_Vector_Down(), info.vertical_blocks);
 
         this._GetMatchingBlocks(targetBlock, pw_Vector_Create(-1, -1), info.diagonal1_blocks);
         this._GetMatchingBlocks(targetBlock, pw_Vector_Create(+1, +1), info.diagonal1_blocks);
