@@ -37,13 +37,14 @@ class AudioPlayer
     } // ctor
 
     //--------------------------------------------------------------------------
-    PreloadSounds(soundsToPreload)
+    PreloadSounds(...args)
     {
-        this.preloadCount += soundsToPreload.length;
+        const sounds_to_preload = pw_Array_MakeFlat(args);
+        this.preloadCount += sounds_to_preload.length;
         this.loaded        = false;
 
-        for(let i = 0; i < soundsToPreload.length; ++i) {
-            const name = soundsToPreload[i];
+        for(let i = 0; i < sounds_to_preload.length; ++i) {
+            const name = sounds_to_preload[i];
 
             PIXI.sound.Sound.from({
                 url     : name,
@@ -52,7 +53,7 @@ class AudioPlayer
                     if(err != null) {
                         debugger;
                     }
-
+                    dlog("Audio Loaded: ", name);
                     this.sounds[name] = sound;
                     if(--this.preloadCount == 0) {
                         this.loaded = true;
@@ -73,7 +74,7 @@ class AudioPlayer
 
         const effect_to_play = this.sounds[name];
         if(!effect_to_play) {
-            // debugger;
+            dlog("[ERROR] AudioPlayer - Failed to play effect", name);
             return;
         }
 
@@ -88,7 +89,7 @@ class AudioPlayer
     {
         const sound_to_play = this.sounds[name];
         if(!sound_to_play) {
-            // debugger;
+            dlog("[ERROR] AudioPlayer - Failed to play music", name);
             return;
         }
 

@@ -47,7 +47,7 @@ Preload()
         Setup,
         TEXTURES_TO_LOAD,
         FONTS_TO_LOAD,
-        SHADERS_TO_LOAD
+        SHADERS_TO_LOAD,
     );
 }
 
@@ -56,14 +56,14 @@ Preload()
 function
 Setup()
 {
-    //
-    // Initialize Scores.
-    HIGHSCORE_MANAGER.FetchScores();
+    // //
+    // // Initialize Scores.
+    // HIGHSCORE_MANAGER.FetchScores();
 
     //
     // Initialize Audio.
     gAudio = new AudioPlayer();
-    gAudio.PreloadSounds(SOUNDS_TO_LOAD);
+    gAudio.PreloadSounds(SOUNDS_TO_LOAD, MUSIC_TO_LOAD);
 
     //
     // Initialize Game Objects
