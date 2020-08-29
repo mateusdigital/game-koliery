@@ -48,7 +48,7 @@ class SceneSplash
         //
         // Initialize.
         const screen_size = Get_Screen_Size();
-        const color       = chroma("black");
+        const color       = gPalette.GetMenuTextNormalColor();
 
         // stdmatt Text.
         pw_Anchor_Center(this.stdmattText);
