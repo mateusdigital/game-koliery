@@ -108,10 +108,11 @@ class Board
             // Mask
             // @notice: This is what will make the blocks to not appear on the
             // screen until the entered the actual board spoce.
-            this.board_mask_sprite      = pw_Sprite_White(board_width, board_height);
-            this.board_mask_sprite.tint = 0x000000;
-            this.board_mask_sprite.x  = 0;
-            this.board_mask_sprite.y  = 0;
+            this.board_mask_sprite       = pw_Sprite_White(board_width, board_height);
+            this.board_mask_sprite.tint  = 0x000000;
+            this.board_mask_sprite.alpha = 0;
+            this.board_mask_sprite.x     = 0;
+            this.board_mask_sprite.y     = 0;
 
             pw_Add_To_Parent(this, this.board_filler_sprite, this.board_mask_sprite);
         }
@@ -122,6 +123,8 @@ class Board
     Start()
     {
         this.paused = false;
+        this.board_mask_sprite.alpha = 1;
+
     } // Start
 
     //--------------------------------------------------------------------------
@@ -222,15 +225,15 @@ class Board
         if(!this.movingFast && pw_Keyboard_IsDown(PW_KEY_SPACE)) {
             this.movingFast     = true;
             gAudio.PlayEffect(RES_AUDIO_PIECE_MOVE_WAV);
-            console.log("FAST");
+            dlog("FAST");
         } else if(pw_Keyboard_IsUp(PW_KEY_SPACE) && this.movingFast) {
             this.movingFast = false;
 
-            console.log("SLOW");
+            dlog("SLOW");
         }
 
         if(pw_Keyboard_IsClick(PW_KEY_ARROW_DOWN) || pw_Keyboard_IsClick(PW_KEY_ARROW_UP)) {
-            console.log("cick")
+            dlog("cick")
             gAudio.PlayEffect(RES_AUDIO_PIECE_ROTATE_WAV);
             this.currPiece.Rotate();
         }
@@ -478,7 +481,7 @@ class Board
         this.prevState = this.currState;
         this.currState = newState;
 
-        // console.log("[STATE] ", this.prevState, " -> ", this.currState);
+        // dlog("[STATE] ", this.prevState, " -> ", this.currState);
     } // _ChangeState
 
 
@@ -519,6 +522,6 @@ class Board
             }
             s += pw_String_Cat(" (", i, ")\n")
         }
-        console.log(s);
+        dlog(s);
     }
 }; // class Board
