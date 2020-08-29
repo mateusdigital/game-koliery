@@ -362,11 +362,11 @@ class SceneMenu
                 // @notice(stdmatt): After we loop thru all the marquee texts
                 // go to another scene.
                 if(this.marqueeTextIndex == 0) {
-                    // Go_To_Scene(
-                    //     SceneHighScore,
-                    //     SceneMenu,
-                    //     SCENE_HIGHSCORE_OPTIONS_GO_BACK_AUTOMATICALLY
-                    // );
+                    Go_To_Scene(
+                        SceneHighScore,
+                        SceneMenu,
+                        SCENE_HIGHSCORE_OPTIONS_GO_BACK_AUTOMATICALLY
+                    );
                 }
             })
             .start();
