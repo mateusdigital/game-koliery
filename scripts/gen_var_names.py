@@ -69,7 +69,9 @@ output_text     = "";
 ##------------------------------------------------------------------------------
 def gen_assets_names(type_extension, variable_name):
     global output_text;
-    output_text += "//" + "-" * 80 + "\n";
+    output_text += "//\n"
+    output_text += "//  " + type_extension + "\n";
+    output_text += "//"   + "-" * 80 + "\n";
 
     filenames = [];
     decls     = [];
@@ -78,6 +80,7 @@ def gen_assets_names(type_extension, variable_name):
     extension_pattern = ".{0}"    .format(type_extension);
     root_path         = ROOT_DIR + "/";
 
+    ## @TODO(stdmatt): We are setting to load the the font png files as textures...
     for path in Path(RES_DIR).glob(glob_pattern):
         quoted_path = pw_str_remove_all("\"{0}\"".format(path), root_path);
         filenames.append(quoted_path);
