@@ -33,7 +33,7 @@ const SCENE_GAME_STATE_PLAYING    = 1;
 const SCENE_GAME_STATE_PAUSED     = 2;
 const SCENE_GAME_STATE_EXITING    = 3;
 // UI
-const SCENE_GAME_SCREEN_GAP = 10;
+const SCENE_GAME_SCREEN_GAP = 20;
 
 const SCENE_GAME_PAUSED_FONT_SIZE            = 42;
 const SCENE_GAME_EXIT_PROMPT_TITLE_FONT_SIZE = 42;
@@ -118,7 +118,7 @@ class SceneGame
 
             // Board Visibility.
             this.board      .visible = true;
-            // this.boardBorder.visible = true;
+            this.boardBorder.visible = true;
 
             // Board Update.
             this.board.Update(dt);
@@ -173,7 +173,7 @@ class SceneGame
         this.prevState = this.currState;
         this.currState = newState;
 
-        // console.log("[STATE] ", this.prevState, " -> ", this.currState);
+        // dlog("[STATE] ", this.prevState, " -> ", this.currState);
     } // _ChangeState
 
 
@@ -225,12 +225,12 @@ class SceneGame
     {
         const screen_size = Get_Screen_Size();
 
-        this.board = new Board(this.progressionHandler);
+        this.board       = new Board(this.progressionHandler);
         this.boardBorder = new BoardBorder(this.board);
         pw_Add_To_Parent(this, this.boardBorder);
 
-        const game_hud_bottom_y = (this.hud.y + this.hud.height + SCENE_GAME_SCREEN_GAP);
-        this.boardBorder.x = (screen_size.x / 2) - (this.boardBorder.width / 2);
+        const game_hud_bottom_y = (this.hud.y + this.hud.height + SCENE_GAME_SCREEN_GAP * 0.5);
+        this.boardBorder.x = (screen_size.x * 0.5) - (this.boardBorder.width * 0.5);
         this.boardBorder.y = (game_hud_bottom_y);
 
         // Create the Board Border Tween.
@@ -253,7 +253,7 @@ class SceneGame
     _CreateStateTexts()
     {
         const screen_size = Get_Screen_Size();
-        const color       = chroma("black");
+        const color       = gPalette.GetMenuTextNormalColor();
 
         // Pause Text.
         this.pauseText = new pw_Text("PAUSED", FONT_COMMODORE, SCENE_GAME_PAUSED_FONT_SIZE);
