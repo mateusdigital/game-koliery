@@ -35,41 +35,8 @@ const SCENE_HIGHSCORE_BOARD_BLINK_TWEEN_DURATION_MS      = 500;
 const SCENE_HIGHSCORE_DELAY_TO_GO_BACK_TO_OTHER_SCENE_MS = 500;
 
 // Sound
-const SCENE_HIGHSCORE_MUSIC_BACKGROUND = ""; //MUSIC_KOMIKU_06_SCHOOL;
-const SCENE_HIGHSCORE_EFFECT_MENU      = ""; //MUSIC_MENU_INTERACTION;
-
-class FetchUI
-    extends PIXI.Container
-{
-    constructor()
-    {
-        super();
-
-
-        this.fetch_status_text = null;
-        const screen_size = Get_Screen_Size();
-
-        // Title Text.
-        this.fetch_status_text = new pw_Text("FETCHING SCORES", FONT_COMMODORE, SCENE_HIGHSCORE_TITLE_FONT_SIZE);
-        // Apply_TextGradientEffect(this.fetch_status_text, gPalette.GetScoreColor(0));
-
-        pw_Anchor_Center(this.fetch_status_text);
-        this.fetch_status_text.x = (screen_size.x * 0.5);
-        this.fetch_status_text.y = (screen_size.y * 0.5);
-
-        pw_Add_To_Parent(this.fetch_status_text);
-    }
-
-    Start()
-    {
-
-    }
-
-    Stop(callback)
-    {
-        callback();
-    }
-}
+const SCENE_HIGHSCORE_MUSIC_BACKGROUND = RES_AUDIO_ROLEMUSIC_W1X_MP3;
+const SCENE_HIGHSCORE_EFFECT_MENU      = RES_AUDIO_MENU_INTERACTION_WAV;
 
 
 //------------------------------------------------------------------------------
