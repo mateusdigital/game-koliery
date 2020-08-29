@@ -21,7 +21,7 @@ function _PRINT_OBJECTS_ID(col)
     for(let i = 0; i < col.length; ++i) {
         s += col[i].blockId + ",";
     }
-    // console.log(s);
+    // dlog(s);
 }
 
 function _SORT_OBJECTS_ID(col)
@@ -85,29 +85,29 @@ class MatchInfo
             //     continue;
             // }
 
-            // console.log(i, " - Checking block: ", block.blockId);
+            // dlog(i, " - Checking block: ", block.blockId);
             const info = this._CheckMatches(block);
             if(info.horizontal_blocks.length != 0) {
-                // console.log("Horizontal");
+                // dlog("Horizontal");
                 _PRINT_OBJECTS_ID(info.horizontal_blocks)
             }
             if(info.vertical_blocks.length != 0) {
-                // console.log("vertical");
+                // dlog("vertical");
                 _PRINT_OBJECTS_ID(info.vertical_blocks)
             }
             if(info.diagonal1_blocks.length != 0) {
-                // console.log("diagonal1_blocks");
+                // dlog("diagonal1_blocks");
                 _PRINT_OBJECTS_ID(info.diagonal1_blocks)
             }
             if(info.diagonal2_blocks.length != 0) {
-                // console.log("diagonal2_blocks");
+                // dlog("diagonal2_blocks");
                 _PRINT_OBJECTS_ID(info.diagonal2_blocks)
             }
 
-            // console.log("ALL MATCHED");
+            // dlog("ALL MATCHED");
             _SORT_OBJECTS_ID (this.allMatchedBlocks);
             _PRINT_OBJECTS_ID(this.allMatchedBlocks);
-            // console.log("-----");
+            // dlog("-----");
             if(info.has_match) {
                 this.infos.push(info);
             }
