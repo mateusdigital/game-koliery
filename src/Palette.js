@@ -71,7 +71,15 @@ class Palette
         // return chroma(colors[colorIndex]);
         const len = HIGHSCORE_MAX_ENTRIES;
         return chroma.hsl((360 / len) * index, 0.7, 0.5);
-    }
+    } // GetScoreColor
+
+    //--------------------------------------------------------------------------
+    GetRandomScoreColor()
+    {
+        const index = pw_Random_Int(0, HIGHSCORE_MAX_ENTRIES);
+        return this.GetScoreColor(index);
+    } // GetRandomScoreColor
+
 
     //--------------------------------------------------------------------------
     _InitializeBlockColors()
