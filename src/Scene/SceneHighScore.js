@@ -19,7 +19,11 @@
 // SceneHighScore                                                             //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const SCENE_HIGHSCORE_FONT_SIZE                     = 40;
+const SCENE_HIGHSCORE_TITLE_FONT_SIZE       = 50;
+const SCENE_HIGHSCORE_SCORE_ITEM_FONT_SIZE  = 40;
+const SCENE_HIGHSCORE_EDIT_TITLE_FONT_SIZE  = 22;
+const SCENE_HIGHSCORE_EDIT_FIELD_FONT_SIZE  = 40;
+
 const SCENE_HIGHSCORE_TEXT_EFFECT_DURATION_MS       = 300;
 const SCENE_HIGHSCORE_TEXT_EFFECT_DELAY_DURATION_MS = 300;
 
@@ -34,6 +38,39 @@ const SCENE_HIGHSCORE_DELAY_TO_GO_BACK_TO_OTHER_SCENE_MS = 500;
 const SCENE_HIGHSCORE_MUSIC_BACKGROUND = ""; //MUSIC_KOMIKU_06_SCHOOL;
 const SCENE_HIGHSCORE_EFFECT_MENU      = ""; //MUSIC_MENU_INTERACTION;
 
+class FetchUI
+    extends PIXI.Container
+{
+    constructor()
+    {
+        super();
+
+
+        this.fetch_status_text = null;
+        const screen_size = Get_Screen_Size();
+
+        // Title Text.
+        this.fetch_status_text = new pw_Text("FETCHING SCORES", FONT_COMMODORE, SCENE_HIGHSCORE_TITLE_FONT_SIZE);
+        // Apply_TextGradientEffect(this.fetch_status_text, gPalette.GetScoreColor(0));
+
+        pw_Anchor_Center(this.fetch_status_text);
+        this.fetch_status_text.x = (screen_size.x * 0.5);
+        this.fetch_status_text.y = (screen_size.y * 0.5);
+
+        pw_Add_To_Parent(this.fetch_status_text);
+    }
+
+    Start()
+    {
+
+    }
+
+    Stop(callback)
+    {
+        callback();
+    }
+}
+
 
 //------------------------------------------------------------------------------
 class SceneHighScore
@@ -47,37 +84,34 @@ class SceneHighScore
         //
         // iVars.
         // Properties.
-        this.scoresInfo         = HIGHSCORE_MANAGER.GetScores();
+        // @XXX(stdamtt): Check this properties....
         this.sceneToGoBackClass = sceneToGoBackClass;
         this.options            = options;
+
+        this.score_texts       = [];
+        this.score_tween_group = null;
 
         // Title.
         this.titleText  = null;
         this.titleLine  = null;
-        // Score Panel.
-        this.scoreTexts      = [];
-        this.scoreTweenGroup = pw_Tween_CreateGroup();
-        // Edit.
-        this.editTitle          = null;
-        this.editField          = null;
-        this.editFieldChars     = [];
-        this.editFadeTweenGroup = null;
-        this.editFadeTween      = null;
-        this.editLocked         = false;
 
-        this.blinkTweenGroup = null;
-        this.blinkTween      = null;
+        // Fetch Status.
+        this.fetch_status_text  = null;
+        this.fetch_status_tween = null;
 
         //
         // Initialize.
-        // If player is out of ranks make the scene non editable...
-        if(HIGHSCORE_MANAGER.GetCurrentScorePosition() == HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
-            this.options = SCENE_HIGHSCORE_OPTIONS_NONE;
-        }
-
         this._CreateTitleUI();
-        this._CreateScoreUI();
-        this._CreateEditUI ();
+
+        if(!HIGHSCORE_MANAGER.is_initialized) {
+            this._CreateFetchUI();
+            HIGHSCORE_MANAGER.FetchScoresWithCallback(()=>{
+                this._DismissFetchUI();
+                this._CreateScoreUI ();
+            });
+        } else {
+            this._CreateScoreUI();
+        }
 
         gAudio.Play(SCENE_HIGHSCORE_MUSIC_BACKGROUND);
     } // ctor
@@ -139,7 +173,9 @@ class SceneHighScore
     {
         gStarfield.Update(dt);
 
-        this.scoreTweenGroup.update();
+        if(this.score_tween_group) {
+            this.score_tween_group.update();
+        }
 
         // Viewing high cores.
         if(this.options != SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
@@ -149,14 +185,14 @@ class SceneHighScore
             }
         }
 
-        // Adding new high score.
-        else if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
-            this.editFadeTweenGroup.update();
-        }
+        // // Adding new high score.
+        // else if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
+        //     this.editFadeTweenGroup.update();
+        // }
 
-        if(this.blinkTweenGroup) {
-            this.blinkTweenGroup.update();
-        }
+        // if(this.blinkTweenGroup) {
+        //     this.blinkTweenGroup.update();
+        // }
     } // Update
 
     //--------------------------------------------------------------------------
@@ -165,24 +201,23 @@ class SceneHighScore
         const screen_size = Get_Screen_Size();
 
         // Title Text.
-        this.titleText = Create_Normal_Text("HIGH SCORES", SCENE_HIGHSCORE_TITLE_FONT_SIZE);
+        this.titleText = new pw_Text("HIGH SCORES", FONT_COMMODORE, SCENE_HIGHSCORE_TITLE_FONT_SIZE);
         Apply_TextGradientEffect(this.titleText, gPalette.GetScoreColor(0));
-
+        pw_Anchor_Center(this.titleText);
         this.titleText.x = (screen_size.x         * 0.5);
         this.titleText.y = (this.titleText.height * 0.5) + 50;
-        this.addChild(this.titleText);
 
         // Title Line.
         this.titleLine = new PIXI.Sprite(PIXI.Texture.WHITE);
         Apply_TextGradientEffect(this.titleLine, chroma("#5a5a5a"));
-
+        pw_Anchor_Center(this.titleLine);
         this.titleLine.width  = this.titleText.width;
         this.titleLine.height = 15;
 
-        this.titleLine.x = this.titleText.x - (this.titleText.width  * 0.5);
-        this.titleLine.y = this.titleText.y + (this.titleText.height * 0.5);
+        this.titleLine.x = this.titleText.x;
+        this.titleLine.y = this.titleText.y + this.titleText.height * 0.5 + this.titleLine.height * 0.5;
 
-        this.addChild(this.titleLine);
+        pw_Add_To_Parent(this, this.titleText, this.titleLine);
     } // _CreateTitleUI
 
     //--------------------------------------------------------------------------
@@ -190,42 +225,41 @@ class SceneHighScore
     {
         const screen_size = Get_Screen_Size();
         const initial_y   = this.titleLine.y + this.titleLine.height + 20;
+        const scores      = HIGHSCORE_MANAGER.scores;
 
-        for(let i = 0; i < this.scoresInfo.length; ++i) {
-            // Tween.
+        this.score_tween_group = pw_Tween_CreateGroup();
+
+        for(let i = 0; i < scores.length; ++i) {
+            // Uncover Tween.
             const tween = pw_Tween_CreateBasic(
                 SCENE_HIGHSCORE_TEXT_EFFECT_DURATION_MS,
-                this.scoreTweenGroup
+                this.score_tween_group
             )
             .delay(SCENE_HIGHSCORE_TEXT_EFFECT_DELAY_DURATION_MS * (i + 1))
             .start();
 
             // Text.
-            const info  = this.scoresInfo[i];
-            const str   = this._BuildScoreString(i + 1, info);
-            const color = chroma(gPalette.GetScoreColor(i));
+            const curr_score = scores[i];
+            const str        = this._BuildScoreString(i + 1, curr_score);
+            const color      = chroma(gPalette.GetScoreColor(i));
 
-            const text   = Create_Normal_Text(str, SCENE_HIGHSCORE_SCORE_ITEM_FONT_SIZE);
+            const text   = new pw_Text(str, FONT_COMMODORE, SCENE_HIGHSCORE_SCORE_ITEM_FONT_SIZE);
             const height = SCENE_HIGHSCORE_SCORE_ITEM_FONT_SIZE;
-            // @BUG(stdmatt): By some reason glypher is generating the fonts with
-            // different height - 40 and 41. So the calculations are messed up with
-            // this.
-            // To overcome the bug we are setting the height as the font size
-            // as it should be anyways, but we REALLY need to take a look
-            // why this is happening.
+
             Apply_TextUncoverEffect (text, tween);
             Apply_TextGradientEffect(text, color);
 
+            pw_Anchor_Center(text);
             text.x = (screen_size.x * 0.5);
             text.y = initial_y + (height * i) + (height * 0.5);
 
             this.addChild(text);
-            this.scoreTexts.push(text);
+            this.score_texts.push(text);
         }
 
         // Animation Finished.
         if(this.options == SCENE_HIGHSCORE_OPTIONS_GO_BACK_AUTOMATICALLY) {
-            this.scoreTweenGroup.onComplete(()=>{
+            this.score_tween_group.onComplete(()=>{
                  // @XXX This should be encapsulated in a library functionality.
                  // This way the application will have control how to handle
                  // the timing itself. Right now I have no idea what's behind
@@ -236,31 +270,79 @@ class SceneHighScore
             });
         }
 
-        if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
-            const index = HIGHSCORE_MANAGER.GetCurrentScorePosition();
-            if(index == HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
-                return;
-            }
+        // if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
+        //     const index = HIGHSCORE_MANAGER.GetCurrentScorePosition();
+        //     if(index == HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
+        //         return;
+        //     }
 
-            const info = this.scoresInfo[index];
-            info.name  = "---";
-            this.scoreTexts[index].text = this._BuildScoreString(index + 1, info);
+        //     const info = this.scoresInfo[index];
+        //     info.name  = "---";
+        //     this.scoreTexts[index].text = this._BuildScoreString(index + 1, info);
 
-            this.scoreTweenGroup.onComplete(()=>{
-                this.blinkTweenGroup = pw_Tween_CreateGroup();
-                this.blinkTween      = pw_Tween_CreateBasic(
-                    SCENE_HIGHSCORE_BOARD_BLINK_TWEEN_DURATION_MS,
-                    this.blinkTweenGroup
-                )
-                .repeat(Infinity)
-                .onRepeat(()=>{
-                    this.scoreTexts[index].visible = !this.scoreTexts[index].visible;
-                })
-                .start();
-            });
-        }
-
+        //     this.score_tween_group.onComplete(()=>{
+        //         this.blinkTweenGroup = pw_Tween_CreateGroup();
+        //         this.blinkTween      = pw_Tween_CreateBasic(
+        //             SCENE_HIGHSCORE_BOARD_BLINK_TWEEN_DURATION_MS,
+        //             this.blinkTweenGroup
+        //         )
+        //         .repeat(Infinity)
+        //         .onRepeat(()=>{
+        //             this.scoreTexts[index].visible = !this.scoreTexts[index].visible;
+        //         })
+        //         .start();
+        //     });
+        // }
     } // _CreateScoreUI
+
+    //--------------------------------------------------------------------------
+    _CreateFetchUI()
+    {
+        const screen_size = Get_Screen_Size();
+        const min_pos_y =  (screen_size.y * 0.5) - 100;
+        const max_pos_y =  (screen_size.y * 0.5) + 100;
+        // @CleanUp - Remove magic numbers...
+
+        //
+        //
+        this.fetch_status_text = new pw_Text("FETCHING SCORES", FONT_COMMODORE, 30);
+        Apply_TextGradientEffect(this.fetch_status_text, gPalette.GetScoreColor(0));
+        pw_Anchor_Center(this.fetch_status_text);
+        this.fetch_status_text.x = (screen_size.x * 0.5);
+        this.fetch_status_text.y = min_pos_y;
+        pw_Add_To_Parent(this, this.fetch_status_text);
+
+        //
+        //
+        this.fetch_status_tween = pw_Tween_CreateBasic(1500)
+            .repeat(Infinity)
+            .yoyo  (true)
+            .onRepeat(()=>{
+                const color = gPalette.GetRandomScoreColor();
+                Apply_TextGradientEffect(this.fetch_status_text, color);
+            })
+            .onUpdate((v)=>{
+                const value = pw_Math_Map(
+                    v.value,
+                    0, 1,
+                    min_pos_y, max_pos_y
+                );
+                this.fetch_status_text.y = value;
+            })
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .start();
+    }
+
+    //--------------------------------------------------------------------------
+    _DismissFetchUI()
+    {
+        // @TODO: Create animation to scale down the text....
+        this.fetch_status_tween.stop();
+        this.fetch_status_tween = null;
+
+        pw_Remove_From_Parent(this.fetch_status_text);
+    }
+
 
     //--------------------------------------------------------------------------
     _CreateEditUI()
@@ -273,7 +355,7 @@ class SceneHighScore
         const last_score_text = pw_Array_GetLast(this.scoreTexts);
 
         // Edit Title.
-        this.editTitle = Create_Normal_Text("Enter your initials", SCENE_HIGHSCORE_EDIT_TITLE_FONT_SIZE);
+        this.editTitle = new pw_Text("Enter your initials", FONT_COMMODORE, SCENE_HIGHSCORE_EDIT_TITLE_FONT_SIZE);
         Apply_TextGradientEffect(this.editTitle, chroma("gray"));
 
         this.editTitle.x = screen_size.x * 0.5;
@@ -282,7 +364,7 @@ class SceneHighScore
         this.addChild(this.editTitle);
 
         // Edit Field.
-        this.editField = Create_Normal_Text("_ _ _", SCENE_HIGHSCORE_EDIT_FIELD_FONT_SIZE);
+        this.editField = new pw_Text("_ _ _", FONT_COMMODORE, SCENE_HIGHSCORE_EDIT_FIELD_FONT_SIZE);
         Apply_TextGradientEffect(this.editField, chroma("gray"));
 
         this.editField.x = screen_size.x * 0.5;
@@ -315,7 +397,7 @@ class SceneHighScore
     _BuildScoreString(index, info)
     {
         const pos_str   = Build_Digits_String("", 2, index);
-        const name_str  = info.name;
+        const name_str  = pw_String_ToUpper(info.name);
         const score_str = Build_Digits_String("", HIGHSCORE_MAX_DIGITS, info.score);
 
         return pw_String_Cat(pos_str, " ", name_str, " ", score_str);
