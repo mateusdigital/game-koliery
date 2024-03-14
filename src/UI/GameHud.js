@@ -65,7 +65,7 @@ class GameHud
         pw_Anchor_Set(this.marqueeText, 1, 0.5);
         pw_Anchor_Set(this.levelText  , 1, 0.5);
 
-        const screen_size = Get_Screen_Size();
+        const screen_size = Get_Design_Size();
         const GAP         = 5;
 
         this.scoreText.x = GAME_HUD_TEXT_GAP;

@@ -74,6 +74,7 @@ class pw_Scene_Manager
         this.sceneStack.push(scene);
         _pw_App.stage.addChild(this.currScene);
 
+        this.currScene.OnSizeChanged();
         this.currScene.OnEnter();
     } // Push Scene
 
@@ -115,9 +116,9 @@ class pw_Scene_Manager
     }
 
     //--------------------------------------------------------------------------
-    Resize(width, height)
+    Resize()
     {
-        this.currScene.OnSizeChanged(width, height);
+        this.currScene.OnSizeChanged();
     }
 }; // class SceneManager
 

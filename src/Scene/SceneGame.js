@@ -223,7 +223,7 @@ class SceneGame
     //--------------------------------------------------------------------------
     _CreateBoard()
     {
-        const screen_size = Get_Screen_Size();
+        const screen_size = Get_Design_Size();
 
         this.board       = new Board(this.progressionHandler);
         this.boardBorder = new BoardBorder(this.board);
@@ -252,7 +252,7 @@ class SceneGame
     //--------------------------------------------------------------------------
     _CreateStateTexts()
     {
-        const screen_size = Get_Screen_Size();
+        const screen_size = Get_Design_Size();
         const color       = gPalette.GetMenuTextNormalColor();
 
         // Pause Text.

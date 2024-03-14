@@ -31,11 +31,13 @@ let gPalette     = null;
 let gStarfield   = null;
 let gAudio       = null;
 
+
 //------------------------------------------------------------------------------
 function
 PreInit()
 {
-    pw_Application_Create(GAME_DESIGN_WIDTH, GAME_DESIGN_HEIGHT);
+    const size = Get_Screen_Size();
+    pw_Application_Create(size.x, size.y);
 }
 
 
@@ -97,17 +99,6 @@ Setup()
 function
 GameLoop(delta)
 {
-}
-
-
-//----------------------------------------------------------------------------//
-// Input Handlers                                                             //
-//----------------------------------------------------------------------------//
-//------------------------------------------------------------------------------
-function
-MouseMove(e)
-{
-    gAudio.enabled = true;
 }
 
 //----------------------------------------------------------------------------//

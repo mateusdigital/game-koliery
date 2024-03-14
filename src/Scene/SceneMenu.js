@@ -64,10 +64,8 @@ class SceneMenu
         // Marquee Text.
         this.marqueeStrings = [
             "DEVELOPED BY",
-            "STDMATT",
+            "MATEUS.DIGITAL",
             // "",
-            "THANKS TO",
-            "MY BEAUTIFUL WIFE ALEX",
             // "",
             "GREETINGS TO THE FRIENDS",
             "OF PROGRAMMERS HIDEOUT",
@@ -75,6 +73,8 @@ class SceneMenu
             "AND A BIG BIG KISS",
             "TO MY MOM AND PINGO",
             "-- I MISS YOU --",
+            "",
+            "FOR MARLA",
             "",
             "",
         ];
@@ -244,13 +244,13 @@ class SceneMenu
             this.titleText.push(text);
         }
 
-        const screen_size = Get_Screen_Size();
+        const screen_size = Get_Design_Size();
         this.titleTextLayer.pivot.set(
             this.titleTextLayer.width  * 0.5,
             this.titleTextLayer.height * 0.5
         );
         this.titleTextLayer.x = (screen_size.x * 0.50)
-        this.titleTextLayer.y = (screen_size.y * 0.30) - (this.titleTextSinAmplitude * 2);
+        this.titleTextLayer.y = (screen_size.y * 0.22) - (this.titleTextSinAmplitude * 2);
 
         this.addChild(this.titleTextLayer);
     } // _InitializeTitleText
@@ -258,7 +258,7 @@ class SceneMenu
     //--------------------------------------------------------------------------
     _InitializeLevelText()
     {
-        const screen_size      = Get_Screen_Size();
+        const screen_size      = Get_Design_Size();
         const create_text_func = (str, font_size) => {
             // Tween.
             const tween = pw_Tween_CreateBasic(
@@ -306,7 +306,7 @@ class SceneMenu
         // Apply_Debug_Filter(this.levelTextLayer);
         // Text Layer.
         this.levelTextLayer.x = (screen_size.x * 0.50);
-        this.levelTextLayer.y = (screen_size.y * 0.45);
+        this.levelTextLayer.y = (screen_size.y * 0.40);
 
         this.addChild(this.levelTextLayer);
 
@@ -326,7 +326,7 @@ class SceneMenu
         );
 
         // Text.
-        const screen_size = Get_Screen_Size();
+        const screen_size = Get_Design_Size();
         const str         = this.marqueeStrings[0];
         const color       = chroma("black");
 

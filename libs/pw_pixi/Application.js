@@ -49,11 +49,9 @@ pw_Application_Create(width, height, seed=null)
 function
 __resize() {
 
-    const width  = window.innerWidth;
-    const height =  window.innerHeight
-
-    _pw_App.renderer.resize(width, height);
-    PW_SCENE_MANAGER.Resize(width, height);
+    const size = Get_Screen_Size();
+    _pw_App.renderer.resize(size.x, size.y);
+    PW_SCENE_MANAGER.Resize();
 
 }
 

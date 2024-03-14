@@ -24,8 +24,45 @@
 function Get_Screen_Size()
 {
     // @TODO(stdmatt): cache the values...
+    // return pw_Vector_Create(document.documentElement.clientWidth, document.documentElement.clientHeight);
+    // return pw_Vector_Create(window.innerWidth, window.innerHeight);
+
+    return pw_Vector_Create(document.documentElement.clientWidth, document.documentElement.clientHeight);
+}
+
+//------------------------------------------------------------------------------
+function Get_Design_Size()
+{
     return pw_Vector_Create(GAME_DESIGN_WIDTH, GAME_DESIGN_HEIGHT);
 }
+
+//------------------------------------------------------------------------------
+function Get_Actual_Size()
+{
+    return pw_Vector_Create(_actualWidth(), _actualHeight());
+}
+
+//------------------------------------------------------------------------------
+// https://coderevue.net/posts/scale-to-fit-screen-pixijs/
+//------------------------------------------------------------------------------
+function _actualWidth() {
+    const size = Get_Screen_Size();
+    const design = Get_Design_Size();
+
+    const isWidthConstrained = size.x < size.y * (design.x / design.y);
+    return isWidthConstrained ? size.x : size.y * (design.x / design.y);
+}
+
+//------------------------------------------------------------------------------
+function _actualHeight() {
+    const size = Get_Screen_Size();
+    const design = Get_Design_Size();
+
+    const isHeightConstrained = size.x * (design.y / design.x) > size.y;
+    return isHeightConstrained ? size.y : size.x * (design.y / design.x);
+  }
+
+
 
 //------------------------------------------------------------------------------
 function Go_To_Scene(...args)

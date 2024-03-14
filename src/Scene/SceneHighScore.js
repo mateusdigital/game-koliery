@@ -165,7 +165,7 @@ class SceneHighScore
     //--------------------------------------------------------------------------
     _CreateTitleUI()
     {
-        const screen_size = Get_Screen_Size();
+        const screen_size = Get_Design_Size();
 
         // Title Text.
         this.titleText = new pw_Text("HIGH SCORES", FONT_COMMODORE, SCENE_HIGHSCORE_TITLE_FONT_SIZE);
@@ -190,7 +190,7 @@ class SceneHighScore
     //--------------------------------------------------------------------------
     _CreateScoreUI()
     {
-        const screen_size = Get_Screen_Size();
+        const screen_size = Get_Design_Size();
         const initial_y   = this.titleLine.y + this.titleLine.height + 20;
         const scores      = HIGHSCORE_MANAGER.scores;
 
@@ -265,7 +265,7 @@ class SceneHighScore
     //--------------------------------------------------------------------------
     _CreateFetchUI()
     {
-        const screen_size = Get_Screen_Size();
+        const screen_size = Get_Design_Size();
         const min_pos_y =  (screen_size.y * 0.5) - 100;
         const max_pos_y =  (screen_size.y * 0.5) + 100;
         // @CleanUp - Remove magic numbers...
@@ -318,7 +318,7 @@ class SceneHighScore
             return;
         }
 
-        const screen_size     = Get_Screen_Size();
+        const screen_size     = Get_Design_Size();
         const last_score_text = pw_Array_GetLast(this.scoreTexts);
 
         // Edit Title.

@@ -56,12 +56,27 @@ class pw_Base_Scene
         // Do nothing...
     }
 
-    OnSizeChanged(width, height)
+    OnSizeChanged()
     {
-        var design = Get_Design_Size();
-        var screen = Get_Screen_Size();
+        const design = Get_Design_Size();
+        const screen = Get_Screen_Size();
+        const actual = Get_Actual_Size();
 
-        this.x = screen.x * 0.5 - design.x * 0.5;
-        this.y = screen.y * 0.5 - design.y * 0.5;
+        let x, y;
+        if(screen.x < design.x || screen.y < design.y) {
+            this.scale.x = actual.x / design.x;
+            this.scale.y = actual.y / design.y;
+
+            x = screen.x * 0.5 - actual.x * 0.5;
+            y = screen.y * 0.5 - actual.y * 0.5;
+        } else {
+            x = screen.x * 0.5 - design.x * 0.5;
+            y = screen.y * 0.5 - design.y * 0.5;
+        }
+
+        this.x =  x;
+        this.y =  y;
     }
+
+
 }; // class BaseScene
