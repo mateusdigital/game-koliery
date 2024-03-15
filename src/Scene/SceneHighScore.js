@@ -66,6 +66,8 @@ class SceneHighScore
         this.fetch_status_text  = null;
         this.fetch_status_tween = null;
 
+        this.editFieldChars = [];
+
         //
         // Initialize.
         this._CreateTitleUI();
@@ -75,9 +77,11 @@ class SceneHighScore
             HIGHSCORE_MANAGER.FetchScoresWithCallback(()=>{
                 this._DismissFetchUI();
                 this._CreateScoreUI ();
+                this._CreateEditUI  ();
             });
         } else {
             this._CreateScoreUI();
+            this._CreateEditUI ();
         }
 
         gAudio.Play(SCENE_HIGHSCORE_MUSIC_BACKGROUND);
@@ -87,7 +91,7 @@ class SceneHighScore
     OnEnter()
     {
         if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
-            Input_AddKeyboardListener(this);
+            // Input_AddKeyboardListener(this);
         }
     } // OnEnter
 
@@ -95,7 +99,7 @@ class SceneHighScore
     OnExit()
     {
         if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
-            Input_RemoveKeyboardListener(this);
+            // Input_RemoveKeyboardListener(this);
         }
     } // OnExit
 
@@ -152,14 +156,16 @@ class SceneHighScore
             }
         }
 
-        // // Adding new high score.
-        // else if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
-        //     this.editFadeTweenGroup.update();
-        // }
+        // Adding new high score.
+        else if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
+            if(this.editFadeTweenGroup) {
+                this.editFadeTweenGroup.update();
+            }
+        }
 
-        // if(this.blinkTweenGroup) {
-        //     this.blinkTweenGroup.update();
-        // }
+        if(this.blinkTweenGroup) {
+            this.blinkTweenGroup.update();
+        }
     } // Update
 
     //--------------------------------------------------------------------------
@@ -236,30 +242,6 @@ class SceneHighScore
                 }, SCENE_HIGHSCORE_DELAY_TO_GO_BACK_TO_OTHER_SCENE_MS)
             });
         }
-
-        // if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
-        //     const index = HIGHSCORE_MANAGER.GetCurrentScorePosition();
-        //     if(index == HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
-        //         return;
-        //     }
-
-        //     const info = this.scoresInfo[index];
-        //     info.name  = "---";
-        //     this.scoreTexts[index].text = this._BuildScoreString(index + 1, info);
-
-        //     this.score_tween_group.onComplete(()=>{
-        //         this.blinkTweenGroup = pw_Tween_CreateGroup();
-        //         this.blinkTween      = pw_Tween_CreateBasic(
-        //             SCENE_HIGHSCORE_BOARD_BLINK_TWEEN_DURATION_MS,
-        //             this.blinkTweenGroup
-        //         )
-        //         .repeat(Infinity)
-        //         .onRepeat(()=>{
-        //             this.scoreTexts[index].visible = !this.scoreTexts[index].visible;
-        //         })
-        //         .start();
-        //     });
-        // }
     } // _CreateScoreUI
 
     //--------------------------------------------------------------------------
@@ -318,8 +300,19 @@ class SceneHighScore
             return;
         }
 
+        const leaderboard_index = 1; // HIGHSCORE_MANAGER.GetCurrentScorePosition();
+        if(leaderboard_index == HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
+            return;
+        }
+
+        this.scoresInfo = HIGHSCORE_MANAGER.GetScores();
+
+        const info = this.scoresInfo[leaderboard_index];
+        info.name  = "---";
+        this.score_texts[leaderboard_index].text = this._BuildScoreString(leaderboard_index + 1, info);
+
         const screen_size     = Get_Design_Size();
-        const last_score_text = pw_Array_GetLast(this.scoreTexts);
+        const last_score_text = this.score_texts[this.score_texts.length -1];
 
         // Edit Title.
         this.editTitle = new pw_Text("Enter your initials", FONT_COMMODORE, SCENE_HIGHSCORE_EDIT_TITLE_FONT_SIZE);
@@ -347,16 +340,28 @@ class SceneHighScore
             this.editTitle.visible = false;
 
             this.options = SCENE_HIGHSCORE_OPTIONS_NONE;
-
-            const index = HIGHSCORE_MANAGER.GetCurrentScorePosition();
-            const info  = this.scoresInfo[index];
+            const info  = this.scoresInfo[leaderboard_index];
             info.name   = "";
             for(let i = 0; i < this.editFieldChars.length; ++i) {
                 info.name += this.editFieldChars[i];
             }
 
-            this.scoreTexts[index].text = this._BuildScoreString(index + 1, info);
+            this.score_texts[leaderboard_index].text = this._BuildScoreString(leaderboard_index + 1, info);
             HIGHSCORE_MANAGER.UploadScore(info.name);
+        });
+
+
+        this.score_tween_group.onComplete(()=>{
+            this.blinkTweenGroup = pw_Tween_CreateGroup();
+            this.blinkTween      = pw_Tween_CreateBasic(
+                SCENE_HIGHSCORE_BOARD_BLINK_TWEEN_DURATION_MS,
+                this.blinkTweenGroup
+            )
+            .repeat(Infinity)
+            .onRepeat(()=>{
+                this.score_texts[leaderboard_index].visible = !this.score_texts[leaderboard_index].visible;
+            })
+            .start();
         });
     } // _CreateEditUI
 

@@ -180,16 +180,21 @@ pw_Input_InstallBasicKeyboardHandler(htmlElement)
             return;
         }
         _pw_Input_ChangeKey(event.keyCode, true);
-        if(typeof(OnKeyDown) == "function") {
-            OnKeyDown(event);
+
+        if(PW_SCENE_MANAGER && PW_SCENE_MANAGER.currScene) {
+            if(typeof(PW_SCENE_MANAGER.currScene.OnKeyDown) == "function") {
+                PW_SCENE_MANAGER.currScene.OnKeyDown(event.keyCode);
+            }
         }
     });
 
     // Keyup.
     htmlElement.addEventListener('keyup', (event) => {
         _pw_Input_ChangeKey(event.keyCode, false);
-        if(typeof(OnKeyUp) == "function") {
-            OnKeyUp(event);
+        if(PW_SCENE_MANAGER && PW_SCENE_MANAGER.currScene) {
+            if(typeof(PW_SCENE_MANAGER.currScene.OnKeyUp) == "function") {
+                PW_SCENE_MANAGER.currScene.OnKeyUp(event.keyCode);
+            }
         }
     });
 }

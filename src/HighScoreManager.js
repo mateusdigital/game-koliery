@@ -55,6 +55,18 @@ _Create_MockScores()
     // i can't get there  no way... I hope that this don't last long.
     // But to be honest, I'm ok  compared with ppl that are rally bad...
     // I'm quite fortunate - stdmatt Aug 11, 2020.
+    //--------------------------------------------------------------------------
+    //
+    // Today is March 15, 2024... covid went away, I'm with Pingo and Mom back
+    // in Brasil and life has changed so much. New problems, new challenges,
+    // so much has changed...
+    //
+    // Marla is almost two years now, but unfortunately family isn't together
+    // anymore - I miss to stay all day with them, I feel so much for the
+    // miss opportunity that we had... it was so great and we just threw away.
+    //
+    // I love my daughter - time doesn't come back, but we can try to make
+    // things better in the future.
     for(let i = 1; i <= HIGHSCORE_MAX_ENTRIES; ++i) {
         const name  = names[pw_Random_Int(0, names.length)];
         const score = pw_Random_Int(HIGHSCORE_MOCK_SCORE_MIN, HIGHSCORE_MOCK_SCORE_MAX);

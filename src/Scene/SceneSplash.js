@@ -42,7 +42,7 @@ class SceneSplash
         this.effectTween     = this._CreateEffectTween();
 
         // Texts.
-        this.stdmattText  = new pw_Text("STDMATT",  FONT_COMMODORE, SPLASH_SCENE_FONT_SIZE);
+        this.stdmattText  = new pw_Text("MATEUSDIGITAL",  FONT_COMMODORE, SPLASH_SCENE_FONT_SIZE);
         this.presentsText = new pw_Text("PRESENTS", FONT_COMMODORE, SPLASH_SCENE_FONT_SIZE);
 
         //

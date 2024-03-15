@@ -93,7 +93,7 @@ class SceneCredits
                 gap  : 15,
             },
             {
-               title: ["STDMATT - MMXX", "gplv3 - hack, share it"],
+               title: ["mateusdigital - MMXX", "gplv3 - hack, share it"],
                    texts: ["\n#blacklivesmatter"],
                gap: 25
             }

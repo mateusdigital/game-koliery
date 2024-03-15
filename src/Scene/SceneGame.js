@@ -286,7 +286,7 @@ class SceneGame
             let l2 = new pw_Text("OR ENTER TO CONTINUE", FONT_COMMODORE, SCENE_GAME_EXIT_PROMPT_MSG_FONT_SIZE);
             pw_Anchor_Center(l2);
             l2.x = l1.x;
-            l2.y = (l1.y + l1.height * 0.5 + l2.height * 0.5);
+            l2.y = (l1.y + l1.height * 0.5 + l2.height * 0.5) + 5;
             Apply_TextGradientEffect(l2, color);
             this.exitText.addChild(l2);
 

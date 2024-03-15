@@ -56,6 +56,7 @@ class pw_Base_Scene
         // Do nothing...
     }
 
+    //--------------------------------------------------------------------------
     OnSizeChanged()
     {
         const design = Get_Design_Size();
@@ -77,6 +78,4 @@ class pw_Base_Scene
         this.x =  x;
         this.y =  y;
     }
-
-
 }; // class BaseScene

@@ -58,9 +58,9 @@ Preload()
 function
 Setup()
 {
-    // //
-    // // Initialize Scores.
-    // HIGHSCORE_MANAGER.FetchScores();
+    //
+    // Initialize Scores.
+    HIGHSCORE_MANAGER.FetchScores();
 
     //
     // Initialize Audio.

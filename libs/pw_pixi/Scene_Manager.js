@@ -29,7 +29,6 @@ class pw_Scene_Manager
         if(!query_obj) {
             return false;
         }
-
         const target_scene_name = query_obj.get("scene");
         if(!target_scene_name) {
             return false;
