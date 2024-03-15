@@ -111,21 +111,6 @@ class SceneMenu
             this._OnMenuSelection();
         }
 
-
-        // if(pw_Keyboard_IsClick(PW_KEY_1)) {
-        //     gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
-        //     Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_EASY);
-        // } else if(pw_Keyboard_IsClick(PW_KEY_2)) {
-        //     gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
-        //     Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_MEDIUM);
-        // } else if(pw_Keyboard_IsClick(PW_KEY_3)) {
-        //     gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
-        //     Go_To_Scene(SceneGame, SCENE_GAME_LEVEL_HARD);
-        // } else if(pw_Keyboard_IsClick(PW_KEY_H)){
-        //     gAudio.PlayEffect(SCENE_MENU_EFFECT_MENU);
-        //     ;
-        // }
-
         // Tweens.
         this.levelTweenGroup  .update();
         this.marqueeTweenGroup.update();
@@ -228,7 +213,7 @@ class SceneMenu
 
         for(let i = 0; i < str_len; ++i) {
             const c     = SCENE_MENU_TITLE_STR[i];
-            const color = chroma.hsl((360 / str_len) * i, 0.5, 0.5);
+            const color = gPalette.GetTitleCharColor(i);
             const text  = new pw_Text(c, FONT_PIXELFORCE, SCENE_MENU_TITLE_SIZE, color.num());
 
             let prev_x = 0;

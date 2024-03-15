@@ -74,7 +74,7 @@ class SceneCredits
         this.creditsStructure = [
             {
                 title: ["Programming"],
-                texts: ["stdmatt"],
+                texts: ["mateusdigital"],
                 gap  : 0,
             },
             {
