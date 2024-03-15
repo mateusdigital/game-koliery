@@ -334,12 +334,18 @@ class Board
         const index_x = this.currPiecePlaceCoord.x;
         const index_y = this.currPiecePlaceCoord.y;
 
+        let stateToChange = BOARD_STATE_PLACING_PIECE_FINISHED;
         this.blocksToTryFindMatch = [];
         for(let i = 0; i < PIECE_BLOCKS_COUNT; ++i) {
             let block = this.currPiece.blocks[i];
-
-            this.blocksToTryFindMatch.push(block);
-            this._SetBlockAt(block, index_x, (index_y - i -1));
+            let place_index_y = (index_y - i -1);
+            if(place_index_y < 0) {
+                stateToChange = BOARD_STATE_GAME_OVER;
+                continue;
+            } else {
+                this.blocksToTryFindMatch.push(block);
+                this._SetBlockAt(block, index_x, place_index_y);
+            }
         }
 
         // Reset the state vars...
@@ -347,7 +353,7 @@ class Board
         this.currPiecePlaceCoord = null;
 
         gAudio.PlayEffect(RES_AUDIO_PIECE_PLACE_WAV);
-        this._ChangeState(BOARD_STATE_PLACING_PIECE_FINISHED);
+        this._ChangeState(stateToChange);
     } // _PlacePiece
 
     //--------------------------------------------------------------------------

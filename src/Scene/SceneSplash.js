@@ -47,7 +47,7 @@ class SceneSplash
 
         //
         // Initialize.
-        const screen_size = Get_Screen_Size();
+        const screen_size = Get_Design_Size();
         const color       = gPalette.GetMenuTextNormalColor();
 
         // stdmatt Text.

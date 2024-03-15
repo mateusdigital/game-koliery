@@ -19,7 +19,7 @@
 // Starfield                                                                  //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const STARFIELD_STARS_COUNT   = 80;
+const STARFIELD_STARS_COUNT   = 120;
 const START_FIELD_START_Z_MIN = 0.5
 const START_FIELD_START_Z_MAX = 2.0
 const STARFIELD_STAR_COLOR    = 0xFFffFF;
@@ -30,7 +30,7 @@ class Starfield
     extends PIXI.Container
 {
     //--------------------------------------------------------------------------
-    constructor(bounds)
+    constructor()
     {
         super();
 
@@ -38,16 +38,8 @@ class Starfield
         // iVars
         // Properties
         this.graphics   = new PIXI.Graphics();
-        this.bounds     = bounds;
         this.stars      = [];
         this.starsSpeed = STARFIELD_BASE_SPEED;
-
-        //
-        // Initialize.
-        for(let i = 0; i < 100; ++i) {
-            let star = this._CreateStar()
-            this.stars.push(star);
-        }
 
         this.addChild(this.graphics);
     } // constructor
@@ -55,24 +47,34 @@ class Starfield
     //--------------------------------------------------------------------------
     _CreateStar()
     {
+        const size = Get_Screen_Size();
         return {
-            x : pw_Random_Int(this.bounds.x, this.bounds.width ),
-            y : pw_Random_Int(this.bounds.y, this.bounds.height),
-            z : pw_Random_Number   (START_FIELD_START_Z_MIN, START_FIELD_START_Z_MAX)
+            x : pw_Random_Int(0, size.x),
+            y : pw_Random_Int(0, size.y),
+            z : pw_Random_Number(START_FIELD_START_Z_MIN, START_FIELD_START_Z_MAX)
         }
     } // _CreateStar
 
     //--------------------------------------------------------------------------
     _ResetStar(star)
     {
+        const size = Get_Screen_Size();
+
         star.x = 0;
-        star.y = pw_Random_Int(this.bounds.y, this.bounds.height);
-        star.z = pw_Random_Number   (START_FIELD_START_Z_MIN, START_FIELD_START_Z_MAX)
+        star.y = pw_Random_Int(0, size.y);
+        star.z = pw_Random_Number(START_FIELD_START_Z_MIN, START_FIELD_START_Z_MAX)
     } // _ResetStar
 
     //--------------------------------------------------------------------------
     Update(dt)
     {
+        if(this.stars.length < STARFIELD_STARS_COUNT) {
+            for(let i = 0; i < STARFIELD_STARS_COUNT; ++i) {
+                let star = this._CreateStar()
+                this.stars.push(star);
+            }
+        }
+
         this.graphics.clear();
         const screen_size = Get_Screen_Size();
 

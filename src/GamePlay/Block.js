@@ -20,7 +20,7 @@
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
 const BLOCK_COLOR_INDEX_COUNT = 3;
-const BLOCK_GRAY_INDEX        = 7;
+const BLOCK_GRAY_INDEX        = 1;
 const BLOCK_BORDER_SIZE       = 1;
 
 // Tweens
@@ -34,11 +34,11 @@ const BLOCK_BLINK_TWEEN_DURATION_MS       = 150;
 const BLOCK_BLINK_TWEEN_BLINK_COUNT       = 2;
 const BLOCK_BLINK_TWEEN_BLINK_DURATION_MS = (BLOCK_BLINK_TWEEN_DURATION_MS / BLOCK_BLINK_TWEEN_BLINK_COUNT);
 
-
 //------------------------------------------------------------------------------
 let _S_BLOCK_OBJECT_ID  = 0;
-let _BLOCKS_TEXTURE     = null;
-let _GRAY_BLOCK_TEXTURE = null;
+let _BLOCKS_TEMPLATE_TEXTURE = null;
+let _GRAY_BLOCK_TEXTURE      = null;
+let _BLOCKS_COLORED_TEXTURES = [];
 
 //------------------------------------------------------------------------------
 function Create_Random_Block(boardRef)
@@ -49,6 +49,52 @@ function Create_Random_Block(boardRef)
     return block;
 } // Create_Random_Block
 
+//------------------------------------------------------------------------------
+function _Create_Blocks_Texture(blockColor, blockSize)
+{
+    const canvas  = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    canvas.width  = blockSize.x;
+    canvas.height = blockSize.y;
+
+    var template_texture = pw_Texture_GetFromCoords(
+        _BLOCKS_TEMPLATE_TEXTURE,
+        0, 0,
+        blockSize.x,
+        blockSize.y
+    );
+
+    context.drawImage(template_texture.baseTexture.source, 0, 0);
+    const image_data = context.getImageData(0, 0, canvas.width, canvas.height);
+
+    const base      = blockColor.rgb();
+    const border    = blockColor.darken(1).rgb();
+    const highlight = blockColor.brighten(2).rgb();
+
+    for (let i = 0; i < image_data.data.length; i += 4) {
+        const r = image_data.data[i];
+        const g = image_data.data[i + 1];
+        const b = image_data.data[i + 2];
+
+        if (r == 255) {
+            curr_color = border;
+        } else if (g == 255) {
+            curr_color = base;
+        } else if (b == 255) {
+            curr_color = highlight;
+        }
+
+        image_data.data[i]     = curr_color[0];
+        image_data.data[i + 1] = curr_color[1];
+        image_data.data[i + 2] = curr_color[2];
+}
+
+    context.putImageData(image_data, 0, 0);
+    const colored_texture = PIXI.Texture.from(canvas);
+    _BLOCKS_COLORED_TEXTURES.push(colored_texture);
+}
+
 
 //------------------------------------------------------------------------------
 class Block
@@ -57,10 +103,16 @@ class Block
     //--------------------------------------------------------------------------
     constructor(boardRef, colorIndex)
     {
-        if(!_BLOCKS_TEXTURE) {
-            _BLOCKS_TEXTURE     = pw_Texture_Get(RES_TEXTURES_BLOCKS_PNG);
+        if(!_BLOCKS_TEMPLATE_TEXTURE) {
+            _BLOCKS_TEMPLATE_TEXTURE = pw_Texture_Get(RES_TEXTURES_BLOCKS_PNG);
+
+            var block_colors = gPalette.GetBlockColors();
+            for(let i = 0; i < block_colors.length; ++i) {
+                _Create_Blocks_Texture(block_colors[i], boardRef.blockSize);
+            }
+
             _GRAY_BLOCK_TEXTURE = pw_Texture_GetFromCoords(
-                _BLOCKS_TEXTURE,
+                _BLOCKS_TEMPLATE_TEXTURE,
                 boardRef.blockSize.x * BLOCK_GRAY_INDEX,
                 0,
                 boardRef.blockSize.x,
@@ -68,15 +120,9 @@ class Block
             );
         }
 
-        const texture = pw_Texture_GetFromCoords(
-            _BLOCKS_TEXTURE,
-            colorIndex * boardRef.blockSize.x,
-            0,
-            boardRef.blockSize.x,
-            boardRef.blockSize.y
-        );
-
+        const texture = _BLOCKS_COLORED_TEXTURES[colorIndex];
         super(texture);
+
 
         //
         // iVars

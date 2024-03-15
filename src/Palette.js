@@ -15,6 +15,8 @@
 //                                                                            //
 //----------------------------------------------------------------------------//
 
+const COLORS_LENGTH = 7;
+
 //----------------------------------------------------------------------------//
 // Palette                                                                    //
 //----------------------------------------------------------------------------//
@@ -35,19 +37,26 @@ class Palette
     } // ctor
 
     //--------------------------------------------------------------------------
+    _GetIndexedColor(index)
+    {
+        const len = SCENE_MENU_TITLE_STR.length;
+        return chroma.hsl((360 / len) * index, 0.7, 0.5);
+    }
+
+    //--------------------------------------------------------------------------
     GetBlockColors()
     {
         return this.blockColors;
     } // GetBlockColors
 
     //--------------------------------------------------------------------------
-    GetBlockColor(colorIndex)
+    GetBlockColor(index)
     {
-        return this.blockColors[colorIndex];
+        return this._GetIndexedColor(index);
     } // GetBlockColor
 
     //--------------------------------------------------------------------------
-    GetBlockBlinkColor(colorIndex)
+    GetBlockBlinkColor(index)
     {
         return chroma("gray");
     } // GetBlockColor
@@ -55,22 +64,7 @@ class Palette
     //--------------------------------------------------------------------------
     GetScoreColor(index)
     {
-        // const colors = [
-        //     "#8C2000",
-        //     "#C17D00",
-        //     "#C5B50C",
-        //     "#009427",
-        //     "#00B385",
-        //     "#266DC3",
-        //     "#7037D9",
-        //     "#8D24C1",
-        //     "#B0325E",
-        //     "#8C2000",
-        // ];
-
-        // return chroma(colors[colorIndex]);
-        const len = HIGHSCORE_MAX_ENTRIES;
-        return chroma.hsl((360 / len) * index, 0.7, 0.5);
+        return this._GetIndexedColor(index);
     } // GetScoreColor
 
     //--------------------------------------------------------------------------
@@ -84,15 +78,17 @@ class Palette
     //--------------------------------------------------------------------------
     _InitializeBlockColors()
     {
-        this.blockColors = [
-            chroma("#985c23"), // brown
-            chroma("#edcf61"), // yellow
-            chroma("#4dad86"), // green
-            chroma("#283fb1"), // dark blue
-            chroma("#8873f4"), // light blue
-            chroma("#c56382"), // pink
-            chroma("#812a18"), // red
-        ];
+        this.blockColors = [];
+        for(let i = 0; i < COLORS_LENGTH; ++i){
+            const color = this._GetIndexedColor(i);
+            this.blockColors.push(color);
+        }
+
+        // Suffle
+        for (let i = this.blockColors.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.blockColors[i], this.blockColors[j]] = [this.blockColors[j], this.blockColors[i]];
+        }
 
     } // _InitializeBlockColors
 
@@ -105,15 +101,12 @@ class Palette
     //--------------------------------------------------------------------------
     GetMenuTextSelectColor(index)
     {
-        const len = SCENE_MENU_TITLE_STR.length;
-        return chroma.hsl((360 / len) * index, 0.7, 0.5);
+        return this._GetIndexedColor(index);
     } // GetMenuTextSelectColor
 
     //--------------------------------------------------------------------------
     GetTitleCharColor(index)
     {
-        const len = SCENE_MENU_TITLE_STR.length;
-        return chroma.hsl((360 / len) * index, 0.7, 0.5);
-        // return chroma.hsl((360 / len) * index, 0.5, 0.5);
+        return this._GetIndexedColor(index);
     }
 }; // class Palette

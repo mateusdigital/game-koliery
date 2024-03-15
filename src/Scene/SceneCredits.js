@@ -74,13 +74,8 @@ class SceneCredits
         this.creditsStructure = [
             {
                 title: ["Programming"],
-                texts: ["stdmatt"],
+                texts: ["mateusdigital"],
                 gap  : 0,
-            },
-            {
-                title: ["Balancing"],
-                texts: ["Alex"],
-                gap  : 15,
             },
             {
                 title: ["Inspired by"],
@@ -110,7 +105,7 @@ class SceneCredits
     {
 
         const total_text_count = 10;
-        const screen_size      = Get_Screen_Size();
+        const screen_size      = Get_Design_Size();
         const create_text_func = (str, font_size, pos_y, color, index) => {
             // Tween.
             const tween = pw_Tween_CreateBasic(
