@@ -9,7 +9,7 @@
 ##                 +                         +                                ##
 ##                      O      *        '       .                             ##
 ##                                                                            ##
-##  File      : build-static.ps1                                              ##
+##  File      : deploy.ps1                                                    ##
 ##  Project   : Koliery                                                       ##
 ##  Date      : 2024-03-19                                                    ##
 ##  License   : See project's COPYING.TXT for full info.                      ##
@@ -17,50 +17,19 @@
 ##  Copyright : mateus.digital - 2024                                         ##
 ##                                                                            ##
 ##  Description :                                                             ##
-##                                                                            ##
+##   Deploys the output of scripts/build-static.ps1 to the remote server.     ##
+##   Current user should have remote ssh keys installed on the server.        ##
 ##---------------------------------------------------------------------------~##
 
+##
+##  Directories
+##
 
-Write-Output "==> Building static...";
+##------------------------------------------------------------------------------
+$SOURCE_FOLDER="./out";
+$REMOTE_SERVER="mateus@mateus.digital";
+$REMOTE_FOLDER="/var/www/mateus.digital/html/koliery";
 
-## retrive build and version.
-touch ".buildno"; ## in case that it doesn't exists.
-
-$VERSION="$(git describe --abbrev=0 --tags)";
-if($VERSION.Length -eq 0) {
-    $VERSION="pre-release";
-}
-
-$CURR_BUILD = [int](Get-Content ".buildno");
-if($CURR_BUILD.Length -eq 0) {
-    $CURR_BUILD = 0;
-}
-
-$NEXT_BUILD = ($CURR_BUILD + 1);
-$DATE       = (Get-Date).ToString('HH:mm:ss dd-MM-yyyy - zz');
-
-Write-Output "BUILD: ${CURR_BUILD} - NEXT_BUILD: ${NEXT_BUILD}";
-
-## clean dir.
-Remove-Item -Force -Recurse  "./out/";
-New-Item -ItemType Directory "./out/";
-
-## copy things.
-Copy-Item -Recurse "./index.html"  "./out/";
-Copy-Item -Recurse "./css"         "./out/";
-Copy-Item -Recurse "./src"         "./out/";
-Copy-Item -Recurse "./libs"        "./out/";
-Copy-Item -Recurse "./res"         "./out/";
-
-$replaced_index = (Get-Content "./out/index.html")     `
-                      -replace "_version_", "$VERSION" `
-                      -replace "_build_", $NEXT_BUILD  `
-                      -replace "_date_", $DATE;
-
-
-$replaced_index | Out-File "./out/index.html.tmp";
-$NEXT_BUILD     | Out-File ".buildno";
-
-Move-Item -Force "./out/index.html.tmp" "./out/index.html";
-
-Write-Output "==> done...";
+scp -r                                 `
+    "${SOURCE_FOLDER}/*"               `
+    "${REMOTE_SERVER}:${REMOTE_FOLDER}"
