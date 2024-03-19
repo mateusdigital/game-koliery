@@ -68,51 +68,38 @@ class SceneHighScore
 
         this.editFieldChars = [];
 
+        this.readyForInput = false;
+
         //
         // Initialize.
         this._CreateTitleUI();
 
-        if(!HIGHSCORE_MANAGER.is_initialized) {
-            this._CreateFetchUI();
-            HIGHSCORE_MANAGER.FetchScoresWithCallback(()=>{
-                this._DismissFetchUI();
-                this._CreateScoreUI ();
-                this._CreateEditUI  ();
-            });
-        } else {
-            this._CreateScoreUI();
-            this._CreateEditUI ();
-        }
+        this._CreateFetchUI();
+        HIGHSCORE_MANAGER.FetchScoresWithCallback(()=>{
+            this._DismissFetchUI();
+            this._CreateScoreUI ();
+            this._CreateEditUI  ();
+
+            this.readyForInput = true;
+        });
 
         gAudio.Play(SCENE_HIGHSCORE_MUSIC_BACKGROUND);
     } // ctor
 
-    //--------------------------------------------------------------------------
-    OnEnter()
-    {
-        if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
-            // Input_AddKeyboardListener(this);
-        }
-    } // OnEnter
-
-    //--------------------------------------------------------------------------
-    OnExit()
-    {
-        if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
-            // Input_RemoveKeyboardListener(this);
-        }
-    } // OnExit
-
-    //--------------------------------------------------------------------------
-    OnKeyUp(keyCode)
-    {
-        // Do nothing...
-    } // OnKeyUp
 
     //--------------------------------------------------------------------------
     OnKeyDown(keyCode)
     {
+        if(this.readyForInput == false) {
+            return;
+        }
+
         if(this.options != SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
+            return;
+        }
+
+        const leaderboard_index = HIGHSCORE_MANAGER.GetCurrentScorePosition();
+        if(leaderboard_index == HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
             return;
         }
 
@@ -120,6 +107,7 @@ class SceneHighScore
         if(keyCode == PW_KEY_BACKSPACE) {
             pw_Array_RemoveLast(this.editFieldChars);
         }
+
         // Enter char
         else if(keyCode >= 65 && keyCode < 65 + 26) {
             if(this.editFieldChars.length < 3) {
@@ -127,6 +115,7 @@ class SceneHighScore
                 this.editFieldChars.push(c);
             }
         }
+
         // Confirm
         else if(keyCode == PW_KEY_ENTER && !this.editLocked) {
             this.editLocked = true;
@@ -148,18 +137,25 @@ class SceneHighScore
             this.score_tween_group.update();
         }
 
-        // Viewing high cores.
+        // Viewing highscores.
         if(this.options != SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
             if(pw_Keyboard_IsClick(PW_KEY_SPACE) || pw_Keyboard_IsClick(PW_KEY_ENTER)) {
                 gAudio.PlayEffect(SCENE_HIGHSCORE_EFFECT_MENU);
                 Go_To_Scene(this.sceneToGoBackClass);
             }
         }
-
-        // Adding new high score.
-        else if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
-            if(this.editFadeTweenGroup) {
-                this.editFadeTweenGroup.update();
+        // Setting highscore.
+        else {
+            const leaderboard_index = HIGHSCORE_MANAGER.GetCurrentScorePosition();
+            if(leaderboard_index == HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
+                if(pw_Keyboard_IsClick(PW_KEY_SPACE) || pw_Keyboard_IsClick(PW_KEY_ENTER)) {
+                    gAudio.PlayEffect(SCENE_HIGHSCORE_EFFECT_MENU);
+                    Go_To_Scene(this.sceneToGoBackClass);
+                }
+            } else {
+                if(this.editFadeTweenGroup) {
+                    this.editFadeTweenGroup.update();
+                }
             }
         }
 
@@ -198,7 +194,17 @@ class SceneHighScore
     {
         const screen_size = Get_Design_Size();
         const initial_y   = this.titleLine.y + this.titleLine.height + 20;
-        const scores      = HIGHSCORE_MANAGER.scores;
+        const scores      = this.scoresInfo = HIGHSCORE_MANAGER.GetScores();
+
+        if(this.options == SCENE_HIGHSCORE_OPTIONS_EDITABLE) {
+            const leaderboard_index = HIGHSCORE_MANAGER.GetCurrentScorePosition();
+            const curr_score        = HIGHSCORE_MANAGER.GetCurrentScoreValue();
+            if(leaderboard_index != HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
+                const new_entry = {name:"---", score: curr_score }
+                this.scoresInfo.splice(leaderboard_index, 0, new_entry);
+                this.scoresInfo.pop();
+            }
+        }
 
         this.score_tween_group = pw_Tween_CreateGroup();
 
@@ -300,7 +306,7 @@ class SceneHighScore
             return;
         }
 
-        const leaderboard_index = 1; // HIGHSCORE_MANAGER.GetCurrentScorePosition();
+        const leaderboard_index = HIGHSCORE_MANAGER.GetCurrentScorePosition();
         if(leaderboard_index == HIGHSCORE_SCORE_POSITION_OUT_OF_RANK) {
             return;
         }
@@ -308,7 +314,6 @@ class SceneHighScore
         this.scoresInfo = HIGHSCORE_MANAGER.GetScores();
 
         const info = this.scoresInfo[leaderboard_index];
-        info.name  = "---";
         this.score_texts[leaderboard_index].text = this._BuildScoreString(leaderboard_index + 1, info);
 
         const screen_size     = Get_Design_Size();
@@ -336,6 +341,7 @@ class SceneHighScore
         this.editFadeTween      = pw_Tween_CreateBasic(400, this.editFadeTweenGroup)
 
         this.editFadeTweenGroup.onComplete(()=>{
+
             this.editField.visible = false;
             this.editTitle.visible = false;
 
@@ -344,6 +350,12 @@ class SceneHighScore
             info.name   = "";
             for(let i = 0; i < this.editFieldChars.length; ++i) {
                 info.name += this.editFieldChars[i];
+            }
+            while(info.name.length != 3) {
+                info.name += " ";
+            }
+            if(info.name.length == 3 && info.name == "   "){
+                info.name = "???";
             }
 
             this.score_texts[leaderboard_index].text = this._BuildScoreString(leaderboard_index + 1, info);

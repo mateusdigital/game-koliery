@@ -19,9 +19,10 @@
 // HighscoreManager                                                           //
 //----------------------------------------------------------------------------//
 //------------------------------------------------------------------------------
-const HIGHSCORE_MANAGER_ENDPOINT        = "http://localhost:8000/" //"https://stdmatt.com/";
-const HIGHSCORE_MANAGER_ENDPOINT_FETCH  = "test.php";
-const HIGHSCORE_MANAGER_ENDPOINT_INSERT = "insert.php";
+// const HIGHSCORE_MANAGER_ENDPOINT        = "http://localhost:3000/api";
+const HIGHSCORE_MANAGER_ENDPOINT        = "https://koliery-server.vercel.app/api";
+const HIGHSCORE_MANAGER_ENDPOINT_FETCH  = "/fetch";
+const HIGHSCORE_MANAGER_ENDPOINT_INSERT = "/save";
 
 const HIGHSCORE_MAX_DIGITS   = 5;
 const HIGHSCORE_MAX_ENTRIES = 10;
@@ -100,13 +101,21 @@ _Fetch_Async(url)
 
 //------------------------------------------------------------------------------
 async function
-_Insert_Async(url)
+_Insert_Async(url, options)
 {
-    try {
-        const response = await fetch(url);
-    } catch (e){
-        // debugger;
-    }
+    fetch(url, options)
+        .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+        .then(data => {
+            console.log('Response from server:', data);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
 }
 
 //------------------------------------------------------------------------------
@@ -130,11 +139,16 @@ HighscoreManager
         const url    = pw_String_Cat(HIGHSCORE_MANAGER_ENDPOINT, HIGHSCORE_MANAGER_ENDPOINT_FETCH);
         const result = await _Fetch_Async(url);
 
-        this.scores         = result.data;
-        this.is_faked       = result.is_faked;
-        this.is_initialized = true;
-        this.highestScore   = this.scores[0].score;
+        this.scores       = this._SortedScores(result.data)
+        this.is_faked     = result.is_faked;
+        this.highestScore = this.scores[0].score;
     } // FetchScores
+
+    //--------------------------------------------------------------------------
+    _SortedScores(scores)
+    {
+        return scores.sort((s1, s2)=>{ return s2.score - s1.score });
+    }
 
     //--------------------------------------------------------------------------
     FetchScoresWithCallback(callback)
@@ -145,7 +159,7 @@ HighscoreManager
         );
 
         _Fetch_Async(url).then((result, error)=>{
-            this.scores         = result.data;
+            this.scores         = this._SortedScores(result.data);
             this.is_faked       = result.is_faked;
             this.is_initialized = true;
             this.highestScore   = this.scores[0].score;
@@ -164,11 +178,19 @@ HighscoreManager
         const url = pw_String_Cat(
             HIGHSCORE_MANAGER_ENDPOINT,
             HIGHSCORE_MANAGER_ENDPOINT_INSERT,
-            "?name=", name,
-            "&score=", this.currScore
         );
 
-        await _Insert_Async(url);
+        const jsonData = {
+            name:  name,
+            score: this.currScore
+        };
+
+        let options = {
+            method: 'POST',
+            body: JSON.stringify(jsonData)
+        };
+
+        await _Insert_Async(url, options);
         await this.FetchScores();
     } // UploadScore
 
@@ -200,6 +222,11 @@ HighscoreManager
     {
         return this.highestScore;
     } // GetHighScoreValue
+
+    GetCurrentScoreValue()
+    {
+        return this.currScore;
+    }
 
     //--------------------------------------------------------------------------
     GetScores()
