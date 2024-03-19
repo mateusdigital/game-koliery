@@ -76,6 +76,12 @@ class SceneGame
         this.exitText        = null;
         this.stateTweenGroup = pw_Tween_CreateGroup();
 
+        // sound
+        this.musicSpeed          = 1;
+        this.musicSpeedIncrement = 1;
+        this.starFieldSpeed      = 1;
+        this.starFieldIncrement  = 1;
+
         //
         // Initialize.
         this._CreateHud               ();
@@ -89,16 +95,25 @@ class SceneGame
         if(this.difficulty == SCENE_GAME_LEVEL_EASY) {
             const sound_name = SCENE_GAME_MUSIC_BACKGROUND_EASY;
             gAudio.Play(sound_name);
-            gAudio.SetSpeed(0.7);
+            this.musicSpeed = 0.6;
+            this.musicSpeedIncrement = 0.04;
+            this.starFieldIncrement  = 0.07;
         } else if(this.difficulty == SCENE_GAME_LEVEL_MEDIUM) {
             const sound_name = SCENE_GAME_MUSIC_BACKGROUND_MEDIUM;
             gAudio.Play(sound_name);
-            gAudio.SetSpeed(1.0);
+            this.musicSpeed = 1;
+            this.musicSpeedIncrement = 0.03;
+            this.starFieldIncrement  = 0.09;
         } else if(this.difficulty == SCENE_GAME_LEVEL_HARD) {
             const sound_name = SCENE_GAME_MUSIC_BACKGROUND_HARD;
             gAudio.Play(sound_name);
-            gAudio.SetSpeed(1.3);
+            this.musicSpeed = 1.3;
+            this.musicSpeedIncrement = 0.02;
+            this.starFieldIncrement  = 0.11;
         }
+
+        gAudio.SetSpeed(this.musicSpeed);
+        gStarfield.SetSpeedModifier(1);
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -181,6 +196,13 @@ class SceneGame
     _OnLevelChanged()
     {
         this.hud.SetLevel(this.progressionHandler.level);
+        this.boardBorder.UpdateColors();
+
+        this.musicSpeed     += this.musicSpeedIncrement;
+        this.starFieldSpeed += this.starFieldIncrement;
+
+        gAudio.SetSpeed(Math.min(this.musicSpeed, 1.5));
+        gStarfield.SetSpeedModifier(this.starFieldSpeed);
     } // _OnLevelChanged
 
     //--------------------------------------------------------------------------
@@ -214,9 +236,9 @@ class SceneGame
         this.progressionHandler = new ProgressionHandler(this.difficulty, 0);
 
         // Set the callbacks.
-        this.progressionHandler.onLevelChangedCallback = ()=>{ this._OnLevelChanged() };
-        this.progressionHandler.onScoreChangeCallback  = ()=>{ this._OnScoreChanged() };
-        this.progressionHandler.onMatchCallback        = ()=>{ this._OnMatch       () };
+        this.progressionHandler.onLevelChangeCallback = ()=>{ this._OnLevelChanged() };
+        this.progressionHandler.onScoreChangeCallback = ()=>{ this._OnScoreChanged() };
+        this.progressionHandler.onMatchCallback       = ()=>{ this._OnMatch       () };
     } // _CreateProgressionHandler
 
 

@@ -84,6 +84,7 @@ class SceneHighScore
         });
 
         gAudio.Play(SCENE_HIGHSCORE_MUSIC_BACKGROUND);
+        gStarfield.SetSpeedModifier(1);
     } // ctor
 
 

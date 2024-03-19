@@ -40,13 +40,19 @@ class BoardBorder
     } // ctor
 
     //--------------------------------------------------------------------------
+    UpdateColors()
+    {
+        this._DrawGraphics();
+    }
+
+    //--------------------------------------------------------------------------
     _DrawGraphics()
     {
         const blocks_y_count      = (BOARD_FIELD_ROWS * 2) + 3;
         const blocks_x_count      = (BOARD_FIELD_COLS * 2) + 4;
         const blocks_half_x_count = blocks_x_count * 0.5;
         const block_size          = (this.boardRef.blockSize.x * 0.5);
-        const colors              = gPalette.GetBlockColors();
+        const colors              = gPalette.GetRandomBlockColors();
 
         for(let i = 1; i < blocks_y_count; ++i) {
             for(let j = 0; j < blocks_half_x_count; ++j) {

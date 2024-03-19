@@ -50,6 +50,7 @@ class SceneCredits
         this._CreateTexts           ();
 
         gAudio.Play(SCENE_CREDITS_MUSIC_BACKGROUND);
+        gStarfield.SetSpeedModifier(1);
     } // ctor
 
     //--------------------------------------------------------------------------

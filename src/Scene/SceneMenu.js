@@ -96,6 +96,8 @@ class SceneMenu
         this._InitializeMarqueeText();
 
         gAudio.Play(SCENE_MENU_MUSIC_BACKGROUND);
+
+        gStarfield.SetSpeedModifier(1);
     } // ctor
 
     //--------------------------------------------------------------------------

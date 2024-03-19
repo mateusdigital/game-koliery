@@ -68,6 +68,8 @@ class SceneSplash
 
         this.addChild(this.stdmattText );
         this.addChild(this.presentsText);
+
+        gStarfield.SetSpeedModifier(1);
     } // ctor
 
     //--------------------------------------------------------------------------

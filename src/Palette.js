@@ -50,6 +50,24 @@ class Palette
     } // GetBlockColors
 
     //--------------------------------------------------------------------------
+    GetRandomBlockColors()
+    {
+        const rand_colors = [];
+        for(let i = 0; i < COLORS_LENGTH; ++i){
+            const color = this._GetIndexedColor(i);
+            rand_colors.push(color);
+        }
+
+        // Suffle
+        for (let i = rand_colors.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [rand_colors[i], rand_colors[j]] = [rand_colors[j], rand_colors[i]];
+        }
+
+        return rand_colors;
+    }
+
+    //--------------------------------------------------------------------------
     GetBlockColor(index)
     {
         return this._GetIndexedColor(index);
@@ -89,7 +107,6 @@ class Palette
             const j = Math.floor(Math.random() * (i + 1));
             [this.blockColors[i], this.blockColors[j]] = [this.blockColors[j], this.blockColors[i]];
         }
-
     } // _InitializeBlockColors
 
     //--------------------------------------------------------------------------

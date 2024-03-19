@@ -114,9 +114,10 @@ class AudioPlayer
     //--------------------------------------------------------------------------
     SetSpeed(speed)
     {
+        console.log("-------", speed);
         const playing_sound = this.sounds[this.soundName];
         if(playing_sound) {
-            playing_sound.speed =speed;
+            playing_sound.speed = speed;
         }
     }
 

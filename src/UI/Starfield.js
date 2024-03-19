@@ -40,6 +40,7 @@ class Starfield
         this.graphics   = new PIXI.Graphics();
         this.stars      = [];
         this.starsSpeed = STARFIELD_BASE_SPEED;
+        this.speedModifier = 1.0;
 
         this.addChild(this.graphics);
     } // constructor
@@ -62,8 +63,14 @@ class Starfield
 
         star.x = 0;
         star.y = pw_Random_Int(0, size.y);
-        star.z = pw_Random_Number(START_FIELD_START_Z_MIN, START_FIELD_START_Z_MAX)
+        star.z = pw_Random_Number(START_FIELD_START_Z_MIN, START_FIELD_START_Z_MAX);
     } // _ResetStar
+
+    //--------------------------------------------------------------------------
+    SetSpeedModifier(f)
+    {
+        this.speedModifier = f;
+    }
 
     //--------------------------------------------------------------------------
     Update(dt)
@@ -81,7 +88,7 @@ class Starfield
         this.graphics.beginFill(STARFIELD_STAR_COLOR, 1);
         for(let i = 0; i < this.stars.length; ++i) {
             let star = this.stars[i];
-            star.x += (this.starsSpeed * star.z) * dt;
+            star.x += (this.starsSpeed * star.z) * dt * this.speedModifier;
 
             if(star.x > screen_size.x) {
                 this._ResetStar(star);
