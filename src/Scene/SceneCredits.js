@@ -94,8 +94,8 @@ class SceneCredits
                 gap  : 15,
             },
             {
-               title: ["mateusdigital - MMXX", "gplv3 - hack, share it"],
-                   texts: ["\n#blacklivesmatter"],
+               title: ["mateusdigital - 2020, 2024", "gplv3 - hack, share it"],
+                   texts: ["\n-- for Marla --"],
                gap: 25
             }
         ];
