@@ -168,7 +168,7 @@ class ProgressionHandler
 
         console.log(this.pieceSpeed);
         console.log(this.pieceFastSpeed);
-        this.matchesForNextLevel =1 // _p[this.level].matchesForNextLevel;
+        this.matchesForNextLevel = _p[this.level].matchesForNextLevel;
     }
 
 }; // class ProgressionHandler
