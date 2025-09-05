@@ -9,7 +9,8 @@
 //  Date      : Oct 10, 2019                                                  //
 //  License   : GPLv3                                                         //
 //  Author    : stdmatt <stdmatt@pixelwizards.io>                             //
-//  Copyright : stdmatt - 2019                                                //
+//              mateus.digital <hello@mateus.digital>                         //
+//  Copyright : mateus.digital - 2019 - 2024                                  //
 //                                                                            //
 //  Description :                                                             //
 //                                                                            //
@@ -98,6 +99,23 @@ class SceneMenu
         gAudio.Play(SCENE_MENU_MUSIC_BACKGROUND);
 
         gStarfield.SetSpeedModifier(1);
+
+        {
+            const screen_size = Get_Design_Size();
+            const version = GetVersion();
+            let text = new PIXI.Text(`version ${version}`, {
+                fontFamily : "Arial",
+                fontSize   : 12,
+                fill       : chroma("white").alpha(0.3).css(),
+            });
+
+            text.anchor.set(0.5, 0.5)
+
+            text.x = screen_size.x * 0.5;
+            text.y = screen_size.y * 1;
+
+            this.addChild(text);
+        }
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -326,6 +344,8 @@ class SceneMenu
         this.marqueeText.y = screen_size.y * 0.95;
 
         this.addChild(this.marqueeText);
+
+
     } // _InitializeMarqueeText
 
     //--------------------------------------------------------------------------

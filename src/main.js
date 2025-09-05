@@ -9,7 +9,8 @@
 //  Date      : Sep 25, 2019                                                  //
 //  License   : GPLv3                                                         //
 //  Author    : stdmatt <stdmatt@pixelwizards.io>                             //
-//  Copyright : stdmatt - 2019                                                //
+//              mateus.digital <hello@mateus.digital>                         //
+//  Copyright : mateus.digital - 2019 - 2024                                  //
 //                                                                            //
 //  Description :                                                             //
 //                                                                            //
@@ -22,6 +23,20 @@
 const GAME_DESIGN_WIDTH  = 500;
 const GAME_DESIGN_HEIGHT = 700;
 
+let _version = null;
+
+const GetVersion = () => {
+    if(_version === null) {
+        const scripts = document.getElementsByTagName('script');
+        for(let i = 0; i < scripts.length; i++) {
+            const script = scripts[i];
+            if(script.src && script.src.indexOf('main.js') >= 0) {
+                _version = script.getAttribute('data-version');
+            }
+        }
+    }
+    return _version;
+}
 
 //----------------------------------------------------------------------------//
 // Globals                                                                    //
