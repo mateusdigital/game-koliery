@@ -1,0 +1,36 @@
+{
+  "name": "koliery",
+  "description": "Koliery - Колеры  in belarussian - meaning colors is a game inspired by the Sega Columns and the ISS Colours for the Atari 500 - create by mateus.digital",
+  "version": "1.1.0",
+  "build": 43,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mateusdigital/koliery.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mateusdigital/koliery/issues"
+  },
+  "homepage": "https://mateus.digital/projects/koliery",
+  "keywords": [
+    "koliery",
+    "sega",
+    "columns",
+    "atari",
+    "atari-500",
+    "javascript",
+    "canvas",
+    "retro",
+    "demo",
+    "demoscene",
+    "game",
+    "html5",
+    "creative-coding",
+    "mateus.digital"
+  ],
+  "author": {
+    "name": "Mateus Mesquita",
+    "email": "hello@mateus.digital",
+    "url": "https://mateus.digital"
+  },
+  "license": "GPL-3.0-or-later"
+}
