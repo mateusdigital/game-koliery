@@ -11,14 +11,12 @@
 </p>
 
 <!-- Badges -->
-[![Latest release](https://img.shields.io/github/v/tag/mateusdigital/game-koliery?label=Latest%20release&style=for-the-badge)](https://github.com/mateusdigital/koliery/releases)
+[![Latest release](https://img.shields.io/github/v/tag/mateusdigital/game-koliery?label=Latest%20release&style=for-the-badge)](https://github.com/mateusdigital/game-koliery/releases)
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/mateusdigital/game-koliery?style=for-the-badge)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/t/mateusdigital/game-koliery?style=for-the-badge)](https://github.com/mateusdigital/koliery/commits)
-[![Stars](https://img.shields.io/github/stars/mateusdigital/game-koliery?style=for-the-badge)](https://github.com/mateusdigital/koliery/stargazers)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/t/mateusdigital/game-koliery?style=for-the-badge)](https://github.com/mateusdigital/game-koliery/commits)
+[![Stars](https://img.shields.io/github/stars/mateusdigital/game-koliery?style=for-the-badge)](https://github.com/mateusdigital/game-koliery/stargazers)
 ![GitHub License](https://img.shields.io/github/license/mateusdigital/game-koliery?style=for-the-badge)
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fmateus.digital/koliery%2Findex.html&style=for-the-badge&logo=web)](https://mateus.digital/koliery)
-
-
 
 <!-- ----------------------------------------------------------------------- -->
 ## Description:
