@@ -1,12 +1,28 @@
-# Koliery
+# koliery
 
-**Made with <3 by [mateus.digital](https://mateus.digital).**
+**Made with <3 by [mateus.digital](https://mateus.digital)**
 
+
+<!-- ----------------------------------------------------------------------- -->
+<p align="center">
+  <a href="https://mateus.digital/koliery">
+    <img style="border-radius: 10px;" src="https://raw.githubusercontent.com/mateusdigital/game-koliery/refs/heads/main/_project-resources/readme.gif"/>
+  </a>
+</p>
+
+<!-- Badges -->
+[![Latest release](https://img.shields.io/github/v/tag/mateusdigital/game-koliery?label=Latest%20release&style=for-the-badge)](https://github.com/mateusdigital/koliery/releases)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/mateusdigital/game-koliery?style=for-the-badge)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/t/mateusdigital/game-koliery?style=for-the-badge)](https://github.com/mateusdigital/koliery/commits)
+[![Stars](https://img.shields.io/github/stars/mateusdigital/game-koliery?style=for-the-badge)](https://github.com/mateusdigital/koliery/stargazers)
+![GitHub License](https://img.shields.io/github/license/mateusdigital/game-koliery?style=for-the-badge)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fmateus.digital/koliery%2Findex.html&style=for-the-badge&logo=web)](https://mateus.digital/koliery)
+
+
+
+<!-- ----------------------------------------------------------------------- -->
 ## Description:
 
-<p align="center">
-    <img style="border-radius: 10px;" src="./resources/readme_game.gif"/>
-</p>
 
 Koliery - Колеры  in belarussian - meaning colors is a game inspired by the
 Sega Columns and the ISS Colours for the Atari 500.
@@ -17,9 +33,16 @@ For a long time I forgot this project, but decided to release it now :)
 You can [play it online](https://mateus.digital/koliery)
 
 
-<br>
-
 As usual, you are **very welcomed** to **share** and **hack** it.
+
+<!-- Share -->
+
+[![Share](https://img.shields.io/badge/share-000000?logo=x&logoColor=white)](https://x.com/intent/tweet?text=Check%20out%20this%20project%20on%20GitHub:%20https://github.com/mateusdigital/koliery%20%23pixelart%20%23gamedev)
+[![Share](https://img.shields.io/badge/share-1877F2?logo=facebook&logoColor=white)](https://www.facebook.com/sharer/sharer.php?u=https://github.com/mateusdigital/koliery)
+[![Share](https://img.shields.io/badge/share-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/sharing/share-offsite/?url=https://github.com/mateusdigital/koliery)
+[![Share](https://img.shields.io/badge/share-FF4500?logo=reddit&logoColor=white)](https://www.reddit.com/submit?title=Check%20out%20this%20project%20on%20GitHub:%20https://github.com/mateusdigital/koliery)
+[![Share](https://img.shields.io/badge/share-0088CC?logo=telegram&logoColor=white)](https://t.me/share/url?url=https://github.com/mateusdigital/koliery&text=Check%20out%20this%20project%20on%20GitHub)
+[![Star](https://img.shields.io/badge/⭐%20Give%20a%20Star-000000?logo=github&logoColor=white)](https://github.com/mateusdigital/koliery/stargazers)
 
 
 ## Building
@@ -29,8 +52,8 @@ As usual, you are **very welcomed** to **share** and **hack** it.
 git clone https://github.com/mateusdigital/koliery
 cd koliery
 
-./scripts/build-static.ps1 ## Builds the game.
-./scripts/deploy.ps1       ## Deploys it to a server.
+./scripts/build-game.ps1      ## Builds the game.
+./scripts/deploy-project.ps1  ## Deploys it to a server.
 ```
 
 ## Dependencies:
