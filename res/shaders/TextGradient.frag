@@ -40,9 +40,11 @@ void main()
     } else {
         y = 1.0 - (2.0 * uv.y - 1.0);
     }
-    float m = steep_step(y, 7.0);
+    float m = steep_step(y, 5.0);
 
+    vec4 temp = mix(targetColor, gray_color, m);
+    vec4 final = mix(targetColor, temp, m);
 
     vec4 grad_color =
-    gl_FragColor    = mix(targetColor, gray_color, m);
+    gl_FragColor    = final;
 }
