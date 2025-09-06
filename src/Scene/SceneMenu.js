@@ -100,23 +100,7 @@ class SceneMenu
 
         gStarfield.SetSpeedModifier(1);
 
-        {
-            const screen_size = Get_Design_Size();
-            const version = GetVersion();
-            let text = new PIXI.Text(`version ${version}`, {
-                fontFamily : "Arial",
-                fontSize   : 12,
-                fill       : chroma("white").alpha(0.2).css(),
-            });
 
-            text.anchor.set(0.5, 0.5)
-            const src = this.titleText[this.titleText.length - 1];
-
-            text.x = src.x + src.width * 0.5 + 20;
-            text.y = src.y + src.height + 140;
-
-            this.addChild(text);
-        }
     } // ctor
 
     //--------------------------------------------------------------------------
@@ -315,9 +299,31 @@ class SceneMenu
         this.levelTextLayer.y = (screen_size.y * 0.40);
 
         this.addChild(this.levelTextLayer);
+      {
+            const screen_size = Get_Design_Size();
+            const version = GetVersion();
+            let text = new PIXI.Text(`version ${version}`, {
+                fontFamily : "Arial",
+                fontSize   : 12,
+                fill       : chroma("white")
+            });
+
+            text.anchor.set(0.5, 0.5)
+            const src = this.levelTextLayer;
+
+            text.x = screen_size.x * 0.5;
+            text.y = src.y + src.height + 5;
+
+            this.addChild(text);
+
+            this._versionText = text;
+            this._versionText.alpha = 0.0;
+        }
+
 
         // Tween Group
         this.levelTweenGroup.onComplete(()=>{
+            this._versionText.alpha = 0.1;
             this._SetupMarqueeTween();
         });
     } // _InitializeLevelText
