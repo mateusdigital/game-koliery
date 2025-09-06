@@ -6,7 +6,7 @@
 <!-- ----------------------------------------------------------------------- -->
 <p align="center">
   <a href="https://mateus.digital/koliery">
-    <img style="border-radius: 10px;" src="https://raw.githubusercontent.com/mateusdigital/game-koliery/refs/heads/main/_project-resources/readme.gif"/>
+    <img style="border-radius: 10px;" src="https://raw.githubusercontent.com/mateusdigital/game-koliery/refs/heads/master/_project-resources/readme.gif"/>
   </a>
 </p>
 

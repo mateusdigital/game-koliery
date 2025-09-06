@@ -106,13 +106,14 @@ class SceneMenu
             let text = new PIXI.Text(`version ${version}`, {
                 fontFamily : "Arial",
                 fontSize   : 12,
-                fill       : chroma("white").alpha(0.3).css(),
+                fill       : chroma("white").alpha(0.2).css(),
             });
 
             text.anchor.set(0.5, 0.5)
+            const src = this.titleText[this.titleText.length - 1];
 
-            text.x = screen_size.x * 0.5;
-            text.y = screen_size.y * 1;
+            text.x = src.x + src.width * 0.5 + 20;
+            text.y = src.y + src.height + 140;
 
             this.addChild(text);
         }
