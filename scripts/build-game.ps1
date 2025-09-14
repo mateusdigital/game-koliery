@@ -62,9 +62,6 @@ Copy-Item -Recurse "./res"         "${OUTPUT_DIR}";
     -replace "__GAME_DATE__",    (Get-Date -Format "yyyy-MM-dd") `
 | Set-Content "${OUTPUT_DIR}/index.html";
 
-## --- Copy libs and resources -------------------------------------------------
-Copy-Item -Recurse "./resources/*" "${OUTPUT_DIR}";
-
 
 ## -----------------------------------------------------------------------------
 Write-Output "==> done...";
